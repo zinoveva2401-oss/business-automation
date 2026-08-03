@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Автономная диагностика ключевых показателей розничного магазина">
+  <title>Диагностика показателей магазина</title>
+  <style>
+:root {
+  --chocolate: #17130f;
+  --navy: #173f70;
+  --navy-dark: #102f55;
+  --orange: #d85b32;
+  --blue: #2f80ed;
+  --ink: #25282d;
+  --muted: #66707b;
+  --line: #d7dee5;
+  --background: #f2f4f6;
+  --soft: #f6f7f8;
+  --white: #fff;
+  --success: #3d765b;
+  --danger: #a63f35;
+  --warning-bg: #f7efe1;
+  --radius: 16px;
+  --shadow: 0 12px 35px rgba(24, 39, 55, .08);
+}
+
+* { box-sizing: border-box; }
+html { min-width: 320px; background: var(--background); }
+body { margin: 0; color: var(--ink); background: var(--background); font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.45; }
+button, input { font: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+
+.hero { background: var(--chocolate); color: var(--white); border-bottom: 3px solid var(--navy); }
+.hero__inner { width: min(1320px, calc(100% - 40px)); margin: auto; padding: 20px 0 18px; }
+.eyebrow { margin: 0 0 3px; color: #b9c5d3; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+h1 { margin: 0; max-width: 1000px; font-family: Arial, Inter, Helvetica, sans-serif; font-size: clamp(32px, 3vw, 38px); line-height: 1.12; text-transform: uppercase; }
+.subtitle { margin: 7px 0 0; color: #d4d0cb; font-size: 17px; }
+.subtitle span { color: var(--orange); padding: 0 5px; }
+
+.page-shell { width: min(1320px, calc(100% - 40px)); margin: 20px auto 32px; }
+.mode-panel { display: grid; grid-template-columns: auto minmax(360px, 1fr); gap: 10px 18px; align-items: center; padding: 18px 24px; background: #f7f8f9; border-bottom: 1px solid var(--line); }
+h2 { margin: 0; font-size: 23px; line-height: 1.2; }
+.step-label { margin: 0 0 5px; color: var(--orange); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; }
+.mode-switch { display: grid; grid-template-columns: 1fr 1fr; padding: 4px; background: var(--white); border: 1px solid var(--line); border-radius: 11px; }
+.mode-switch label { position: relative; }
+.mode-switch input { position: absolute; opacity: 0; pointer-events: none; }
+.mode-switch span { min-height: 42px; display: grid; place-items: center; padding: 7px 12px; border-radius: 8px; color: #515861; font-weight: 700; text-align: center; }
+.mode-switch input:checked + span { background: var(--navy); color: var(--white); }
+.mode-switch input:focus-visible + span { outline: 3px solid #76aef5; outline-offset: 2px; }
+.mode-hint { grid-column: 2; margin: 0; color: var(--muted); font-size: 14px; }
+
+.workspace { display: grid; grid-template-columns: minmax(620px, 1.08fr) minmax(440px, .92fr); gap: 22px; align-items: start; }
+.card { background: var(--white); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.section-heading { padding: 20px 24px 17px; border-bottom: 1px solid #e7ebef; }
+.section-heading p:last-child { margin: 7px 0 0; color: var(--muted); }
+#diagnostic-form { padding: 20px 24px 24px; }
+.periods-grid { display: grid; grid-template-columns: 1fr; gap: 22px; }
+.periods-grid.is-comparison { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+legend { width: 100%; padding: 0 0 6px; color: var(--navy); font-size: 19px; font-weight: 800; }
+.period-note { min-height: 38px; margin: 0 0 12px; color: var(--muted); font-size: 14px; }
+.field { margin-bottom: 11px; }
+.field label { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 7px; font-size: 15px; font-weight: 700; }
+.required-mark { color: var(--orange); font-size: 18px; line-height: 1; }
+.field input { width: 100%; min-height: 46px; padding: 9px 12px; color: var(--ink); background: #fcfcfc; border: 1px solid #c9d2db; border-radius: 9px; }
+.field input:hover { border-color: #8da0b3; }
+.field input:focus-visible, button:focus-visible { outline: 3px solid rgba(47, 128, 237, .4); outline-offset: 2px; }
+.field input[aria-invalid="true"] { border: 2px solid var(--danger); background: #fffafa; }
+.field-error { min-height: 20px; margin: 5px 0 0; color: var(--danger); font-size: 13px; font-weight: 700; }
+.comparison-tip { margin: 4px 0 15px; padding: 10px 12px; color: var(--muted); background: var(--soft); border-radius: 8px; font-size: 14px; }
+.form-actions { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+.primary-button, .secondary-button, .dialog-confirm, .dialog-cancel { min-height: 48px; padding: 11px 18px; border-radius: 9px; font-weight: 800; }
+.primary-button { width: 100%; color: var(--white); background: var(--navy); border: 0; }
+.primary-button:hover:not(:disabled) { background: var(--navy-dark); }
+.primary-button:disabled { cursor: not-allowed; background: #aab4bf; }
+
+.result-content { padding: 22px 24px 24px; }
+.result-placeholder { min-height: 130px; display: flex; align-items: center; gap: 18px; padding: 24px; background: var(--soft); border-radius: 14px; }
+.status-dot { flex: 0 0 18px; width: 18px; height: 18px; background: #717980; border-radius: 50%; }
+.result-kicker, .metric-label, .conclusion-label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.result-placeholder strong { display: block; font-size: 24px; line-height: 1.25; }
+.privacy-note { margin: 20px 0 0; color: var(--muted); font-size: 14px; }
+.conclusion { padding: 20px; background: #edf4fb; border-left: 5px solid var(--blue); border-radius: 10px; }
+.conclusion--system { background: #f4dfdc; border-left-color: var(--danger); }
+.conclusion--stable { background: #f4f6f7; border-left-color: #7f8d99; }
+.conclusion-zone { margin: 0 0 9px; color: var(--navy); font-size: 31px; line-height: 1.1; }
+.conclusion-fact { margin: 0; font-size: 19px; font-weight: 700; }
+.meaning { margin-top: 14px; padding: 17px; border: 1px solid var(--line); border-left: 4px solid var(--orange); border-radius: 9px; }
+.meaning p { margin: 0; font-size: 18px; font-weight: 700; }
+.risk { margin: 16px 0 0; padding: 15px 18px; color: #774817; background: var(--warning-bg); border-radius: 10px; font-weight: 700; }
+.metrics-title { margin: 20px 0 8px; font-size: 18px; }
+.metrics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 18px; border-top: 1px solid var(--line); }
+.metric { min-width: 0; padding: 12px 2px; border-bottom: 1px solid var(--line); }
+.metric strong { display: block; overflow-wrap: anywhere; color: var(--navy); font-size: 19px; }
+.metric-change { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; }
+.metric-change.down { color: var(--danger); }
+.metric-change.up { color: var(--success); }
+.comparison-label { color: var(--muted); font-weight: 400; }
+
+.step-label--light { color: #f3a17e; }
+.secondary-button { color: var(--navy); background: var(--white); border: 1px solid #91a6ba; }
+.secondary-button:hover { background: #f1f5f8; }
+
+dialog { width: min(480px, calc(100% - 32px)); padding: 0; border: 0; border-radius: 15px; box-shadow: 0 24px 70px rgba(0,0,0,.3); }
+dialog::backdrop { background: rgba(18, 20, 24, .65); }
+dialog form { padding: 28px; }
+dialog p { color: var(--muted); }
+.dialog-actions { margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px; }
+.dialog-cancel { color: var(--ink); background: var(--white); border: 1px solid var(--line); }
+.dialog-confirm { color: var(--white); background: var(--danger); border: 0; }
+
+@media (max-width: 1100px) {
+  .workspace { grid-template-columns: 1fr; }
+  .result-card { min-height: 0; }
+}
+
+@media (max-width: 767px) {
+  .hero__inner, .page-shell { width: min(100% - 28px, 680px); }
+  .hero__inner { padding: 16px 0 15px; }
+  h1 { font-size: clamp(26px, 6vw, 32px); }
+  .subtitle { font-size: 16px; }
+  .page-shell { margin-top: 20px; }
+  .mode-panel { grid-template-columns: 1fr; padding: 17px 20px; }
+  .mode-hint { grid-column: 1; }
+  .workspace { gap: 20px; }
+  .section-heading, #diagnostic-form, .result-content { padding-left: 20px; padding-right: 20px; }
+  .periods-grid.is-comparison { grid-template-columns: 1fr; }
+  .period + .period { padding-top: 21px; border-top: 2px solid #e6ebef; }
+  .form-actions { grid-template-columns: 1fr; }
+  .secondary-button { width: 100%; }
+}
+
+@media (max-width: 430px) {
+  body { font-size: 16px; }
+  .hero__inner, .page-shell { width: calc(100% - 20px); }
+  h1 { font-size: 25px; overflow-wrap: anywhere; }
+  .subtitle span { padding: 0 2px; }
+  h2 { font-size: 22px; }
+  .section-heading, #diagnostic-form, .result-content { padding-left: 16px; padding-right: 16px; }
+  .metrics-grid { grid-template-columns: 1fr; }
+  .conclusion-zone { font-size: 29px; }
+  .dialog-actions { flex-direction: column-reverse; }
+  .dialog-actions button { width: 100%; }
+}
+
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__inner">
+      <div>
+        <p class="eyebrow">Розница в цифрах</p>
+        <h1>Диагностика показателей магазина</h1>
+        <p class="subtitle">Трафик <span>•</span> Конверсия <span>•</span> Средний чек <span>•</span> Прибыльность</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <div class="workspace">
+      <section class="card input-card" aria-labelledby="input-title">
+        <section class="mode-panel" aria-labelledby="mode-title">
+          <h2 id="mode-title">Режим анализа</h2>
+          <div class="mode-switch" role="radiogroup" aria-label="Режим анализа">
+            <label><input type="radio" name="mode" value="current" checked><span>Текущее состояние</span></label>
+            <label><input type="radio" name="mode" value="compare"><span>Сравнение периодов</span></label>
+          </div>
+          <p class="mode-hint" id="mode-hint">Рассчитайте базовые показатели без преждевременных выводов.</p>
+        </section>
+        <div class="section-heading">
+          <h2 id="input-title">Введите данные за один период</h2>
+          <p id="input-description">Все пять показателей обязательны.</p>
+        </div>
+        <form id="diagnostic-form" novalidate>
+          <div class="periods-grid">
+            <fieldset class="period" data-period="period1">
+              <legend>Текущий период</legend>
+              <p class="period-note">Укажите итоговые данные за выбранный срок.</p>
+              <div class="fields"></div>
+            </fieldset>
+            <fieldset class="period" data-period="period2" hidden>
+              <legend>Период 2</legend>
+              <p class="period-note">Срок и условия должны быть сопоставимы.</p>
+              <div class="fields"></div>
+            </fieldset>
+          </div>
+          <p class="comparison-tip">Сопоставляйте периоды одинаковой длительности и со сходными условиями работы.</p>
+          <div class="form-actions">
+            <button class="primary-button" id="diagnose-button" type="submit" disabled>Провести диагностику</button>
+            <button class="secondary-button" id="clear-button" type="button">Очистить данные</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+        <div class="section-heading">
+          <h2 id="result-title">Управленческий вывод</h2>
+          <p>Сначала результат, затем показатели и смысл.</p>
+        </div>
+        <div id="result-content" class="result-content">
+          <div class="result-placeholder">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div><span class="result-kicker">Готово к расчёту</span><strong>Заполните обязательные поля</strong></div>
+          </div>
+          <p class="privacy-note">Расчёт выполняется только в этом браузере. Данные никуда не отправляются.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <dialog id="clear-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+    <form method="dialog">
+      <h2 id="dialog-title">Очистить все данные?</h2>
+      <p id="dialog-description">Введённые значения и сохранённый результат будут удалены из этого браузера.</p>
+      <div class="dialog-actions">
+        <button class="dialog-cancel" value="cancel">Отмена</button>
+        <button class="dialog-confirm" id="confirm-clear" value="confirm">Очистить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script>
+'use strict';
+
+const SIGNIFICANCE_THRESHOLD = 0.05;
+const STORAGE_KEY = 'diagnostika-pokazateley-magazina-v1';
+
+const FIELD_DEFINITIONS = [
+  { key: 'revenue', label: 'Выручка после возвратов, ₽', inputMode: 'decimal' },
+  { key: 'checks', label: 'Количество чеков', inputMode: 'numeric', positive: true, integer: true },
+  { key: 'items', label: 'Количество проданных товаров', inputMode: 'numeric', positive: true, integer: true },
+  { key: 'visitors', label: 'Количество посетителей', inputMode: 'numeric', positive: true, integer: true },
+  { key: 'markup', label: 'Средняя торговая наценка, %', inputMode: 'decimal' }
+];
+
+function parseNumber(value) {
+  const normalized = String(value ?? '').trim().replace(',', '.');
+  if (!normalized || !/^-?\d+(?:\.\d+)?$/.test(normalized)) return null;
+  const number = Number(normalized);
+  return Number.isFinite(number) ? number : null;
+}
+
+function validatePeriod(raw) {
+  const values = {};
+  const errors = {};
+  FIELD_DEFINITIONS.forEach((field) => {
+    const original = raw[field.key];
+    if (String(original ?? '').trim() === '') {
+      errors[field.key] = 'Заполните обязательное поле.';
+      return;
+    }
+    const value = parseNumber(original);
+    if (value === null) {
+      errors[field.key] = 'Введите число без букв и посторонних символов.';
+      return;
+    }
+    if (value < 0) {
+      errors[field.key] = 'Значение не может быть отрицательным.';
+      return;
+    }
+    if (field.positive && value === 0) {
+      errors[field.key] = 'Значение должно быть больше нуля.';
+      return;
+    }
+    if (field.integer && !Number.isInteger(value)) {
+      errors[field.key] = 'Введите целое число';
+      return;
+    }
+    values[field.key] = value;
+  });
+
+  if (!errors.checks && !errors.visitors && values.checks > values.visitors) {
+    errors.checks = 'Количество чеков не может быть больше посетителей.';
+  }
+  if (!errors.items && !errors.checks && values.items < values.checks) {
+    errors.items = 'Количество товаров не может быть меньше чеков.';
+  }
+  return { valid: Object.keys(errors).length === 0, values, errors };
+}
+
+function calculateMetrics(data) {
+  return {
+    averageCheck: data.revenue / data.checks,
+    conversion: data.checks / data.visitors * 100,
+    itemsPerCheck: data.items / data.checks,
+    averageItemPrice: data.revenue / data.items,
+    grossProfit: data.revenue * data.markup / (100 + data.markup)
+  };
+}
+
+function percentageChange(first, second) {
+  if (first === 0) throw new Error('Нельзя рассчитать изменение: значение первого периода равно нулю.');
+  return (second - first) / Math.abs(first);
+}
+
+// Небольшой допуск защищает точную границу −5% от погрешности двоичных дробей JavaScript.
+function isDecline(change) { return change < -SIGNIFICANCE_THRESHOLD - 1e-10; }
+
+function comparePeriods(first, second) {
+  const firstMetrics = calculateMetrics(first);
+  const secondMetrics = calculateMetrics(second);
+  const changes = {
+    traffic: percentageChange(first.visitors, second.visitors),
+    conversion: percentageChange(firstMetrics.conversion, secondMetrics.conversion),
+    averageCheck: percentageChange(firstMetrics.averageCheck, secondMetrics.averageCheck),
+    profitability: percentageChange(firstMetrics.grossProfit, secondMetrics.grossProfit),
+    itemsPerCheck: percentageChange(firstMetrics.itemsPerCheck, secondMetrics.itemsPerCheck),
+    averageItemPrice: percentageChange(firstMetrics.averageItemPrice, secondMetrics.averageItemPrice),
+    checks: percentageChange(first.checks, second.checks),
+    revenue: first.revenue === 0 ? null : percentageChange(first.revenue, second.revenue),
+    markup: first.markup === 0 ? (second.markup === 0 ? 0 : null) : percentageChange(first.markup, second.markup)
+  };
+  return { firstData: first, secondData: second, firstMetrics, secondMetrics, changes, diagnosis: diagnose(changes) };
+}
+
+function diagnose(changes) {
+  const down = {
+    traffic: isDecline(changes.traffic),
+    conversion: isDecline(changes.conversion),
+    averageCheck: isDecline(changes.averageCheck),
+    profitability: isDecline(changes.profitability)
+  };
+  let zone = 'Не выявлена';
+
+  if (down.traffic && down.conversion && down.averageCheck && down.profitability) {
+    zone = 'Системное снижение';
+  } else if (down.profitability && (
+    (changes.revenue !== null && changes.revenue >= -SIGNIFICANCE_THRESHOLD && isDecline(changes.markup)) ||
+    (isDecline(changes.markup) && changes.profitability < changes.traffic && changes.profitability < changes.conversion && changes.profitability < changes.averageCheck)
+  )) {
+    zone = 'Прибыльность';
+  } else if (down.traffic && down.conversion) {
+    zone = changes.traffic <= changes.conversion ? 'Трафик' : 'Конверсия';
+  } else if (down.traffic && !down.conversion && isDecline(changes.checks)) {
+    zone = 'Трафик';
+  } else if (!down.traffic && down.conversion && (isDecline(changes.checks) || changes.checks < changes.traffic)) {
+    zone = 'Конверсия';
+  } else if (down.averageCheck && changes.traffic >= changes.averageCheck && changes.conversion >= changes.averageCheck) {
+    zone = 'Средний чек';
+  } else if (down.profitability) {
+    zone = 'Прибыльность';
+  }
+
+  const content = diagnosisContent(zone, changes, down);
+  const risk = additionalRisk(zone, down);
+  return { zone, fact: content.fact, meaning: content.meaning, risk };
+}
+
+function diagnosisContent(zone, changes, down) {
+  if (zone === 'Трафик') return {
+    fact: down.conversion ? 'Трафик снизился сильнее конверсии.' : 'Посетителей стало меньше, при этом конверсия существенно не ухудшилась.',
+    meaning: 'Магазин получает недостаточно входящего потока.'
+  };
+  if (zone === 'Конверсия') return {
+    fact: down.traffic ? 'Конверсия снизилась сильнее трафика.' : 'Трафик сохранился или вырос, но покупок стало меньше.',
+    meaning: 'Посетители приходят, но реже совершают покупку.'
+  };
+  if (zone === 'Средний чек') {
+    const itemsDown = isDecline(changes.itemsPerCheck);
+    const priceDown = isDecline(changes.averageItemPrice);
+    let fact = 'Средний чек снизился, но отдельный внутренний фактор не выделился существенно.';
+    if (itemsDown && priceDown) fact = 'Средний чек снизился одновременно из-за количества товаров и средней цены.';
+    else if (itemsDown) fact = 'Средний чек снизился из-за меньшего количества товаров в покупке.';
+    else if (priceDown) fact = 'Средний чек снизился из-за уменьшения средней цены проданного товара.';
+    return { fact, meaning: 'Сумма одной покупки стала меньше.' };
+  }
+  if (zone === 'Прибыльность') return {
+    fact: isDecline(changes.revenue)
+      ? 'Выручка снизилась, а ориентировочная валовая прибыль сократилась ещё сильнее.'
+      : 'Выручка сохранилась или выросла, но ориентировочная валовая прибыль снизилась.',
+    meaning: 'Магазин продаёт, но зарабатывает меньше с этих продаж.'
+  };
+  if (zone === 'Системное снижение') return {
+    fact: 'Одновременно ухудшились трафик, конверсия, средний чек и прибыльность.',
+    meaning: 'Проблема не ограничивается одним показателем.'
+  };
+  return {
+    fact: 'Ключевые показатели не ухудшились существенно.',
+    meaning: 'Система работает стабильно относительно первого периода.'
+  };
+}
+
+function additionalRisk(zone, down) {
+  if (zone === 'Системное снижение' || zone === 'Не выявлена') return '';
+  const order = ['traffic', 'conversion', 'averageCheck', 'profitability'];
+  const names = { traffic: 'Трафик', conversion: 'Конверсия', averageCheck: 'Средний чек', profitability: 'Прибыльность' };
+  return order.map((key) => names[key]).find((name, index) => down[order[index]] && name !== zone) || '';
+}
+
+function analyze(mode, rawFirst, rawSecond) {
+  const first = validatePeriod(rawFirst);
+  if (!first.valid) return { valid: false, period1: first };
+  if (mode === 'current') return { valid: true, mode, firstData: first.values, firstMetrics: calculateMetrics(first.values) };
+  if (first.values.revenue === 0) {
+    first.valid = false;
+    first.errors.revenue = 'Для сравнения выручка первого периода должна быть больше нуля';
+  }
+  const second = validatePeriod(rawSecond || {});
+  if (!first.valid || !second.valid) return { valid: false, period1: first, period2: second };
+  return { valid: true, mode, ...comparePeriods(first.values, second.values) };
+}
+
+function formatNumber(value, digits = 0) {
+  return new Intl.NumberFormat('ru-RU', { maximumFractionDigits: digits, minimumFractionDigits: digits }).format(value);
+}
+
+function formatChange(value) {
+  const percent = value * 100;
+  return `${percent > 0 ? '+' : ''}${formatNumber(percent, 1)}%`;
+}
+
+function initApp() {
+  const form = document.querySelector('#diagnostic-form');
+  if (!form) return;
+  const modeInputs = [...document.querySelectorAll('input[name="mode"]')];
+  const periodElements = [...document.querySelectorAll('.period')];
+  const button = document.querySelector('#diagnose-button');
+  const clearButton = document.querySelector('#clear-button');
+  const dialog = document.querySelector('#clear-dialog');
+
+  periodElements.forEach((element, periodIndex) => {
+    const fields = element.querySelector('.fields');
+    FIELD_DEFINITIONS.forEach((field) => {
+      const id = `p${periodIndex + 1}-${field.key}`;
+      fields.insertAdjacentHTML('beforeend', `<div class="field"><label for="${id}"><span>${field.label}</span><span class="required-mark" aria-hidden="true">•</span></label><input id="${id}" name="${id}" inputmode="${field.inputMode}" autocomplete="off" aria-describedby="${id}-error"><p class="field-error" id="${id}-error"></p></div>`);
+    });
+  });
+
+  const currentMode = () => modeInputs.find((input) => input.checked).value;
+  const readPeriod = (index) => Object.fromEntries(FIELD_DEFINITIONS.map((field) => [field.key, document.querySelector(`#p${index}-${field.key}`).value]));
+  const paintErrors = (index, validation) => FIELD_DEFINITIONS.forEach((field) => {
+    const input = document.querySelector(`#p${index}-${field.key}`);
+    const error = document.querySelector(`#p${index}-${field.key}-error`);
+    const message = validation?.errors?.[field.key] || '';
+    input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    error.textContent = message;
+  });
+  const save = () => {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify({ mode: currentMode(), period1: readPeriod(1), period2: readPeriod(2) })); } catch (_) { /* local file privacy settings may disable storage */ }
+  };
+  const updateButton = (showErrors = false) => {
+    const first = validatePeriod(readPeriod(1));
+    const second = currentMode() === 'compare' ? validatePeriod(readPeriod(2)) : { valid: true };
+    const comparisonRevenueIsZero = currentMode() === 'compare' && first.valid && first.values.revenue === 0;
+    if (comparisonRevenueIsZero) {
+      first.valid = false;
+      first.errors.revenue = 'Для сравнения выручка первого периода должна быть больше нуля';
+    }
+    button.disabled = !(first.valid && second.valid);
+    if (showErrors || comparisonRevenueIsZero) paintErrors(1, first);
+    if (showErrors && currentMode() === 'compare') paintErrors(2, second);
+  };
+
+  function setMode(mode) {
+    const comparison = mode === 'compare';
+    periodElements[1].hidden = !comparison;
+    document.querySelector('.periods-grid').classList.toggle('is-comparison', comparison);
+    periodElements[0].querySelector('legend').textContent = comparison ? 'Период 1' : 'Текущий период';
+    document.querySelector('#input-title').textContent = comparison ? 'Введите два сопоставимых периода' : 'Введите данные за один период';
+    document.querySelector('#input-description').textContent = comparison ? 'Одинаковая длительность и условия сравнения. Все поля обязательны.' : 'Все пять показателей обязательны.';
+    document.querySelector('#mode-hint').textContent = comparison ? 'Найдите главную слабую зону и один дополнительный риск.' : 'Рассчитайте базовые показатели без преждевременных выводов.';
+    updateButton();
+  }
+
+  function metricCard(label, value, change) {
+    const direction = change === undefined ? '' : (change < -SIGNIFICANCE_THRESHOLD ? 'down' : change > SIGNIFICANCE_THRESHOLD ? 'up' : '');
+    return `<div class="metric"><span class="metric-label">${label}</span><strong>${value}</strong>${change === undefined ? '' : `<span class="metric-change ${direction}">${formatChange(change)} к периоду 1</span>`}</div>`;
+  }
+
+  function render(result) {
+    const target = document.querySelector('#result-content');
+    if (result.mode === 'current') {
+      const m = result.firstMetrics;
+      target.innerHTML = `<div class="conclusion conclusion--stable"><span class="conclusion-label">Оценка текущего состояния</span><h3 class="conclusion-zone">Показатели рассчитаны</h3><p class="conclusion-fact">Для определения главной слабой зоны сравните два сопоставимых периода.</p></div><h3 class="metrics-title">Текущие показатели</h3><div class="metrics-grid">${metricCard('Средний чек', `${formatNumber(m.averageCheck, 2)} ₽`)}${metricCard('Конверсия', `${formatNumber(m.conversion, 2)}%`)}${metricCard('Товаров в покупке', formatNumber(m.itemsPerCheck, 2))}${metricCard('Средняя цена товара', `${formatNumber(m.averageItemPrice, 2)} ₽`)}${metricCard('Ориентировочная валовая прибыль', `${formatNumber(m.grossProfit, 2)} ₽`)}</div><p class="privacy-note">Заключение основано только на введённых показателях. Данные хранятся локально в браузере.</p>`;
+      return;
+    }
+    const d = result.diagnosis;
+    const cls = d.zone === 'Системное снижение' ? ' conclusion--system' : d.zone === 'Не выявлена' ? ' conclusion--stable' : '';
+    target.innerHTML = `<div class="conclusion${cls}"><span class="conclusion-label">Главная слабая зона</span><h3 class="conclusion-zone">${d.zone}</h3><p class="conclusion-fact">${d.fact}</p></div><div class="meaning"><span class="conclusion-label">Это означает</span><p>${d.meaning}</p></div>${d.risk ? `<p class="risk">Дополнительный риск: ${d.risk}.</p>` : ''}<h3 class="metrics-title">Изменение ключевых показателей</h3><div class="metrics-grid">${metricCard('Трафик', `${formatNumber(result.secondData.visitors)} посетителей`, result.changes.traffic)}${metricCard('Конверсия', `${formatNumber(result.secondMetrics.conversion, 2)}%`, result.changes.conversion)}${metricCard('Средний чек', `${formatNumber(result.secondMetrics.averageCheck, 2)} ₽`, result.changes.averageCheck)}${metricCard('Ориентировочная валовая прибыль', `${formatNumber(result.secondMetrics.grossProfit, 2)} ₽`, result.changes.profitability)}</div><p class="privacy-note">Вывод требует проверки ассортимента, цен, наличия, трафика и условий работы магазина.</p>`;
+  }
+
+  modeInputs.forEach((input) => input.addEventListener('change', () => { setMode(currentMode()); save(); }));
+  form.addEventListener('input', () => { updateButton(true); save(); });
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const result = analyze(currentMode(), readPeriod(1), readPeriod(2));
+    paintErrors(1, result.period1 || validatePeriod(readPeriod(1)));
+    if (currentMode() === 'compare') paintErrors(2, result.period2 || validatePeriod(readPeriod(2)));
+    if (!result.valid) { updateButton(true); return; }
+    render(result); save();
+  });
+  clearButton.addEventListener('click', () => dialog.showModal());
+  document.querySelector('#confirm-clear').addEventListener('click', () => {
+    form.reset();
+    modeInputs[0].checked = true;
+    periodElements.forEach((element) => element.querySelectorAll('input').forEach((input) => { input.value = ''; input.setAttribute('aria-invalid', 'false'); }));
+    document.querySelectorAll('.field-error').forEach((error) => { error.textContent = ''; });
+    try { localStorage.removeItem(STORAGE_KEY); } catch (_) { /* storage unavailable */ }
+    setMode('current');
+    document.querySelector('#result-content').innerHTML = '<div class="result-placeholder"><span class="status-dot" aria-hidden="true"></span><div><span class="result-kicker">Готово к расчёту</span><strong>Заполните обязательные поля</strong></div></div><p class="privacy-note">Расчёт выполняется только в этом браузере. Данные никуда не отправляются.</p>';
+  });
+
+  try {
+    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (stored) {
+      const modeInput = modeInputs.find((input) => input.value === stored.mode) || modeInputs[0];
+      modeInput.checked = true;
+      [stored.period1, stored.period2].forEach((data, index) => FIELD_DEFINITIONS.forEach((field) => { document.querySelector(`#p${index + 1}-${field.key}`).value = data?.[field.key] ?? ''; }));
+    }
+  } catch (_) { /* ignore damaged or unavailable local storage */ }
+  setMode(currentMode());
+}
+
+const DiagnosticEngine = { SIGNIFICANCE_THRESHOLD, parseNumber, validatePeriod, calculateMetrics, percentageChange, comparePeriods, diagnose, analyze };
+if (typeof window !== 'undefined') { window.DiagnosticEngine = DiagnosticEngine; document.addEventListener('DOMContentLoaded', initApp); }
+if (typeof module !== 'undefined' && module.exports) module.exports = DiagnosticEngine;
+
+  </script>
+</body>
+</html>
