@@ -84,7 +84,7 @@ function comparePeriods(first, second) {
     revenue: first.revenue === 0 ? null : percentageChange(first.revenue, second.revenue),
     markup: first.markup === 0 ? (second.markup === 0 ? 0 : null) : percentageChange(first.markup, second.markup)
   };
-  return { firstMetrics, secondMetrics, changes, diagnosis: diagnose(changes) };
+  return { firstData: first, secondData: second, firstMetrics, secondMetrics, changes, diagnosis: diagnose(changes) };
 }
 
 function diagnose(changes) {
@@ -139,7 +139,9 @@ function diagnosisContent(zone, changes, down) {
     return { fact, meaning: 'Сумма одной покупки стала меньше.' };
   }
   if (zone === 'Прибыльность') return {
-    fact: 'Выручка сохранилась или выросла, но ориентировочная валовая прибыль снизилась.',
+    fact: isDecline(changes.revenue)
+      ? 'Выручка снизилась, а ориентировочная валовая прибыль сократилась ещё сильнее.'
+      : 'Выручка сохранилась или выросла, но ориентировочная валовая прибыль снизилась.',
     meaning: 'Магазин продаёт, но зарабатывает меньше с этих продаж.'
   };
   if (zone === 'Системное снижение') return {
@@ -162,13 +164,13 @@ function additionalRisk(zone, down) {
 function analyze(mode, rawFirst, rawSecond) {
   const first = validatePeriod(rawFirst);
   if (!first.valid) return { valid: false, period1: first };
-  const firstMetrics = calculateMetrics(first.values);
-  if (mode === 'current') return { valid: true, mode, firstMetrics };
-  const second = validatePeriod(rawSecond || {});
-  if (!second.valid) return { valid: false, period1: first, period2: second };
+  if (mode === 'current') return { valid: true, mode, firstData: first.values, firstMetrics: calculateMetrics(first.values) };
   if (first.values.revenue === 0) {
-    return { valid: false, period1: { ...first, errors: { ...first.errors, revenue: 'Для сравнения выручка первого периода должна быть больше нуля.' } }, period2: second };
+    first.valid = false;
+    first.errors.revenue = 'Для сравнения выручка первого периода должна быть больше нуля';
   }
+  const second = validatePeriod(rawSecond || {});
+  if (!first.valid || !second.valid) return { valid: false, period1: first, period2: second };
   return { valid: true, mode, ...comparePeriods(first.values, second.values) };
 }
 
@@ -213,8 +215,14 @@ function initApp() {
   const updateButton = (showErrors = false) => {
     const first = validatePeriod(readPeriod(1));
     const second = currentMode() === 'compare' ? validatePeriod(readPeriod(2)) : { valid: true };
-    button.disabled = !(first.valid && second.valid && (currentMode() !== 'compare' || first.values.revenue > 0));
-    if (showErrors) { paintErrors(1, first); if (currentMode() === 'compare') paintErrors(2, second); }
+    const comparisonRevenueIsZero = currentMode() === 'compare' && first.valid && first.values.revenue === 0;
+    if (comparisonRevenueIsZero) {
+      first.valid = false;
+      first.errors.revenue = 'Для сравнения выручка первого периода должна быть больше нуля';
+    }
+    button.disabled = !(first.valid && second.valid);
+    if (showErrors || comparisonRevenueIsZero) paintErrors(1, first);
+    if (showErrors && currentMode() === 'compare') paintErrors(2, second);
   };
 
   function setMode(mode) {
@@ -242,7 +250,7 @@ function initApp() {
     }
     const d = result.diagnosis;
     const cls = d.zone === 'Системное снижение' ? ' conclusion--system' : d.zone === 'Не выявлена' ? ' conclusion--stable' : '';
-    target.innerHTML = `<div class="conclusion${cls}"><span class="conclusion-label">Главная слабая зона</span><h3 class="conclusion-zone">${d.zone}</h3><p class="conclusion-fact">${d.fact}</p></div><div class="meaning"><span class="conclusion-label">Это означает</span><p>${d.meaning}</p></div>${d.risk ? `<p class="risk">Дополнительный риск: ${d.risk}.</p>` : ''}<h3 class="metrics-title">Изменение ключевых показателей</h3><div class="metrics-grid">${metricCard('Трафик', `${formatNumber(result.secondMetrics ? readPeriod(2).visitors : 0)} посетителей`, result.changes.traffic)}${metricCard('Конверсия', `${formatNumber(result.secondMetrics.conversion, 2)}%`, result.changes.conversion)}${metricCard('Средний чек', `${formatNumber(result.secondMetrics.averageCheck, 2)} ₽`, result.changes.averageCheck)}${metricCard('Ориентировочная валовая прибыль', `${formatNumber(result.secondMetrics.grossProfit, 2)} ₽`, result.changes.profitability)}</div><p class="privacy-note">Вывод требует проверки ассортимента, цен, наличия, трафика и условий работы магазина.</p>`;
+    target.innerHTML = `<div class="conclusion${cls}"><span class="conclusion-label">Главная слабая зона</span><h3 class="conclusion-zone">${d.zone}</h3><p class="conclusion-fact">${d.fact}</p></div><div class="meaning"><span class="conclusion-label">Это означает</span><p>${d.meaning}</p></div>${d.risk ? `<p class="risk">Дополнительный риск: ${d.risk}.</p>` : ''}<h3 class="metrics-title">Изменение ключевых показателей</h3><div class="metrics-grid">${metricCard('Трафик', `${formatNumber(result.secondData.visitors)} посетителей`, result.changes.traffic)}${metricCard('Конверсия', `${formatNumber(result.secondMetrics.conversion, 2)}%`, result.changes.conversion)}${metricCard('Средний чек', `${formatNumber(result.secondMetrics.averageCheck, 2)} ₽`, result.changes.averageCheck)}${metricCard('Ориентировочная валовая прибыль', `${formatNumber(result.secondMetrics.grossProfit, 2)} ₽`, result.changes.profitability)}</div><p class="privacy-note">Вывод требует проверки ассортимента, цен, наличия, трафика и условий работы магазина.</p>`;
   }
 
   modeInputs.forEach((input) => input.addEventListener('change', () => { setMode(currentMode()); save(); }));
