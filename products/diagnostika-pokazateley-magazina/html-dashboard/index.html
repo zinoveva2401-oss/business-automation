@@ -10,7 +10,6 @@
 <body>
   <header class="hero">
     <div class="hero__inner">
-      <div class="brand-mark" aria-hidden="true">РЦ</div>
       <div>
         <p class="eyebrow">Розница в цифрах</p>
         <h1>Диагностика показателей магазина</h1>
@@ -20,22 +19,17 @@
   </header>
 
   <main class="page-shell">
-    <section class="mode-panel" aria-labelledby="mode-title">
-      <div>
-        <p class="step-label">Шаг 1</p>
-        <h2 id="mode-title">Выберите режим анализа</h2>
-      </div>
-      <div class="mode-switch" role="radiogroup" aria-label="Режим анализа">
-        <label><input type="radio" name="mode" value="current" checked><span>Текущее состояние</span></label>
-        <label><input type="radio" name="mode" value="compare"><span>Сравнение периодов</span></label>
-      </div>
-      <p class="mode-hint" id="mode-hint">Рассчитайте базовые показатели без преждевременных выводов.</p>
-    </section>
-
     <div class="workspace">
       <section class="card input-card" aria-labelledby="input-title">
+        <section class="mode-panel" aria-labelledby="mode-title">
+          <h2 id="mode-title">Режим анализа</h2>
+          <div class="mode-switch" role="radiogroup" aria-label="Режим анализа">
+            <label><input type="radio" name="mode" value="current" checked><span>Текущее состояние</span></label>
+            <label><input type="radio" name="mode" value="compare"><span>Сравнение периодов</span></label>
+          </div>
+          <p class="mode-hint" id="mode-hint">Рассчитайте базовые показатели без преждевременных выводов.</p>
+        </section>
         <div class="section-heading">
-          <p class="step-label">Шаг 2</p>
           <h2 id="input-title">Введите данные за один период</h2>
           <p id="input-description">Все пять показателей обязательны.</p>
         </div>
@@ -52,13 +46,16 @@
               <div class="fields"></div>
             </fieldset>
           </div>
-          <button class="primary-button" id="diagnose-button" type="submit" disabled>Провести диагностику</button>
+          <p class="comparison-tip">Сопоставляйте периоды одинаковой длительности и со сходными условиями работы.</p>
+          <div class="form-actions">
+            <button class="primary-button" id="diagnose-button" type="submit" disabled>Провести диагностику</button>
+            <button class="secondary-button" id="clear-button" type="button">Очистить данные</button>
+          </div>
         </form>
       </section>
 
       <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
         <div class="section-heading">
-          <p class="step-label">Шаг 3</p>
           <h2 id="result-title">Управленческий вывод</h2>
           <p>Сначала результат, затем показатели и смысл.</p>
         </div>
@@ -71,15 +68,6 @@
         </div>
       </section>
     </div>
-
-    <section class="actions-card" aria-labelledby="next-step-title">
-      <div>
-        <p class="step-label step-label--light">После расчёта</p>
-        <h2 id="next-step-title">Сопоставляйте периоды одинаковой длительности</h2>
-        <p>Так вывод отражает изменение работы магазина, а не разницу календарных условий.</p>
-      </div>
-      <button class="secondary-button" id="clear-button" type="button">Очистить данные</button>
-    </section>
   </main>
 
   <dialog id="clear-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
