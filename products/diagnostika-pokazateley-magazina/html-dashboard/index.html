@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Автономная диагностика ключевых показателей розничного магазина">
+  <title>Диагностика показателей магазина</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <div class="hero__inner">
+      <div class="brand-mark" aria-hidden="true">РЦ</div>
+      <div>
+        <p class="eyebrow">Розница в цифрах</p>
+        <h1>Диагностика показателей магазина</h1>
+        <p class="subtitle">Трафик <span>•</span> Конверсия <span>•</span> Средний чек <span>•</span> Прибыльность</p>
+      </div>
+    </div>
+  </header>
+
+  <main class="page-shell">
+    <section class="mode-panel" aria-labelledby="mode-title">
+      <div>
+        <p class="step-label">Шаг 1</p>
+        <h2 id="mode-title">Выберите режим анализа</h2>
+      </div>
+      <div class="mode-switch" role="radiogroup" aria-label="Режим анализа">
+        <label><input type="radio" name="mode" value="current" checked><span>Текущее состояние</span></label>
+        <label><input type="radio" name="mode" value="compare"><span>Сравнение периодов</span></label>
+      </div>
+      <p class="mode-hint" id="mode-hint">Рассчитайте базовые показатели без преждевременных выводов.</p>
+    </section>
+
+    <div class="workspace">
+      <section class="card input-card" aria-labelledby="input-title">
+        <div class="section-heading">
+          <p class="step-label">Шаг 2</p>
+          <h2 id="input-title">Введите данные за один период</h2>
+          <p id="input-description">Все пять показателей обязательны.</p>
+        </div>
+        <form id="diagnostic-form" novalidate>
+          <div class="periods-grid">
+            <fieldset class="period" data-period="period1">
+              <legend>Текущий период</legend>
+              <p class="period-note">Укажите итоговые данные за выбранный срок.</p>
+              <div class="fields"></div>
+            </fieldset>
+            <fieldset class="period" data-period="period2" hidden>
+              <legend>Период 2</legend>
+              <p class="period-note">Срок и условия должны быть сопоставимы.</p>
+              <div class="fields"></div>
+            </fieldset>
+          </div>
+          <button class="primary-button" id="diagnose-button" type="submit" disabled>Провести диагностику</button>
+        </form>
+      </section>
+
+      <section class="card result-card" aria-labelledby="result-title" aria-live="polite">
+        <div class="section-heading">
+          <p class="step-label">Шаг 3</p>
+          <h2 id="result-title">Управленческий вывод</h2>
+          <p>Сначала результат, затем показатели и смысл.</p>
+        </div>
+        <div id="result-content" class="result-content">
+          <div class="result-placeholder">
+            <span class="status-dot" aria-hidden="true"></span>
+            <div><span class="result-kicker">Готово к расчёту</span><strong>Заполните обязательные поля</strong></div>
+          </div>
+          <p class="privacy-note">Расчёт выполняется только в этом браузере. Данные никуда не отправляются.</p>
+        </div>
+      </section>
+    </div>
+
+    <section class="actions-card" aria-labelledby="next-step-title">
+      <div>
+        <p class="step-label step-label--light">После расчёта</p>
+        <h2 id="next-step-title">Сопоставляйте периоды одинаковой длительности</h2>
+        <p>Так вывод отражает изменение работы магазина, а не разницу календарных условий.</p>
+      </div>
+      <button class="secondary-button" id="clear-button" type="button">Очистить данные</button>
+    </section>
+  </main>
+
+  <dialog id="clear-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+    <form method="dialog">
+      <h2 id="dialog-title">Очистить все данные?</h2>
+      <p id="dialog-description">Введённые значения и сохранённый результат будут удалены из этого браузера.</p>
+      <div class="dialog-actions">
+        <button class="dialog-cancel" value="cancel">Отмена</button>
+        <button class="dialog-confirm" id="confirm-clear" value="confirm">Очистить</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>

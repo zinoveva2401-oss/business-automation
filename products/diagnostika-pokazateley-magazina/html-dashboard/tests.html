@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Тесты — Диагностика показателей магазина</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .test-shell{width:min(1100px,calc(100% - 28px));margin:28px auto 50px}.test-summary{padding:24px;background:#173f70;color:#fff;border-radius:16px}.test-summary h1{font-family:Arial,sans-serif;font-size:32px}.test-list{display:grid;gap:14px;margin-top:20px}.test-case{padding:20px;background:#fff;border:1px solid #d7dee5;border-left:7px solid #a63f35;border-radius:12px}.test-case.pass{border-left-color:#3d765b}.test-case h2{font-size:19px}.test-case dl{display:grid;grid-template-columns:170px 1fr;gap:6px 12px;margin:14px 0 0}.test-case dt{font-weight:700;color:#66707b}.test-case dd{margin:0}.status{font-weight:800}.pass .status{color:#3d765b}@media(max-width:600px){.test-case dl{grid-template-columns:1fr}.test-case dd{margin-bottom:8px}}
+  </style>
+</head>
+<body>
+  <main class="test-shell">
+    <header class="test-summary"><p class="step-label step-label--light">Автоматическая проверка</p><h1 id="summary">Выполняются 16 тестов…</h1><p>Расчёты запускаются локально, без сервера и сети.</p></header>
+    <section class="test-list" id="test-list" aria-live="polite"></section>
+  </main>
+  <script src="app.js"></script>
+  <script>
+    'use strict';
+    const E = window.DiagnosticEngine;
+    const p = (revenue, checks, items, visitors, markup=50) => ({revenue, checks, items, visitors, markup});
+    const zone = (a,b) => E.analyze('compare',a,b).diagnosis.zone;
+    const fact = (a,b) => E.analyze('compare',a,b).diagnosis.fact;
+    const cases = [
+      ['Трафик снизился, конверсия стабильна','Трафик',()=>zone(p(100000,100,200,500),p(80000,80,160,400))],
+      ['Трафик стабилен, конверсия снизилась','Конверсия',()=>zone(p(100000,100,200,500),p(90000,80,160,500))],
+      ['Трафик вырос, конверсия снизилась','Конверсия',()=>zone(p(100000,100,200,500),p(100000,90,180,600))],
+      ['Трафик и конверсия снизились','Трафик + риск «Конверсия»',()=>{const r=E.analyze('compare',p(100000,100,200,500),p(90000,72,150,400)).diagnosis;return r.zone+' + риск «'+r.risk+'»'}],
+      ['Средний чек снизился из-за товаров в покупке','Причина: меньше товаров',()=>fact(p(100000,100,200,500),p(90000,100,150,500)).includes('меньшего количества товаров')?'Причина: меньше товаров':'Другая причина'],
+      ['Средний чек снизился из-за средней цены товара','Причина: средняя цена',()=>fact(p(100000,100,200,500),p(80000,100,200,500)).includes('средней цены')?'Причина: средняя цена':'Другая причина'],
+      ['Средний чек снизился из-за обоих факторов','Причина: оба фактора',()=>fact(p(100000,100,200,500),p(72000,100,160,500)).includes('одновременно')?'Причина: оба фактора':'Другая причина'],
+      ['Выручка выросла, прибыль снизилась','Прибыльность',()=>zone(p(100000,100,200,500,100),p(105000,100,200,500,50))],
+      ['Все четыре зоны снизились','Системное снижение',()=>zone(p(100000,100,200,500,100),p(50000,60,90,400,50))],
+      ['Все зоны стабильны','Не выявлена',()=>zone(p(100000,100,200,500),p(100000,100,200,500))],
+      ['Все зоны выросли','Не выявлена',()=>zone(p(100000,100,200,500),p(130000,120,260,550,60))],
+      ['Изменения ровно 5% или внутри порога','Не выявлена',()=>zone(p(100000,100,200,500),p(95000,95,190,475))],
+      ['Нулевой показатель','Ошибка: больше нуля',()=>E.analyze('current',p(100000,0,200,500)).period1.errors.checks.includes('больше нуля')?'Ошибка: больше нуля':'Ошибка не найдена'],
+      ['Отрицательное значение','Ошибка: отрицательное',()=>E.analyze('current',p(-1,100,200,500)).period1.errors.revenue.includes('отрицательным')?'Ошибка: отрицательное':'Ошибка не найдена'],
+      ['Текст вместо числа','Ошибка: введите число',()=>E.analyze('current',p('текст',100,200,500)).period1.errors.revenue.includes('Введите число')?'Ошибка: введите число':'Ошибка не найдена'],
+      ['Режим текущего состояния','Оценка без слабой зоны',()=>{const r=E.analyze('current',p(100000,100,200,500));return r.valid&&r.mode==='current'&&!r.diagnosis?'Оценка без слабой зоны':'Неверный вывод'}]
+    ];
+    let passed=0; const list=document.querySelector('#test-list');
+    cases.forEach(([name,expected,run],i)=>{let actual;try{actual=run()}catch(error){actual='Ошибка: '+error.message}const ok=actual===expected;if(ok)passed++;list.insertAdjacentHTML('beforeend',`<article class="test-case ${ok?'pass':''}"><h2>${i+1}. ${name}</h2><dl><dt>Ожидаемый результат</dt><dd>${expected}</dd><dt>Фактический результат</dt><dd>${actual}</dd><dt>Статус</dt><dd class="status">${ok?'Пройден':'Не пройден'}</dd></dl></article>`)});
+    document.querySelector('#summary').textContent=`Пройдено ${passed} из ${cases.length}`;
+    document.documentElement.dataset.passed=String(passed);
+  </script>
+</body>
+</html>
