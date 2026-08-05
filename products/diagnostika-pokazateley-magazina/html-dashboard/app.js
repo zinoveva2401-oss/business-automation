@@ -107,13 +107,15 @@ function diagnose(changes) {
     (isDecline(changes.markup) && changes.profitability < changes.traffic && changes.profitability < changes.conversion && changes.profitability < changes.averageCheck)
   )) {
     zone = 'Прибыльность';
+  } else if (down.averageCheck && changes.averageCheck < changes.traffic && changes.averageCheck < changes.conversion) {
+    zone = 'Средний чек';
   } else if (down.traffic && down.conversion) {
     zone = changes.traffic <= changes.conversion ? 'Трафик' : 'Конверсия';
   } else if (down.traffic && !down.conversion && isDecline(changes.checks)) {
     zone = 'Трафик';
   } else if (!down.traffic && down.conversion && (isDecline(changes.checks) || changes.checks < changes.traffic)) {
     zone = 'Конверсия';
-  } else if (down.averageCheck && changes.traffic >= changes.averageCheck && changes.conversion >= changes.averageCheck) {
+  } else if (down.averageCheck && ((!down.traffic && !down.conversion) || trafficCompensationSignal(changes, down))) {
     zone = 'Средний чек';
   } else if (down.profitability) {
     zone = 'Прибыльность';
@@ -124,8 +126,12 @@ function diagnose(changes) {
   return { zone, fact: content.fact, meaning: content.meaning, risk };
 }
 
+function trafficCompensationSignal(changes, down) {
+  return down.traffic && !isDecline(changes.checks) && changes.conversion > SIGNIFICANCE_THRESHOLD;
+}
+
 function trafficCompensatedByConversion(zone, changes, down) {
-  return zone === 'Не выявлена' && down.traffic && !isDecline(changes.checks) && changes.conversion > SIGNIFICANCE_THRESHOLD;
+  return zone === 'Не выявлена' && trafficCompensationSignal(changes, down);
 }
 
 function diagnosisContent(zone, changes, down) {
