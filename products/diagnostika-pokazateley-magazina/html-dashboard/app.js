@@ -120,8 +120,12 @@ function diagnose(changes) {
   }
 
   const content = diagnosisContent(zone, changes, down);
-  const risk = additionalRisk(zone, down);
+  const risk = additionalRisk(zone, changes, down);
   return { zone, fact: content.fact, meaning: content.meaning, risk };
+}
+
+function trafficCompensatedByConversion(zone, changes, down) {
+  return zone === 'Не выявлена' && down.traffic && !isDecline(changes.checks) && changes.conversion > SIGNIFICANCE_THRESHOLD;
 }
 
 function diagnosisContent(zone, changes, down) {
@@ -156,13 +160,18 @@ function diagnosisContent(zone, changes, down) {
     fact: 'Одновременно ухудшились трафик, конверсия, средний чек и прибыльность.',
     meaning: 'Проблема не ограничивается одним показателем.'
   };
+  if (trafficCompensatedByConversion(zone, changes, down)) return {
+    fact: 'Снижение трафика компенсировано ростом конверсии, поэтому количество покупок сохранилось.',
+    meaning: 'Магазин сохранил количество покупок, но входящий поток требует внимания.'
+  };
   return {
     fact: 'Ключевые показатели не ухудшились существенно.',
     meaning: 'Система работает стабильно относительно первого периода.'
   };
 }
 
-function additionalRisk(zone, down) {
+function additionalRisk(zone, changes, down) {
+  if (trafficCompensatedByConversion(zone, changes, down)) return 'Трафик';
   if (zone === 'Системное снижение' || zone === 'Не выявлена') return '';
   const order = ['traffic', 'conversion', 'averageCheck', 'profitability'];
   const names = { traffic: 'Трафик', conversion: 'Конверсия', averageCheck: 'Средний чек', profitability: 'Прибыльность' };
@@ -176,6 +185,10 @@ function analyze(mode, rawFirst, rawSecond) {
   if (first.values.revenue === 0) {
     first.valid = false;
     first.errors.revenue = 'Для сравнения выручка первого периода должна быть больше нуля';
+  }
+  if (first.values.markup === 0) {
+    first.valid = false;
+    first.errors.markup = 'Для сравнения наценка первого периода должна быть больше нуля';
   }
   const second = validatePeriod(rawSecond || {});
   if (!first.valid || !second.valid) return { valid: false, period1: first, period2: second };
@@ -224,12 +237,17 @@ function initApp() {
     const first = validatePeriod(readPeriod(1));
     const second = currentMode() === 'compare' ? validatePeriod(readPeriod(2)) : { valid: true };
     const comparisonRevenueIsZero = currentMode() === 'compare' && first.valid && first.values.revenue === 0;
+    const comparisonMarkupIsZero = currentMode() === 'compare' && first.valid && first.values.markup === 0;
     if (comparisonRevenueIsZero) {
       first.valid = false;
       first.errors.revenue = 'Для сравнения выручка первого периода должна быть больше нуля';
     }
+    if (comparisonMarkupIsZero) {
+      first.valid = false;
+      first.errors.markup = 'Для сравнения наценка первого периода должна быть больше нуля';
+    }
     button.disabled = !(first.valid && second.valid);
-    if (showErrors || comparisonRevenueIsZero) paintErrors(1, first);
+    if (showErrors || comparisonRevenueIsZero || comparisonMarkupIsZero) paintErrors(1, first);
     if (showErrors && currentMode() === 'compare') paintErrors(2, second);
   };
 

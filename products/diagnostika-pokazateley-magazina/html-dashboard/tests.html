@@ -11,7 +11,7 @@
 </head>
 <body>
   <main class="test-shell">
-    <header class="test-summary"><p class="step-label step-label--light">Автоматическая проверка</p><h1 id="summary">Выполняются 24 теста…</h1><p>Расчёты запускаются локально, без сервера и сети.</p></header>
+    <header class="test-summary"><p class="step-label step-label--light">Автоматическая проверка</p><h1 id="summary">Выполняются 26 тестов…</h1><p>Расчёты запускаются локально, без сервера и сети.</p></header>
     <section class="test-list" id="test-list" aria-live="polite"></section>
   </main>
   <script src="app.js"></script>
@@ -50,7 +50,9 @@
       ['Корректность дополнительного риска','Конверсия',()=>diagnosis(p(100000,100,200,500),p(90000,72,150,400)).risk],
       ['Дробное количество чеков','Введите целое число',()=>E.analyze('current',p(100000,'100,5',200,500)).period1.errors.checks],
       ['Дробное количество товаров','Введите целое число',()=>E.analyze('current',p(100000,100,'200.5',500)).period1.errors.items],
-      ['Дробное количество посетителей','Введите целое число',()=>E.analyze('current',p(100000,100,200,'500,5')).period1.errors.visitors]
+      ['Дробное количество посетителей','Введите целое число',()=>E.analyze('current',p(100000,100,200,'500,5')).period1.errors.visitors],
+      ['Нулевая наценка первого периода','Для сравнения наценка первого периода должна быть больше нуля',()=>{try{return E.analyze('compare',p(100000,100,200,500,0),p(100000,100,200,500,50)).period1.errors.markup}catch(error){return 'Исключение: '+error.message}}],
+      ['Падение трафика компенсировано конверсией',d('Не выявлена','Снижение трафика компенсировано ростом конверсии, поэтому количество покупок сохранилось.','Магазин сохранил количество покупок, но входящий поток требует внимания.','Трафик'),()=>diagnosis(p(100000,100,200,500),p(100000,100,200,400))]
     ];
     let passed=0; const list=document.querySelector('#test-list');
     const display = value => typeof value === 'object' ? JSON.stringify(value) : value;
