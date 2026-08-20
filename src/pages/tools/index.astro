@@ -1,0 +1,4 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import { getCollection } from 'astro:content'; const tools=(await getCollection('tools')).filter(({data})=>data.status==='available');
+---
+<BaseLayout title="Цифровые инструменты для магазина — Розница в цифрах" description="Практические цифровые инструменты для анализа и управления непродовольственным магазином."><section class="placeholder-page"><div class="container"><p class="eyebrow">Инструменты</p><h1>Рабочие решения для розничного бизнеса</h1>{tools.map(tool=><p><a href={`/tools/${tool.id}/`}>{tool.data.title}</a> — единственный подтверждённый готовый продукт.</p>)}</div></section></BaseLayout>

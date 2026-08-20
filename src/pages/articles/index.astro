@@ -1,0 +1,6 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+const articles = (await getCollection('articles')).filter(({data}) => !data.draft);
+---
+<BaseLayout title="Статьи о розничном бизнесе — Розница в цифрах" description="Практические материалы о продажах, товаре, покупателях, персонале, управлении, маркетинге и автоматизации."><section class="placeholder-page"><div class="container"><p class="eyebrow">База знаний</p><h1>Статьи о системном управлении розницей</h1><p>{articles.length ? `Опубликовано материалов: ${articles.length}.` : 'Первый практический материал готовится. Каталог автоматически наполнится после публикации утверждённых статей.'}</p></div></section></BaseLayout>

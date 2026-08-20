@@ -1,0 +1,18 @@
+---
+const { dark = false } = Astro.props;
+---
+<a class="skip-link" href="#main">К содержанию</a>
+<header class:list={["site-header", { dark }]}>
+  <div class="container header-inner">
+    <a class="brand" href="/" aria-label="Розница в цифрах — главная"><span>РОЗНИЦА</span><b>В</b> ЦИФРАХ</a>
+    <nav aria-label="Основная навигация">
+      <a href="/articles/">Статьи</a><a href="/tools/">Инструменты</a><a href="/services/">Услуги</a><a href="/about/">Обо мне</a><a href="/contacts/">Контакты</a>
+    </nav>
+    <a class="all-tools" href="/tools/">Все продукты</a>
+  </div>
+</header>
+<style>
+  .site-header{background:#fff;border-bottom:1px solid var(--c-line)}.site-header.dark{background:var(--c-ink);color:#fff;border:0}.header-inner{min-height:82px;display:grid;grid-template-columns:210px 1fr auto;align-items:center;gap:2rem}.brand{font-family:var(--font-editorial);font-size:1.12rem;line-height:.9;text-decoration:none}.brand span{display:block}.brand b{color:var(--c-orange);font-family:var(--font-sans)}nav{display:flex;justify-content:center;gap:clamp(1rem,3vw,3.2rem)}nav a,.all-tools{font-size:.88rem;font-weight:700;text-decoration:none}.all-tools{padding:.65rem 1rem;border:1px solid var(--c-orange);border-radius:var(--r-sm);color:var(--c-orange)}
+  @media(max-width:880px){.header-inner{grid-template-columns:1fr auto;min-height:72px}.header-inner nav{grid-column:1/-1;grid-row:2;justify-content:flex-start;overflow-x:auto;padding-bottom:.85rem}.all-tools{grid-column:2;grid-row:1}.site-header nav a{white-space:nowrap}}
+  @media(max-width:520px){.all-tools{display:none}.header-inner{grid-template-columns:1fr}.header-inner nav{gap:1.2rem}}
+</style>
