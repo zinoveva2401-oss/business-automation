@@ -1,0 +1,86 @@
+---
+// Footer компонент
+---
+
+<footer class="footer">
+  <div class="container footer__container">
+    <div class="footer__section">
+      <span class="footer__logo">Розница в цифрах</span>
+      <p class="footer__tagline">Экспертный проект о системном управлении розничным бизнесом</p>
+    </div>
+
+    <nav class="footer__nav" aria-label="Навигация по сайту">
+      <ul class="footer__menu">
+        <li><a href="/articles/">Статьи</a></li>
+        <li><a href="/tools/">Инструменты</a></li>
+        <li><a href="/services/">Услуги</a></li>
+        <li><a href="/about/">О проекте</a></li>
+        <li><a href="/contacts/">Контакты</a></li>
+      </ul>
+    </nav>
+
+    <div class="footer__contacts">
+      <p class="footer__copyright">&copy; {new Date().getFullYear()} Розница в цифрах</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-light-bg);
+    border-top: 1px solid var(--color-border);
+    padding: var(--spacing-2xl) 0;
+    margin-top: auto;
+  }
+
+  .footer__container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xl);
+  }
+
+  .footer__logo {
+    font-family: var(--font-serif);
+    font-size: var(--text-lg);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    display: block;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .footer__tagline {
+    font-size: var(--text-sm);
+    color: var(--color-text-primary);
+    opacity: 0.8;
+  }
+
+  .footer__menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+  }
+
+  .footer__menu a {
+    font-size: var(--text-sm);
+    color: var(--color-text-primary);
+    transition: color var(--transition-fast);
+  }
+
+  .footer__menu a:hover {
+    color: var(--color-accent-orange);
+  }
+
+  .footer__copyright {
+    font-size: var(--text-xs);
+    color: var(--color-text-primary);
+    opacity: 0.6;
+  }
+
+  @media (min-width: 768px) {
+    .footer__container {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+  }
+</style>

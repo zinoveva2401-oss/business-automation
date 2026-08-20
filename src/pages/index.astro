@@ -1,0 +1,45 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Layout title="Розница в цифрах — Главная">
+  <Header slot="header" />
+  
+  <!-- Техническая заглушка главной страницы -->
+  <section class="hero-placeholder">
+    <div class="container">
+      <h1>Розница в цифрах</h1>
+      <p>Экспертный проект о системном управлении розничным бизнесом</p>
+      <p class="placeholder-note">Это техническая заглушка. Дизайн главной страницы будет разработан на следующем этапе.</p>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</Layout>
+
+<style>
+  .hero-placeholder {
+    padding: var(--spacing-3xl) 0;
+    text-align: center;
+  }
+
+  .hero-placeholder h1 {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-dark-base);
+  }
+
+  .hero-placeholder p {
+    font-size: var(--text-lg);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .placeholder-note {
+    font-size: var(--text-sm);
+    color: var(--color-analytics-blue);
+    font-style: italic;
+  }
+</style>
