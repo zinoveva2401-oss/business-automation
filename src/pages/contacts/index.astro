@@ -1,0 +1,45 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout title="Контакты — Розница в цифрах">
+  <Header slot="header" />
+  
+  <!-- Техническая заглушка страницы контактов -->
+  <section class="page-placeholder">
+    <div class="container">
+      <h1>Контакты</h1>
+      <p>Свяжитесь с нами для вопросов по продуктам и услугам.</p>
+      <p class="placeholder-note">Это техническая заглушка. Контактные данные будут добавлены позже.</p>
+    </div>
+  </section>
+
+  <Footer slot="footer" />
+</Layout>
+
+<style>
+  .page-placeholder {
+    padding: var(--spacing-3xl) 0;
+    min-height: 50vh;
+  }
+
+  .page-placeholder h1 {
+    font-size: var(--text-4xl);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-dark-base);
+  }
+
+  .page-placeholder p {
+    font-size: var(--text-lg);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .placeholder-note {
+    font-size: var(--text-sm);
+    color: var(--color-analytics-blue);
+    font-style: italic;
+  }
+</style>
