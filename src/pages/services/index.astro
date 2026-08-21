@@ -1,0 +1,4 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import { getCollection } from 'astro:content'; const services=(await getCollection('services')).sort((a,b)=>a.data.order-b.data.order);
+---
+<BaseLayout title="Услуги для собственников магазинов — Розница в цифрах" description="Анализ показателей, аудит проблем и построение системы управления розничным бизнесом."><section class="placeholder-page"><div class="container"><p class="eyebrow">Услуги</p><h1>От точечного анализа к системе управления</h1>{services.map(service=><p><a href={`/services/${service.id}/`}>{service.data.title}</a> — {service.data.pricePrefix} {service.data.price.toLocaleString('ru-RU')} ₽</p>)}</div></section></BaseLayout>

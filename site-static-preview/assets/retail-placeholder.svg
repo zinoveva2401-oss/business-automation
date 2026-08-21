@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 760" role="img" aria-labelledby="title description">
+  <title id="title">Место для фотографии магазина</title>
+  <desc id="description">Нейтральная схема торгового зала без вымышленных изображений и данных.</desc>
+  <rect width="1200" height="760" fill="#17130f"/>
+  <rect x="70" y="110" width="330" height="500" rx="8" fill="#211812" stroke="#59402e" stroke-width="8"/>
+  <rect x="800" y="110" width="330" height="500" rx="8" fill="#211812" stroke="#59402e" stroke-width="8"/>
+  <g fill="#3b291d">
+    <rect x="95" y="170" width="280" height="24"/><rect x="95" y="280" width="280" height="24"/><rect x="95" y="390" width="280" height="24"/><rect x="95" y="500" width="280" height="24"/>
+    <rect x="825" y="170" width="280" height="24"/><rect x="825" y="280" width="280" height="24"/><rect x="825" y="390" width="280" height="24"/><rect x="825" y="500" width="280" height="24"/>
+  </g>
+  <path d="M520 655C700 600 475 535 640 465S765 325 690 250" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round" stroke-dasharray="12 22" opacity=".9"/>
+  <path d="m675 275 15-28 22 25" fill="none" stroke="#d9562f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="600" y="705" fill="#d8dde3" font-family="Arial, sans-serif" font-size="22" text-anchor="middle" letter-spacing="3">ФОТО RETAIL-СЦЕНЫ ОЖИДАЕТ УТВЕРЖДЕНИЯ</text>
+</svg>
