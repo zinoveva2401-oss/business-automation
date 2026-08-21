@@ -2,8 +2,11 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-interface Props { title: string; description: string; darkHeader?: boolean; image?: string; schema?: Record<string, unknown>; }
-const { title, description, darkHeader = false, image = '/favicon.svg', schema } = Astro.props;
+import CookieConsent from '../components/CookieConsent.astro';
+import AnalyticsBridge from '../components/AnalyticsBridge.astro';
+interface Props { title: string; description: string; darkHeader?: boolean; image?: string; type?: 'website' | 'article'; schema?: Record<string, unknown> | Record<string, unknown>[]; noindex?: boolean; }
+const { title, description, darkHeader = false, image = '/favicon.svg', type = 'website', schema, noindex = false } = Astro.props;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const socialImage = Astro.site ? new URL(image, Astro.site) : image;
 ---
-<!doctype html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width"><meta name="description" content={description}><meta name="theme-color" content="#17130f"><title>{title}</title>{canonical && <link rel="canonical" href={canonical}/>}<meta property="og:type" content="website"><meta property="og:title" content={title}><meta property="og:description" content={description}><meta property="og:image" content={image}><link rel="icon" href="/favicon.svg" type="image/svg+xml">{schema && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}</head><body><SiteHeader dark={darkHeader}/><main id="main"><slot/></main><SiteFooter/></body></html>
+<!doctype html><html lang="ru"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content={description}><meta name="theme-color" content="#17130f">{noindex && <meta name="robots" content="noindex,nofollow">}<title>{title}</title>{canonical && <link rel="canonical" href={canonical}/>}<meta property="og:locale" content="ru_RU"><meta property="og:site_name" content="Розница в цифрах"><meta property="og:type" content={type}><meta property="og:title" content={title}><meta property="og:description" content={description}>{canonical && <meta property="og:url" content={canonical}/>}<meta property="og:image" content={socialImage}><meta name="twitter:card" content="summary_large_image"><link rel="icon" href="/favicon.svg" type="image/svg+xml">{schema && <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />}</head><body><SiteHeader dark={darkHeader}/><main id="main"><slot/></main><SiteFooter/><CookieConsent/><AnalyticsBridge/></body></html>

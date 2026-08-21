@@ -1,0 +1,14 @@
+<script>
+  import { analyticsEvents, rememberUtm, track, type AnalyticsEvent } from '../lib/analytics';
+  rememberUtm();
+  const allowed = new Set<string>(analyticsEvents);
+  document.querySelectorAll<HTMLElement>('[data-analytics-view]').forEach((element) => {
+    const event = element.dataset.analyticsView;
+    if (event && allowed.has(event)) track(event as AnalyticsEvent);
+  });
+  document.addEventListener('click', (click) => {
+    const target = (click.target as HTMLElement).closest<HTMLElement>('[data-analytics-event]');
+    const event = target?.dataset.analyticsEvent;
+    if (event && allowed.has(event)) track(event as AnalyticsEvent);
+  });
+</script>

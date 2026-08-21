@@ -1,6 +1,8 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro'; import { getCollection, render } from 'astro:content';
-export async function getStaticPaths(){return (await getCollection('articles')).map(entry=>({params:{slug:entry.id},props:{entry}}))}
+import BaseLayout from '../../layouts/BaseLayout.astro'; import Breadcrumbs from '../../components/Breadcrumbs.astro'; import { getCollection, render } from 'astro:content';
+export async function getStaticPaths(){return (await getCollection('articles')).filter(({data})=>!data.draft).map(entry=>({params:{slug:entry.id},props:{entry}}))}
 const {entry}=Astro.props; const {Content}=await render(entry);
+const title=entry.data.seoTitle ?? `${entry.data.title} — Розница в цифрах`; const description=entry.data.seoDescription ?? entry.data.description;
+const articleSchema={'@context':'https://schema.org','@type':'Article',headline:entry.data.title,description,datePublished:entry.data.publishedAt.toISOString(),...(entry.data.updatedAt?{dateModified:entry.data.updatedAt.toISOString()}:{}),author:{'@type':'Person',name:'Светлана Тарасова'},publisher:{'@type':'Organization',name:'Розница в цифрах'},...(entry.data.image?{image:entry.data.image}:{})};
 ---
-<BaseLayout title={`${entry.data.title} — Розница в цифрах`} description={entry.data.description}><article class="placeholder-page"><div class="container"><p class="eyebrow">{entry.data.category}</p><h1>{entry.data.title}</h1><p>{entry.data.description}</p><Content/></div></article></BaseLayout>
+<BaseLayout title={title} description={description} image={entry.data.image} type="article" schema={articleSchema}><article class="placeholder-page" data-analytics-view="article_view"><div class="container"><Breadcrumbs items={[{name:'Главная',href:'/'},{name:'Статьи',href:'/articles/'},{name:entry.data.title}]} /><p class="eyebrow">{entry.data.category}</p><h1>{entry.data.title}</h1><p>{entry.data.description}</p><p><small>Опубликовано: {entry.data.publishedAt.toLocaleDateString('ru-RU')}{entry.data.updatedAt && ` · Обновлено: ${entry.data.updatedAt.toLocaleDateString('ru-RU')}`} · {entry.data.readingTime} мин чтения</small></p><Content/></div></article></BaseLayout>

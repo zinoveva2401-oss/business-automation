@@ -1,0 +1,18 @@
+---
+const { compact = false } = Astro.props;
+const contact = [
+  { label: 'Telegram', href: 'https://t.me/Cvetlana2401', event: 'telegram_click', icon: '✈' },
+  { label: 'Электронная почта', href: 'mailto:As24011982@yandex.ru', event: 'email_click', icon: '@' },
+];
+const project = [
+  { label: 'VK', href: 'https://vk.ru/svetlana_tarasova_marketolog', event: 'vk_click', icon: 'VK' },
+  { label: 'Telegram', href: 'https://t.me/Svetlana_Marketolog_riteil', event: 'telegram_click', icon: '✈' },
+  { label: 'VC.ru', href: 'https://vc.ru/id5659262', event: 'vc_click', icon: 'VC' },
+  { label: 'Дзен', href: 'https://dzen.ru/user/j0k4kngnxzw8m5tlmxy8gvho3im?share_to=link', event: 'dzen_click', icon: 'Д' },
+];
+---
+<div class:list={['contact-links', { compact }]}>
+  <section><h2>Связаться со Светланой</h2><div>{contact.map(({ label, href, event, icon }) => <a href={href} data-analytics-event={event} rel={href.startsWith('http') ? 'noopener noreferrer' : undefined}><span aria-hidden="true">{icon}</span>{label}</a>)}</div></section>
+  {!compact && <section><h2>Читать проект «Розница в цифрах»</h2><div>{project.map(({ label, href, event, icon }) => <a href={href} data-analytics-event={event} target="_blank" rel="noopener noreferrer"><span aria-hidden="true">{icon}</span>{label}</a>)}</div></section>}
+</div>
+<style>.contact-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(1.5rem,4vw,4rem)}.contact-links.compact{grid-template-columns:1fr}.contact-links h2{margin:0 0 1rem;font-family:var(--font-editorial);font-size:clamp(1.4rem,2vw,2rem)}.contact-links section>div{display:flex;flex-wrap:wrap;gap:.75rem}.contact-links a{display:inline-flex;min-height:48px;align-items:center;gap:.65rem;padding:.7rem 1rem;border:1px solid var(--c-line);border-radius:var(--r-sm);background:#fff;color:#123f73;font-weight:700;text-decoration:none}.contact-links a:hover{border-color:var(--c-sky)}.contact-links a span{display:grid;width:28px;height:28px;place-items:center;border-radius:50%;background:var(--c-blue);color:#fff;font-size:.72rem}@media(max-width:700px){.contact-links{grid-template-columns:1fr}}</style>

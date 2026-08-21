@@ -1,0 +1,14 @@
+<aside class="cookie-consent" data-cookie-consent hidden aria-label="Настройки аналитических cookie"><p><strong>Аналитические cookie</strong><br>Документ готовится к публикации после утверждения инфраструктуры и платёжного сервиса.</p><div><button type="button" data-consent="denied">Не использовать</button><button class="accept" type="button" data-consent="granted">Разрешить аналитику</button></div></aside>
+<script>
+  const name = 'rvd_analytics_consent';
+  const banner = document.querySelector<HTMLElement>('[data-cookie-consent]');
+  const current = document.cookie.split('; ').find((row) => row.startsWith(`${name}=`))?.split('=')[1];
+  if (banner && !current) banner.hidden = false;
+  banner?.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach((button) => button.addEventListener('click', () => {
+    const value = button.dataset.consent === 'granted' ? 'granted' : 'denied';
+    document.cookie = `${name}=${value}; Path=/; Max-Age=31536000; SameSite=Lax; Secure`;
+    banner.hidden = true;
+    window.dispatchEvent(new CustomEvent('rvd:analytics-consent', { detail: { value } }));
+  }));
+</script>
+<style>.cookie-consent{position:fixed;z-index:100;right:1rem;bottom:1rem;width:min(430px,calc(100vw - 2rem));padding:1rem;border:1px solid var(--c-line);border-radius:var(--r-md);background:#fff;box-shadow:0 16px 45px #17130f33}.cookie-consent[hidden]{display:none}.cookie-consent p{margin:0 0 .8rem;font-size:.82rem}.cookie-consent div{display:flex;flex-wrap:wrap;gap:.5rem}.cookie-consent button{min-height:42px;padding:.6rem .8rem;border:1px solid var(--c-line);border-radius:var(--r-sm);background:#fff;color:var(--c-text);font-weight:700;cursor:pointer}.cookie-consent .accept{border-color:var(--c-orange);background:var(--c-orange);color:#fff}</style>
