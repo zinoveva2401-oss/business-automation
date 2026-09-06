@@ -5,6 +5,7 @@ dist/
 qa-output/
 output/
 site-static-preview/
+public/_optimized/
 .playwright-*/
 .tmp_*
 retail-site-audit-snapshot-*.zip

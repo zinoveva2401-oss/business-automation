@@ -6,6 +6,7 @@ import ProductCard from '../../components/ProductCard.astro';
 import ArticleFunctionalBlocks from '../../components/ArticleFunctionalBlocks.astro';
 import ArticleHero from '../../components/ArticleHero.astro';
 import ArticleTableOfContents from '../../components/ArticleTableOfContents.astro';
+import ResponsiveImage from '../../components/ResponsiveImage.astro';
 import Cnt0027Editorial from '../../components/Cnt0027Editorial.astro';
 import { getCollection, render } from 'astro:content';
 import { categoryByName } from '../../lib/site';
@@ -17,7 +18,7 @@ const {entry}=Astro.props;const {Content,headings}=await render(entry);const toc
 <Breadcrumbs items={[{name:'Главная',href:'/'},{name:'Статьи',href:'/articles/'},{name:entry.data.title}]} />
 {isCnt0027 ? <Cnt0027Editorial /> : <>
 <ArticleHero category={entry.data.category} cluster={entry.data.cluster} title={entry.data.title} lead={entry.data.description} categoryHref={`/articles/?category=${category?.slug}`} />
-{entry.data.cover&&<img class="cover" src={entry.data.cover} alt={entry.data.coverAlt||''} width="1200" height="675" loading="eager" />}
+{entry.data.cover&&<ResponsiveImage class="cover" src={entry.data.cover} alt={entry.data.coverAlt||''} width={1200} height={675} loading="eager" fetchpriority="high" sizes="(max-width: 900px) 100vw, 1200px" />}
 <ArticleTableOfContents headings={toc} />
 {entry.data.id!=='CNT-0024'&&<ArticleFunctionalBlocks articleId={entry.data.id} />}<div class="prose"><Content /></div>
 </>}

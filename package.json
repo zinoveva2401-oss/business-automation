@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/optimize-images.mjs && astro build && node scripts/rewrite-optimized-references.mjs",
     "preview": "astro preview",
     "check": "astro check"
   },

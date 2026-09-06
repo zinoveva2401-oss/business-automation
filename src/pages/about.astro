@@ -44,7 +44,7 @@ const areas = [
     <section class="about-hero">
       <picture class="hero-art">
         <source media="(max-width: 600px)" srcset="/about/about-hero-mobile.webp" />
-        <img src="/about/about-hero-desktop.webp" alt="Светлана Тарасова в магазине рядом с аналитическим изображением торгового пространства" width="1799" height="1063" fetchpriority="high" />
+        <picture><source media="(max-width: 800px)" srcset="/about/about-hero-mobile.webp" /><img src="/about/about-hero-desktop.webp" alt="Светлана Тарасова в магазине рядом с аналитическим изображением торгового пространства" width="1799" height="1063" fetchpriority="high" /></picture>
       </picture>
       <div class="container hero-content">
         <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: 'Обо мне' }]} />

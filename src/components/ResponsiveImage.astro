@@ -1,0 +1,16 @@
+---
+interface Props { src: string; alt: string; width: number; height: number; loading?: 'lazy' | 'eager'; fetchpriority?: 'high' | 'low' | 'auto'; sizes?: string; class?: string; }
+const { src, alt, width, height, loading = 'lazy', fetchpriority = 'auto', sizes = '100vw', class: className } = Astro.props;
+const match = src.match(/^(.*)\.(png|jpe?g)$/i);
+const base = match ? match[1] : src;
+const optimizedBase = `/_optimized${base}`;
+const available = [480, 768, 1200, 1600].filter((value) => value < width * 2 || value === 1600);
+const webp = available.map((value) => `${optimizedBase}.w${value}.webp ${value}w`).join(', ');
+const avif = available.map((value) => `${optimizedBase}.w${value}.avif ${value}w`).join(', ');
+const fallback = match ? `${optimizedBase}.w${Math.min(available.at(-1) ?? 1600, 1600)}.webp` : src;
+---
+<picture>
+  {match && <source type="image/avif" srcset={avif} sizes={sizes} />}
+  {match && <source type="image/webp" srcset={webp} sizes={sizes} />}
+  <img src={fallback} alt={alt} width={width} height={height} loading={loading} fetchpriority={fetchpriority} class={className} />
+</picture>
