@@ -1,0 +1,13 @@
+---
+const { article, featured = false, placement = 'catalog' } = Astro.props;
+---
+<article class:list={['article-card',{featured}]} data-article-card data-category={article.data.category} data-cluster={article.data.cluster} data-search={`${article.data.title} ${article.data.description} ${article.data.primarySearchQuestion}`.toLocaleLowerCase('ru')} data-timestamp={article.data.publishedAt.valueOf()} data-featured={article.data.featured?'1':'0'}>
+  <a class="article-card__link" href={`/articles/${article.data.slug}/`} data-analytics-event="click_related_article" data-analytics-content-id={article.data.id} data-analytics-category={article.data.category} data-analytics-placement={placement}>
+    <div class:list={['article-card__image',!article.data.cover&&'article-card__image--placeholder']}>{article.data.cover?<img src={article.data.cover} alt={article.data.coverAlt||''} width="720" height="405" loading="lazy" />:<i class="ti ti-file-description" aria-hidden="true"></i>}</div>
+    <div class="article-card__body"><p class="article-card__category">{article.data.category}</p><h3>{article.data.title}</h3></div>
+  </a>
+</article>
+<style>
+  .article-card{min-width:0;overflow:hidden;border:1px solid var(--c-line);border-radius:var(--r-md);background:#fff;transition:border-color .2s,transform .2s}.article-card:hover{transform:translateY(-2px);border-color:#aeb8bf}.article-card__link{display:grid;height:100%;grid-template-rows:auto 1fr;color:inherit;text-decoration:none}.article-card__link:focus-visible{outline:3px solid var(--c-orange);outline-offset:-3px}.article-card__image{aspect-ratio:16/9;overflow:hidden;background:#edf1f4}.article-card__image img{width:100%;height:100%;object-fit:cover;object-position:center}.article-card__image--placeholder{display:grid;place-items:center;color:#7890a6}.article-card__image--placeholder i{font-size:2.3rem}.article-card__body{padding:.8rem .9rem .9rem}.article-card__category{margin:0;color:var(--c-blue);font-size:.75rem;font-weight:800}.article-card h3{display:-webkit-box;overflow:hidden;-webkit-box-orient:vertical;-webkit-line-clamp:3;margin:.4rem 0 0;font-size:1.02rem;line-height:1.22}.article-card.featured{border-top:3px solid var(--c-orange)}
+  @media(max-width:700px){.article-card__body{padding:.75rem .85rem .85rem}}
+</style>

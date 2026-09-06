@@ -1,6 +1,10 @@
 ---
+id: "express-analysis-archive"
+slug: "express-analysis-archive"
 title: "Экспресс-анализ"
-description: "Быстрый разбор ключевых показателей и очевидных узких мест."
-price: 9900
-order: 1
+description: "Архивная запись ранней версии услуги."
+order: 99
+active: false
+seoTitle: "Экспресс-анализ"
+seoDescription: "Архивная запись услуги."
 ---

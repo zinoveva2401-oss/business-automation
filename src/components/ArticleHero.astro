@@ -1,0 +1,13 @@
+---
+interface Props { category:string; cluster:string; title:string; lead:string; categoryHref:string }
+const { category, cluster, title, lead, categoryHref } = Astro.props;
+---
+<header class="article-hero">
+  <div class="article-taxonomy"><a href={categoryHref} data-analytics-event="click_article_category" data-analytics-category={category}>{category}</a><span aria-hidden="true">/</span><span>{cluster}</span></div>
+  <h1>{title}</h1>
+  <p>{lead}</p>
+</header>
+<style>
+  .article-hero{max-width:850px}.article-taxonomy{display:flex;flex-wrap:wrap;gap:.4rem;color:#5f6a72;font:700 .86rem/1.35 var(--font-ui)}.article-taxonomy a{color:var(--c-blue);text-decoration:none}.article-hero h1{max-width:20ch;margin:.55rem 0 .9rem;font-size:clamp(2.25rem,4vw,3.55rem);line-height:1.04}.article-hero>p{max-width:67ch;margin:0;font-size:1.125rem;line-height:1.55}
+  @media(max-width:700px){.article-hero h1{max-width:none;font-size:clamp(2rem,8.7vw,2.5rem)}.article-hero>p{font-size:1rem;line-height:1.55}}
+</style>

@@ -1,0 +1,36 @@
+---
+const metrikaId = import.meta.env.PUBLIC_YANDEX_METRIKA_ID;
+---
+<script is:inline define:vars={{ metrikaId }}>
+  const allowed = new Set([
+    'view_article','click_related_article','click_article_category','click_product','view_product','click_product_catalog',
+    'click_product_purchase','click_service','click_contact','click_social','click_vk','click_telegram','click_vc','click_dzen',
+    'click_teletype','click_instagram','click_email','start_checkout','outbound_checkout','payment_success','download_success',
+  ]);
+  const consentKey = 'rvd_analytics_consent';
+  const utmKey = 'rvd_utm';
+  const utmNames = new Set(['utm_source','utm_medium','utm_campaign','utm_content','utm_term']);
+  const params = new URLSearchParams(location.search);
+  const utm = Object.fromEntries([...params].filter(([key, value]) => utmNames.has(key) && value).map(([key, value]) => [key, value.slice(0, 200)]));
+  if (Object.keys(utm).length) sessionStorage.setItem(utmKey, JSON.stringify(utm));
+  const contextFrom = (element) => Object.fromEntries(Object.entries(element.dataset).filter(([key]) => key.startsWith('analytics') && key !== 'analyticsEvent' && key !== 'analyticsSecondaryEvent' && key !== 'analyticsView').map(([key, value]) => [key.replace(/^analytics/, '').replace(/^./, (letter) => letter.toLowerCase()).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`), value]));
+  const send = (event, context = {}) => {
+    if (!allowed.has(event) || localStorage.getItem(consentKey) !== 'granted') return;
+    let savedUtm = {}; try { savedUtm = JSON.parse(sessionStorage.getItem(utmKey) || '{}'); } catch {}
+    const detail = { event, context, utm: savedUtm };
+    window.dispatchEvent(new CustomEvent('rvd:analytics-event', { detail }));
+    if (metrikaId && typeof window.ym === 'function') window.ym(Number(metrikaId), 'reachGoal', event, { ...context, ...savedUtm });
+  };
+  const startMetrika = () => {
+    if (!metrikaId || localStorage.getItem(consentKey) !== 'granted' || window.__rvdMetrikaStarted) return;
+    window.__rvdMetrikaStarted = true;
+    window.ym = window.ym || function(){ (window.ym.a = window.ym.a || []).push(arguments); };
+    window.ym.l = Date.now();
+    const script = document.createElement('script'); script.async = true; script.src = 'https://mc.yandex.ru/metrika/tag.js'; document.head.append(script);
+    window.ym(Number(metrikaId), 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
+  };
+  startMetrika();
+  document.querySelectorAll('[data-analytics-view]').forEach((element) => send(element.dataset.analyticsView, contextFrom(element)));
+  document.addEventListener('click', (click) => { const target = click.target.closest('[data-analytics-event]'); if (target) { const context = contextFrom(target); send(target.dataset.analyticsEvent, context); if (target.dataset.analyticsSecondaryEvent) send(target.dataset.analyticsSecondaryEvent, context); } });
+  window.addEventListener('rvd:analytics-consent', (event) => { if (event.detail?.value === 'granted') startMetrika(); });
+</script>

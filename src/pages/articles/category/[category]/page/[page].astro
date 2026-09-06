@@ -1,0 +1,6 @@
+---
+import { getPublishedArticles } from '../../../../../lib/content';
+import { categories } from '../../../../../lib/site';
+export async function getStaticPaths(){const articles=await getPublishedArticles();return categories.flatMap((category)=>{const count=articles.filter(({data})=>data.category===category.name).length;return Array.from({length:Math.max(0,Math.ceil(count/12)-1)},(_,index)=>({params:{category:category.slug,page:String(index+2)},props:{category}}))})}
+return Astro.redirect(`/articles/?category=${Astro.props.category.slug}`,301);
+---

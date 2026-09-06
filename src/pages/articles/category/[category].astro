@@ -1,0 +1,9 @@
+---
+import { categories } from '../../../lib/site';
+
+export function getStaticPaths() {
+  return categories.map((category) => ({ params: { category: category.slug }, props: { category } }));
+}
+
+return Astro.redirect(`/articles/?category=${Astro.props.category.slug}`, 301);
+---

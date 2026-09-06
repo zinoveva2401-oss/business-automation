@@ -1,0 +1,28 @@
+---
+import ArticleBlock from './ArticleBlock.astro';
+type Block = { type:'callout'|'important'|'error'|'action'|'example'|'case'|'checklist'|'steps'|'comparison'|'matrix'|'process'|'quote'; title:string; intro?:string; items?:{title:string;text?:string}[] };
+const { articleId } = Astro.props as { articleId:string };
+const blocks:Record<string,Block[]> = {
+  'CNT-0045':[
+    {type:'process',title:'Четыре роли ИИ',items:['Собрать','Разобрать','Предложить','Действовать'].map(title=>({title}))},
+    {type:'matrix',title:'Карта человеческого контроля',items:[{title:'Что ИИ реально видит?'},{title:'Чего он не видит?'},{title:'Кто проверяет решение?'},{title:'Сколько стоит ошибка?'}]},
+    {type:'important',title:'Чем дороже ошибка, тем ближе к решению должен оставаться человек'},
+  ],
+  'CNT-0027':[
+    {type:'case',title:'Один ситуационный тест',intro:'Покупатель говорит: «Я просто смотрю». Что кандидат сделает дальше?'},
+    {type:'matrix',title:'Четыре наблюдения вместо общей оценки',items:['Граница покупателя','Поведение покупателя','Следующий шаг','Задача до предложения'].map(title=>({title}))},
+    {type:'comparison',title:'Два ответа',items:[{title:'Ответ А',text:'Общее обещание быть вежливым.'},{title:'Ответ Б',text:'Конкретное действие и следующий вопрос покупателю.'}]},
+  ],
+  'CNT-0007':[
+    {type:'process',title:'Маршрут посетителя',items:['Вошёл','Остановился','Искал','Контакт','Выбор','Покупка или выход'].map(title=>({title}))},
+    {type:'important',title:'15 минут — экспресс-сигнал, не диагноз'},
+    {type:'checklist',title:'Сохраняемый протокол наблюдения',items:['Выбрать период','Занять точку наблюдения','Считать входы','Отмечать контакт','Фиксировать выбор','Записать выходы','Выбрать этап для замера'].map(title=>({title}))},
+  ],
+  'CNT-0024':[
+    {type:'comparison',title:'Два отзыва с одинаковой оценкой',items:[{title:'Отзыв А',text:'Даёт только общую оценку.'},{title:'Отзыв Б',text:'Отвечает на конкретный вопрос будущего покупателя.'}]},
+    {type:'matrix',title:'Какая информация помогает выбрать магазин',items:['Товар и качество','Выбор и размер','Сервис','Цена и ценность','Возврат и обмен','Повторная покупка'].map(title=>({title}))},
+    {type:'checklist',title:'Проверка последних отзывов',items:[{title:'Повторяющиеся темы'},{title:'Вопросы без ответа'},{title:'Что покупатель узнаёт до визита'}]},
+  ],
+};
+---
+<div class="article-functional-blocks">{(blocks[articleId]||[]).map((block)=><ArticleBlock {...block} />)}</div>

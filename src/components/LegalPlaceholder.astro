@@ -1,0 +1,9 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from './Breadcrumbs.astro';
+const { title, description } = Astro.props;
+---
+<BaseLayout title={`${title} — Розница в цифрах`} description={description} noindex={true}>
+  <section class="legal-page"><div class="container narrow"><Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: title }]} /><p class="eyebrow">Юридическая информация</p><h1>{title}</h1><p>Страница подготовлена технически и не индексируется. Текст будет опубликован после проверки и утверждения владельцем проекта.</p></div></section>
+</BaseLayout>
+<style>.legal-page{padding-block:var(--section)}.legal-page h1{margin:.4rem 0 1rem;font-size:clamp(2rem,5vw,3.6rem);line-height:1}.legal-page p{max-width:760px}</style>

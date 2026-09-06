@@ -1,0 +1,10 @@
+---
+interface Heading { slug:string; text:string }
+const { headings=[] } = Astro.props as { headings:Heading[] };
+---
+{headings.length>0&&<details class="article-toc" open><summary>В этой статье</summary><nav aria-label="Оглавление"><ol>{headings.map((heading)=><li><a href={`#${heading.slug}`}>{heading.text}</a></li>)}</ol></nav></details>}
+<script>if(matchMedia('(max-width:700px)').matches){document.querySelectorAll('.article-toc').forEach((toc)=>toc.removeAttribute('open'))}</script>
+<style>
+  .article-toc{margin:1.8rem 0;padding:1rem 1.2rem;border:1px solid var(--c-line);border-radius:var(--r-md);background:#fff}.article-toc summary{font-weight:800;cursor:pointer}.article-toc ol{display:grid;gap:.42rem;margin:.8rem 0 0;padding-left:1.3rem}.article-toc a{color:#33404a;text-decoration-thickness:1px;text-underline-offset:3px}
+  @media(max-width:700px){.article-toc{margin:1.3rem 0;padding:.85rem 1rem}}
+</style>

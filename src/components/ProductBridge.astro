@@ -1,0 +1,9 @@
+---
+interface Props { eyebrow?:string; title:string; description:string; href:string; label:string; productId?:string }
+const { eyebrow='Инструмент по теме', title, description, href, label, productId } = Astro.props;
+---
+<aside class="product-bridge"><p class="product-bridge__eyebrow">{eyebrow}</p><h2>{title}</h2><p>{description}</p><a href={href} data-analytics-event="click_product" data-analytics-content-id={productId} data-analytics-placement="article_product_bridge">{label}</a></aside>
+<style>
+  .product-bridge{margin-top:3rem;padding:1.4rem;border-left:5px solid var(--c-orange);border-radius:0 var(--r-md) var(--r-md) 0;background:var(--c-ink);color:#fff}.product-bridge__eyebrow{margin:0 0 .45rem;color:#a8c5e6;font:800 .76rem/1.2 var(--font-ui);letter-spacing:.06em;text-transform:uppercase}.product-bridge h2{margin:.2rem 0 .65rem;font-size:1.75rem}.product-bridge>p:not(.product-bridge__eyebrow){max-width:65ch;color:#e0e5e8}.product-bridge a{display:inline-flex;min-height:44px;align-items:center;margin-top:.4rem;padding:.65rem 1rem;border-radius:var(--r-sm);background:var(--c-orange);color:#fff;font-weight:800;text-decoration:none}
+  @media(max-width:700px){.product-bridge{padding:1.1rem}.product-bridge h2{font-size:1.45rem}}
+</style>

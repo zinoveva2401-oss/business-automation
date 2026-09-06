@@ -1,0 +1,5 @@
+---
+import { getPublishedArticles } from '../../../lib/content';
+export async function getStaticPaths(){const articles=await getPublishedArticles();const pages=Math.ceil(articles.length/12);return Array.from({length:Math.max(0,pages-1)},(_,index)=>({params:{page:String(index+2)},props:{page:index+2}}))}
+return Astro.redirect('/articles/',301);
+---

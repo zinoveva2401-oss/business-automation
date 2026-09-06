@@ -1,4 +1,268 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Светлана Тарасова',
+  image: ['/about/about-hero-desktop.webp', '/about/about-hero-mobile.webp'],
+  jobTitle: 'Практик в сфере торговли и управления бизнесом',
+};
+
+const heroFacts = [
+  { icon: 'ti-building-store', title: '19 лет практического опыта', text: 'От повседневной работы магазина до управления бизнес-процессами.' },
+  { icon: 'ti-arrows-exchange', title: 'Разные стороны торгового бизнеса', text: 'Продажи, товар, закупки, производство, люди и управление.' },
+  { icon: 'ti-tool', title: 'Практические решения', text: 'Диагностика, чек-листы, методики и цифровые инструменты.' },
+];
+
+const steps = [
+  { icon: 'ti-chart-bar', title: 'Что происходит?', text: 'Смотрим на показатели и процессы, чтобы увидеть реальную картину, а не один симптом.' },
+  { icon: 'ti-help-circle', title: 'Почему это происходит?', text: 'Ищем причину в продажах, товаре, покупателях, работе команды и управленческих решениях.' },
+  { icon: 'ti-flag', title: 'Что делать дальше?', text: 'Превращаем выводы в конкретные действия, которые можно проверить и внедрить в работу.' },
+];
+
+const areas = [
+  { icon: 'ti-chart-line', title: 'Продажи и показатели', text: 'Средний чек, конверсия, план и динамика продаж.' },
+  { icon: 'ti-package', title: 'Товар и ассортимент', text: 'Остатки, неликвид, ассортимент и товарные решения.' },
+  { icon: 'ti-user', title: 'Покупатель', text: 'Путь клиента, сервис и причины отказа от покупки.' },
+  { icon: 'ti-users', title: 'Персонал', text: 'Продавцы, руководители, стандарты, обучение и контроль.' },
+  { icon: 'ti-shopping-bag', title: 'Закупки', text: 'Поставщики, условия и ассортиментные решения.' },
+  { icon: 'ti-building-store', title: 'Управление магазином', text: 'Процессы, показатели, регламенты и ежедневная работа руководителя.' },
+  { icon: 'ti-speakerphone', title: 'Маркетинг и акции', text: 'Акции, механики продаж, лояльность и работа со спросом.' },
+  { icon: 'ti-settings', title: 'Производство и смежные процессы', text: 'Опыт оптовой торговли и швейного производства.' },
+];
 ---
-<BaseLayout title="О Светлане Тарасовой — Розница в цифрах" description="Практический опыт системного управления непродовольственным ритейлом."><section class="placeholder-page"><div class="container"><p class="eyebrow">О проекте</p><h1>Практика розницы, переведённая в понятные решения</h1><p>Страница подготовлена технически. Финальная редакционная версия будет собрана только из подтверждённых фактов.</p></div></section></BaseLayout>
+
+<BaseLayout
+  title="Светлана Тарасова — Розница в цифрах"
+  description="Практический опыт Светланы Тарасовой в торговле, управлении и системной работе с магазином."
+  image="/about/about-hero-desktop.webp"
+  schema={personSchema}
+>
+  <article class="about-page">
+    <section class="about-hero">
+      <picture class="hero-art">
+        <source media="(max-width: 600px)" srcset="/about/about-hero-mobile.webp" />
+        <img src="/about/about-hero-desktop.webp" alt="Светлана Тарасова в магазине рядом с аналитическим изображением торгового пространства" width="1799" height="1063" fetchpriority="high" />
+      </picture>
+      <div class="container hero-content">
+        <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: 'Обо мне' }]} />
+        <div class="hero-intro">
+          <h1><span>Светлана</span> <em>Тарасова</em></h1>
+          <div class="desktop-copy">
+            <p>19 лет работаю в сфере торговли и управления бизнесом. За это время я успела поработать в рознице и опте, в закупках и производстве, в магазинах и командах, с ассортиментом и с ежедневными управленческими задачами.</p>
+            <p>В «Рознице в цифрах» я собрала этот опыт в понятные статьи, методики и инструменты, которые помогают разобраться в проблеме и понять, что делать дальше.</p>
+          </div>
+        </div>
+        <div class="hero-facts">
+          {heroFacts.map((fact) => (
+            <div class="hero-fact">
+              <i class={`ti ${fact.icon}`} aria-hidden="true"></i>
+              <div><strong>{fact.title}</strong><span>{fact.text}</span></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="origin-section">
+      <div class="container editorial-copy">
+        <h2>От <em>практики</em> к «Рознице в цифрах»</h2>
+        <div class="origin-text">
+          <p>Я хорошо знаю ситуацию, когда цифры вроде бы есть, а внятного ответа все равно нет. Продажи упали. Средний чек изменился. Остатков стало больше. Команда работает, но результат не устраивает.</p>
+          <p>За годы работы я привыкла не хвататься за первое очевидное решение. Сначала нужно понять, что именно изменилось и почему.</p>
+          <p>Иногда причина действительно в продавцах. Иногда — в ассортименте, трафике, цене, выкладке, закупках или решении руководителя.</p>
+          <p>Именно поэтому появился проект «Розница в цифрах». Здесь я разбираю реальные задачи торговли и перевожу их в понятные действия, расчеты, инструкции и инструменты.</p>
+        </div>
+        <div class="process-line">
+          {steps.map((step, index) => (
+            <div class="process-step">
+              <div class="step-mark"><i class={`ti ${step.icon}`} aria-hidden="true"></i><span>0{index + 1}</span></div>
+              <h3>{step.title}</h3>
+              <p>{step.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="areas-section">
+      <div class="container">
+        <div class="section-heading">
+          <h2>С чем я <em>работаю</em></h2>
+          <p>Смотрю на магазин как на связанную систему, а не как на набор отдельных показателей.</p>
+        </div>
+        <div class="areas-grid">
+          {areas.map((area) => (
+            <div class="area-item">
+              <i class={`ti ${area.icon}`} aria-hidden="true"></i>
+              <div><h3>{area.title}</h3><p>{area.text}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="principle-section">
+      <div class="container principle-grid">
+        <div class="principle-title"><span>Мой подход</span><h2>Сначала разобраться.<br/><em>Потом менять.</em></h2></div>
+        <div class="principle-copy">
+          <p>Я не верю в универсальные советы, которые одинаково работают для всех магазинов. Одна и та же проблема может быть вызвана совершенно разными причинами.</p>
+          <p>Поэтому моя логика проста: <strong>посмотреть, что происходит → найти причину → выбрать действие → проверить результат.</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="start-section">
+      <div class="container start-grid">
+        <div><h2>С чего начать</h2><p>Если хотите разобраться самостоятельно, начните со статей и готовых инструментов. Если задача требует отдельного разбора, посмотрите варианты сотрудничества со мной.</p></div>
+        <div class="actions">
+          <a class="button button--primary" href="/articles/">Читать статьи <i class="ti ti-arrow-right"></i></a>
+          <a class="button button--outline" href="/tools/">Смотреть инструменты <i class="ti ti-arrow-right"></i></a>
+          <a class="button button--outline" href="/services/">Услуги <i class="ti ti-arrow-right"></i></a>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+
+<style>
+  .about-page{overflow:hidden;background:#f3f5f7;color:var(--c-ink)}
+  .about-page h1,.about-page h2,.about-page h3{font-family:var(--font-editorial)}
+  .about-page em{color:var(--c-orange);font-style:normal}
+  .about-hero{position:relative;height:680px;overflow:hidden;background:#eee9e1}
+  .hero-art{position:absolute;inset:0;display:block}
+  .hero-art img{width:100%;height:100%;object-fit:cover;object-position:center center}
+  .hero-content{position:relative;z-index:1;height:100%;padding-top:1.15rem}
+  .hero-content :global(.breadcrumbs){margin-bottom:2.2rem}
+  .hero-intro{width:48%;max-width:650px}
+  .hero-intro h1{margin:0 0 1rem;font-size:clamp(3rem,4.4vw,4.75rem);font-weight:500;line-height:.94;letter-spacing:-.035em}
+  .hero-intro h1 span,.hero-intro h1 em{display:inline}
+  .hero-intro p{max-width:610px;margin:.55rem 0;font-size:1rem;line-height:1.5}
+  .hero-facts{position:absolute;bottom:2.2rem;left:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.1rem;width:48%;max-width:680px}
+  .hero-fact{display:grid;grid-template-columns:34px 1fr;gap:.6rem;align-items:start;padding-top:.75rem;border-top:1px solid #27333d36}
+  .hero-fact i{color:var(--c-blue);font-size:1.55rem}
+  .hero-fact strong,.hero-fact span{display:block}
+  .hero-fact strong{margin-bottom:.25rem;font-size:.88rem;line-height:1.25}
+  .hero-fact span{color:#525c63;font-size:.76rem;line-height:1.35}
+  .origin-section{position:relative;padding:2.8rem 0 3.2rem;background:#f3f5f7}
+  .origin-section::before{position:absolute;top:-14px;left:0;width:100%;height:18px;background:#f3f5f7;clip-path:polygon(0 34%,5% 55%,11% 28%,18% 60%,27% 35%,35% 65%,44% 38%,53% 61%,63% 32%,72% 58%,82% 34%,91% 63%,100% 37%,100% 100%,0 100%);content:''}
+  .editorial-copy h2,.section-heading h2{margin:0 0 .8rem;font-size:clamp(2rem,3vw,2.75rem);font-weight:500}
+  .origin-text{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem 2.5rem;max-width:1050px}
+  .origin-text p{margin:.25rem 0;font-size:.96rem;line-height:1.55}
+  .process-line{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:2.2rem;border-top:1px dashed #2f80ed80}
+  .process-step{position:relative;padding:1.5rem 2.1rem 0 0}
+  .process-step:not(:last-child){border-right:1px solid #d9d6cf}
+  .process-step:not(:first-child){padding-left:2.1rem}
+  .step-mark{position:absolute;top:-18px;left:0;display:flex;width:36px;height:36px;align-items:center;justify-content:center;border:1px solid #b8ccec;border-radius:50%;background:#f3f5f7;color:var(--c-blue)}
+  .process-step:not(:first-child) .step-mark{left:2.1rem}
+  .step-mark span{position:absolute;top:-.45rem;right:-.65rem;padding:.05rem .25rem;background:#f3f5f7;color:#7a838a;font:700 .62rem var(--font-ui)}
+  .process-step h3{margin:.4rem 0 .35rem;font-size:1.12rem}
+  .process-step p{max-width:330px;margin:0;color:#4f585f;font-size:.86rem;line-height:1.45}
+  .areas-section{padding:2.6rem 0 3rem;background:#e9eef2}
+  .section-heading{display:flex;align-items:end;justify-content:space-between;gap:2rem;margin-bottom:1.4rem}
+  .section-heading h2{margin:0}
+  .section-heading>p{max-width:430px;margin:0;color:#596168;font-size:.9rem}
+  .areas-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #cbc6bd;border-left:1px solid #cbc6bd}
+  .area-item{display:grid;grid-template-columns:34px 1fr;gap:.7rem;min-height:125px;padding:1rem;border-right:1px solid #cbc6bd;border-bottom:1px solid #cbc6bd}
+  .area-item>i{color:var(--c-blue);font-size:1.55rem}
+  .area-item h3{margin:0 0 .3rem;font-size:1rem}
+  .area-item p{margin:0;color:#566067;font-size:.8rem;line-height:1.4}
+  .principle-section{padding:2.7rem 0;background:#10161b;color:#fff}
+  .principle-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(2rem,7vw,7rem);align-items:center}
+  .principle-title>span{display:block;margin-bottom:.45rem;color:#9da8af;font-size:.75rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase}
+  .principle-title h2{margin:0;font-size:clamp(2rem,3.3vw,3.25rem);font-weight:500;line-height:1.05}
+  .principle-copy{padding-left:1.5rem;border-left:3px solid var(--c-orange)}
+  .principle-copy p{margin:.3rem 0 .8rem;color:#d8dde0;font-size:.98rem;line-height:1.55}
+  .principle-copy strong{color:#fff}
+  .start-section{padding:2.3rem 0 2.7rem;background:#f3f5f7}
+  .start-grid{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center}
+  .start-grid h2{margin:0 0 .45rem;font-size:2rem}
+  .start-grid p{max-width:760px;margin:0;color:#505960;font-size:.95rem;line-height:1.5}
+  .actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:.55rem}
+  .actions .button{min-height:44px;padding:.65rem .9rem;font-size:.82rem}
+  .actions .button--outline{border-color:var(--c-ink);color:var(--c-ink)}
+  :global(.site-footer .footer-grid>div:last-child a[href="/cookie-policy/"]),:global(.site-footer .footer-grid>div:last-child button[data-cookie-settings]){display:none!important}
+  :global(.site-footer .footer-grid>div:last-child strong){order:0}
+  :global(.site-footer .footer-grid>div:last-child a[href="/privacy/"]){order:1;font-size:0!important}
+  :global(.site-footer .footer-grid>div:last-child a[href="/user-agreement/"]){order:2;font-size:0!important}
+  :global(.site-footer .footer-grid>div:last-child a[href="/offer/"]){order:3}
+  :global(.site-footer .footer-grid>div:last-child a[href="/privacy/"]::after){content:'Политика конфиденциальности';font-size:.875rem}
+  :global(.site-footer .footer-grid>div:last-child a[href="/user-agreement/"]::after){content:'Пользовательское соглашение';font-size:.875rem}
+
+  @media(max-width:1024px){
+    .about-hero{height:650px}
+    .hero-art img{object-fit:contain;object-position:center bottom}
+    .hero-intro{width:52%}
+    .hero-facts{width:52%}
+    .areas-grid{grid-template-columns:repeat(2,1fr)}
+  }
+
+  @media(max-width:768px){
+    .about-hero{height:760px}
+    .hero-art img{object-position:center bottom}
+    .hero-intro{width:58%}
+    .hero-facts{grid-template-columns:1fr;width:47%;gap:.45rem}
+    .hero-fact{grid-template-columns:30px 1fr;padding-top:.45rem}
+    .origin-text{grid-template-columns:1fr}
+    .process-step,.process-step:not(:first-child){padding-right:1rem;padding-left:1rem}
+    .process-step:first-child{padding-left:0}
+    .process-step:not(:first-child) .step-mark{left:1rem}
+    .principle-grid,.start-grid{grid-template-columns:1fr}
+    .actions{justify-content:flex-start}
+  }
+
+  @media(max-width:600px){
+    .about-hero{display:block;height:910px;min-height:0;padding-bottom:0;background:#f0ede8}
+    .hero-art{position:absolute;inset:auto -6% 0;display:block;height:auto;margin:0;overflow:visible}
+    .hero-art img{position:static;width:112%;max-width:none;height:auto;object-fit:contain;object-position:center bottom}
+    .hero-content{display:flex;height:auto;flex-direction:column;padding-top:.4rem}
+    .hero-content :global(.breadcrumbs){margin-bottom:.3rem}
+    .hero-intro{width:100%;max-width:none}
+    .hero-intro h1{margin-bottom:.3rem;font-size:2.35rem;line-height:1}
+    .hero-intro p{margin:.18rem 0;font-size:1rem;line-height:1.34}
+    .hero-facts{position:static;display:grid;grid-template-columns:1fr;width:100%;max-width:none;gap:0;margin:.35rem 0 .25rem}
+    .hero-fact{grid-template-columns:27px 1fr;gap:.45rem;padding:.36rem 0;border-top:1px solid #27333d27}
+    .hero-fact i{font-size:1.2rem}
+    .hero-fact strong{margin-bottom:.12rem;font-size:.86rem}
+    .hero-fact span{font-size:.78rem;line-height:1.28}
+    .origin-section{padding:2rem 0 2.4rem}
+    .editorial-copy h2,.section-heading h2{font-size:1.8rem;line-height:1.05}
+    .origin-text p{font-size:.95rem}
+    .process-line{grid-template-columns:1fr;margin:1.8rem 0 0 .9rem;border-top:0;border-left:1px dashed #2f80ed80}
+    .process-step,.process-step:not(:first-child){padding:0 0 1.4rem 2.2rem;border-right:0}
+    .process-step:last-child{padding-bottom:0}
+    .step-mark,.process-step:not(:first-child) .step-mark{top:0;left:-18px}
+    .process-step h3{margin:0 0 .3rem;font-size:1.08rem}
+    .process-step p{font-size:.88rem}
+    .areas-section{padding:2rem 0 2.2rem}
+    .section-heading{display:block;margin-bottom:1rem}
+    .section-heading>p{margin-top:.55rem;font-size:.9rem}
+    .areas-grid{grid-template-columns:1fr 1fr}
+    .area-item{display:block;min-height:145px;padding:.8rem}
+    .area-item>i{display:block;margin-bottom:.45rem;font-size:1.35rem}
+    .area-item h3{font-size:.95rem;line-height:1.15}
+    .area-item p{font-size:.78rem}
+    .principle-section{padding:2.1rem 0}
+    .principle-grid{gap:1.2rem}
+    .principle-title h2{font-size:2rem}
+    .principle-copy{padding-left:1rem}
+    .principle-copy p{font-size:.95rem}
+    .start-section{padding:2rem 0 2.3rem}
+    .start-grid{gap:1.25rem}
+    .start-grid h2{font-size:1.8rem}
+    .actions{display:grid;grid-template-columns:1fr}
+    .actions .button{width:100%;min-height:46px;justify-content:center}
+  }
+
+  @media(max-width:430px){
+    .hero-intro h1{font-size:2.15rem}
+    .areas-grid{grid-template-columns:1fr}
+    .area-item{display:grid;grid-template-columns:30px 1fr;min-height:0}
+    .area-item>i{margin:0}
+    :global(.site-footer .footer-grid>div:not(.footer-about)){display:grid;gap:.4rem}
+    :global(.site-footer .footer-grid>div:not(.footer-about) a){display:block!important}
+    :global(.site-footer .footer-grid>div:not(.footer-about) strong:after){display:none}
+  }
+</style>

@@ -1,0 +1,159 @@
+---
+interface Heading { slug:string; text:string }
+const { headings=[] } = Astro.props as { headings:Heading[] };
+const id = (text:string) => headings.find((heading)=>heading.text===text)?.slug;
+const productHref = '/tools/store-diagnostics/';
+---
+
+<div class="cnt0026 prose">
+  <p>План не выполнен. Первая реакция обычно появляется быстрее данных.</p>
+
+  <div class="impulses" aria-label="Первые импульсивные решения">
+    <p>«Надо поговорить с продавцами».</p>
+    <p>«Нужно добавить рекламу».</p>
+    <p>«Ассортимент слабый — надо заказать товар».</p>
+    <p>«Давайте сделаем акцию, чтобы догнать план».</p>
+  </div>
+
+  <p>Я бы не начинала ни с одного из этих действий.</p>
+
+  <p class="principle principle--signal"><strong>Невыполненный план — это сигнал. Но ещё не диагноз.</strong> Пока мы не понимаем, где именно появилось отклонение, любое вмешательство остаётся гипотезой — иногда дорогой.</p>
+
+  <aside class="quick-answer"><strong>Короткий ответ:</strong> сначала сравните факт с сопоставимой базой, затем найдите первую точку, где процесс реально изменился. И только после этого решайте, что проверять глубже.</aside>
+
+  <section aria-labelledby={id('Почему одинаковый минус по плану может требовать разных действий')}>
+    <h2 id={id('Почему одинаковый минус по плану может требовать разных действий')}>Почему одинаковый минус по плану может требовать разных действий</h2>
+    <p>Представим, что два магазина выполнили план только на 80%.</p>
+
+    <div class="comparison" aria-label="Два сценария одинакового отклонения">
+      <article>
+        <p class="scene-label">Сценарий А</p><strong class="minus">−20% к плану</strong>
+        <p>В первом магазине стало заметно меньше посетителей, но те, кто пришёл, покупают примерно так же, как раньше.</p>
+        <p class="check-zone">Зона проверки → до покупки / поток</p>
+      </article>
+      <p class="mobile-between">Одинаковый результат. Разные зоны проверки.</p>
+      <article>
+        <p class="scene-label">Сценарий Б</p><strong class="minus">−20% к плану</strong>
+        <p>Во втором поток не изменился, но из тех же посетителей покупку совершает меньше людей.</p>
+        <p class="check-zone">Зона проверки → между входом и покупкой</p>
+      </article>
+    </div>
+
+    <p>В обоих отчётах можно увидеть одинаковое «−20% к плану». Но решение «добавить рекламу» во втором случае может только привести больше людей в процесс, который уже работает хуже.</p>
+    <p>То же самое с продавцами. Если магазин не получил нужного потока, разговор с командой о конверсии не исправит недостающих посетителей. Если люди приходят, но нужного товара нет в наличии, давление на продавца тоже не вернёт отсутствующий размер или модель.</p>
+    <p>Поэтому до решения я разделяю две вещи:</p>
+
+    <div class="where-why" aria-label="Где изменилось — не равно почему изменилось">
+      <p><span>1</span><strong>Где появилось отклонение?</strong></p><b aria-hidden="true">≠</b><p><span>2</span><strong>Почему оно появилось?</strong></p>
+    </div>
+    <p>Это не одно и то же.</p>
+  </section>
+
+  <section aria-labelledby={id('Первая проверка: план вообще сравнивается с реальностью?')}>
+    <h2 id={id('Первая проверка: план вообще сравнивается с реальностью?')}>Первая проверка: план вообще сравнивается с реальностью?</h2>
+    <p>Перед поиском виноватого проверьте саму базу сравнения.</p>
+    <p>План мог быть поставлен на месяц с другим количеством рабочих дней, иной сезонностью, акцией, изменившимся графиком, другим ассортиментом или внешним событием. Это не означает, что план «неправильный». Но означает, что процент выполнения без контекста ещё не объясняет работу магазина.</p>
+    <p>Для первого прохода достаточно четырёх вопросов:</p>
+    <ul class="compact-checklist">
+      <li>одинаково ли количество рабочих дней и часов;</li><li>были ли существенные акции или изменения цен;</li><li>сопоставим ли ассортимент и наличие ключевых групп;</li><li>не произошло ли внешнее изменение, которое явно повлияло на поток.</li>
+    </ul>
+    <p class="warning-line">Если база несопоставима, сначала зафиксируйте это. Не пытайтесь объяснить весь разрыв одной причиной.</p>
+  </section>
+
+  <section aria-labelledby={id('Вторая проверка: где процесс изменился первым')}>
+    <h2 id={id('Вторая проверка: где процесс изменился первым')}>Вторая проверка: где процесс изменился первым</h2>
+    <p>Для первичной диагностики удобно смотреть не на десятки показателей, а на последовательность продажи:</p>
+    <p class="sale-direction"><span>Продажа</span><strong>люди → покупки → корзина → деньги.</strong></p>
+    <p>Если мы уже видим проблему в деньгах, диагностировать удобно в обратную сторону:</p>
+
+    <div class="diagnostic-path" aria-label="Диагностический путь от денег к людям">
+      <p class="path-label">Диагностика</p>
+      <ol>
+        <li><strong>Деньги</strong><span>итог</span></li><li><strong>Корзина</strong><span>что внутри покупки</span></li><li><strong>Покупки</strong><span>чеки / конверсия</span></li><li><strong>Люди</strong><span>входящий поток</span></li>
+      </ol>
+    </div>
+
+    <p><strong>деньги → корзина → покупки → люди.</strong></p>
+    <p>Это не полный аудит магазина. Это способ сузить область поиска.</p>
+
+    <div class="point-explanations">
+      <section><h3 id={id('Деньги')}>Деньги</h3><p>Факт ниже плана — это итог. Он подтверждает проблему, но не объясняет её.</p></section>
+      <section><h3 id={id('Корзина')}>Корзина</h3><p>Что происходило с уже состоявшейся покупкой?</p><p>Изменился ли средний чек? Стало ли меньше товаров в чеке? Не произошёл ли сдвиг в структуре проданного?</p><p>Если корзина стабильна, нет смысла автоматически лечить ситуацию допродажами.</p></section>
+      <section><h3 id={id('Покупки')}>Покупки</h3><p>Сколько чеков было получено из существующего потока? Что произошло с конверсией?</p><p>Если людей столько же, а чеков меньше, область поиска уже заметно сужается.</p></section>
+      <section><h3 id={id('Люди')}>Люди</h3><p>Сколько покупателей реально дошло до магазина?</p><p>Если поток просел, дальнейшая диагностика идёт в другую сторону, чем при стабильном потоке.</p></section>
+    </div>
+  </section>
+
+  <section aria-labelledby={id('Учебный пример: две версии одного и того же «−20%»')}>
+    <h2 id={id('Учебный пример: две версии одного и того же «−20%»')}>Учебный пример: две версии одного и того же «−20%»</h2>
+    <p class="example-note">Это учебный пример, не данные реального магазина.</p>
+    <div class="scenario-board">
+      <article><h3 id={id('Версия А')}>Версия А</h3><ul><li>плановая выручка: 100 000 ₽;</li><li>фактическая: 80 000 ₽;</li><li>входящий поток: снизился на 20%;</li><li>конверсия: примерно на прежнем уровне;</li><li>средний чек: примерно на прежнем уровне.</li></ul><p class="found-point">Первая заметная точка → <strong>ЛЮДИ</strong></p><p>Здесь первая заметная точка — <strong>люди</strong>.</p><p>Это ещё не доказывает, что «нужна реклама», но хотя бы показывает, что проблему стоит искать до покупки: видимость точки, внешний трафик, расписание, локальные факторы, рекламные источники.</p></article>
+      <article><h3 id={id('Версия Б')}>Версия Б</h3><ul><li>плановая выручка: 100 000 ₽;</li><li>фактическая: 80 000 ₽;</li><li>входящий поток: не изменился;</li><li>средний чек: примерно на прежнем уровне;</li><li>число покупок: снизилось.</li></ul><p class="found-point">Первая заметная точка → <strong>ПОКУПКИ</strong></p><p>Здесь первая заметная точка — <strong>покупки</strong>.</p><p>И уже теперь вопрос другой: что изменилось между входом человека и покупкой?</p><p>Наличие? Цена? Навигация? Контакт? Состав трафика? Работа продавца?</p><p>Мы пока не знаем. Но уже знаем, <strong>где проверять дальше</strong>.</p></article>
+    </div>
+  </section>
+
+  <section aria-labelledby={id('Что имеющиеся цифры пока не доказывают')}>
+    <h2 id={id('Что имеющиеся цифры пока не доказывают')}>Что имеющиеся цифры пока не доказывают</h2>
+    <div class="false-inference"><p><strong>Конверсия снизилась</strong><span>≠</span>не значит автоматически «продавец плохо работает».</p><p><strong>Средний чек снизился</strong><span>≠</span>не значит автоматически «перестали делать допродажи».</p><p><strong>Поток снизился</strong><span>≠</span>не значит автоматически «реклама плохая».</p><p><strong>Выручка снизилась</strong><span>≠</span>не значит автоматически «ассортимент слабый».</p></div>
+    <p class="principle"><strong>Показатель помогает локализовать проблему. Причину нужно доказать отдельно.</strong></p>
+    <p>Именно поэтому я не люблю начинать разбор плохого дня с фразы «почему так произошло?». Сначала полезнее спросить: <strong>«что именно изменилось?»</strong></p>
+  </section>
+
+  <section aria-labelledby={id('Мини-проверка перед любым вмешательством')}>
+    <h2 id={id('Мини-проверка перед любым вмешательством')}>Мини-проверка перед любым вмешательством</h2>
+    <p>Перед тем как менять продавцов, рекламу, ассортимент или цены, пройдите короткую последовательность.</p>
+    <ol class="decision-sequence"><li><strong>Зафиксируйте отклонение.</strong> Что именно не выполнено: выручка, количество покупок, маржа, план по категории?</li><li><strong>Проверьте сопоставимость.</strong> С чем вы сравниваете факт и почему эта база подходит?</li><li><strong>Найдите первую изменившуюся точку.</strong> Деньги → корзина → покупки → люди.</li><li><strong>Запишите, чего данные НЕ доказывают.</strong> Например: «конверсия упала, но по этим данным нельзя сделать вывод о причине».</li><li><strong>Сформулируйте одну следующую проверку.</strong> Не «исправить продажи», а конкретное наблюдение или показатель.</li></ol>
+    <p>Это уже управленческая задача, с которой можно работать.</p>
+  </section>
+
+  <section aria-labelledby={id('Когда продавца действительно нужно проверять')}>
+    <h2 id={id('Когда продавца действительно нужно проверять')}>Когда продавца действительно нужно проверять</h2>
+    <p>Продавец — одна из возможных причин, и исключать её нельзя.</p>
+    <p>Но я бы переходила к оценке его работы после того, как проверены хотя бы базовые условия:</p>
+    <ul><li>был ли поток;</li><li>был ли товар;</li><li>была ли понятна цена и предложение;</li><li>дошёл ли покупатель до реальной возможности контакта.</li></ul>
+    <p class="inline-sequence"><span>Поток ✓</span><i>→</i><span>Товар ✓</span><i>→</i><span>Цена/предложение ✓</span><i>→</i><span>Возможность контакта ✓</span><i>→</i><strong>Проверяем работу продавца</strong></p>
+    <p>Если эти точки не объясняют просадку, тогда уже имеет смысл смотреть контакт, выявление задачи, предложение, работу с сомнениями и завершение покупки.</p>
+    <p>Иначе легко наказать человека за проблему, которую он физически не мог исправить.</p>
+  </section>
+
+  <section aria-labelledby={id('Когда реклама действительно становится следующим шагом')}>
+    <h2 id={id('Когда реклама действительно становится следующим шагом')}>Когда реклама действительно становится следующим шагом</h2>
+    <p>Если магазин действительно получает меньше целевых посетителей, вопрос привлечения становится логичным.</p>
+    <p>Но если поток есть, а покупок стало меньше, сначала нужно разобраться с текущим процессом. Покупка дополнительного трафика до этого момента может просто увеличить стоимость той же ошибки.</p>
+  </section>
+
+  <section aria-labelledby={id('Что делать после первой проверки')}>
+    <h2 id={id('Что делать после первой проверки')}>Что делать после первой проверки</h2>
+    <p>Если короткая проверка показала одну слабую точку, не меняйте сразу пять вещей.</p><p>Сформулируйте одну гипотезу и способ её проверить.</p><p>Например:</p>
+    <div class="case-flow"><p><strong>Наблюдение:</strong> поток стабилен, конверсия снизилась.</p><p><strong>Гипотеза:</strong> часть покупателей не находит нужные размеры.</p><p><strong>Проверка:</strong> неделю фиксировать потерянный спрос по размеру/модели и сопоставить с наличием.</p><p><strong>Действие:</strong> только после подтверждения менять заказ, выкладку или замену.</p><p><strong>Повторный замер:</strong> посмотреть, изменилась ли конверсия после одного изменения.</p></div>
+    <p>Это уже переход от эмоциональной реакции к эксперименту.</p>
+  </section>
+
+  <section aria-labelledby={id('Чек-лист перед решением')}>
+    <h2 id={id('Чек-лист перед решением')}>Чек-лист перед решением</h2>
+    <p>Перед решением «меняем продавца / запускаем рекламу / заказываем товар / даём скидку» спросите:</p>
+    <ul class="save-checklist"><li>Что именно не выполнено?</li><li>С чем я сравниваю результат?</li><li>Где появилась первая изменившаяся точка?</li><li>Что эта цифра пока не доказывает?</li><li>Какой один факт поможет различить две возможные причины?</li></ul>
+    <p class="principle"><strong>Если на последний вопрос ответа нет, решение пока рано принимать.</strong></p>
+  </section>
+
+  <p>Эта статья даёт только <strong>первичную локализацию проблемы</strong>.</p>
+  <p>В полном практикуме <strong>«Пульс магазина: диагностика продаж и ключевых показателей»</strong> работа продолжается дальше: используются рабочие диапазоны показателей, экономические минимумы, проверка сопоставимых периодов, потерянный спрос, матрица «показатель → что не доказывает → возможные причины → чем проверить», журнал гипотез и повторный замер. Всё это связано с HTML-дашбордом и рабочими инструментами.</p>
+  <p><strong>Если вы уже видите отклонение, но не хотите разбирать его по памяти и разрозненным таблицам, можно посмотреть, как устроен полный маршрут диагностики.</strong></p>
+
+  <aside class="editorial-bridge" aria-label="Продолжение диагностики">
+    <div><p class="bridge-label">Что уже сделано в статье</p><ul><li>локализовали отклонение;</li><li>нашли первую изменившуюся точку;</li><li>сформулировали следующую проверку.</li></ul></div>
+    <div><p class="bridge-label">Что продолжает полный практикум</p><p>Рабочие диапазоны, экономические минимумы, сопоставимые периоды, потерянный спрос, матрица причин и проверок, журнал гипотез, повторный замер и HTML-дашборд.</p><a href={productHref} data-analytics-event="click_product" data-analytics-content-id="store-diagnostics" data-analytics-placement="article_product_bridge">Посмотреть, как устроена диагностика</a></div>
+  </aside>
+
+  <section aria-labelledby={id('Вывод')}>
+    <h2 id={id('Вывод')}>Вывод</h2>
+    <p>Невыполненный план не требует мгновенного действия. Он требует правильного порядка вопросов.</p><p>Я бы не начинала с продавца, рекламы или товара.</p><p>Сначала я бы нашла первую точку, где процесс действительно изменился, записала, чего данные пока не доказывают, и только потом выбрала одну проверку.</p>
+    <p class="final-line"><strong>План — это повод начать диагностику. Не повод угадывать причину.</strong></p>
+  </section>
+</div>
+
+<style>
+  .cnt0026{font-size:1.0625rem;line-height:1.72}.cnt0026>section{margin-top:3.2rem}.cnt0026 h2{scroll-margin-top:1rem;margin:0 0 1.2rem;padding-top:.3rem;font-size:1.8rem}.cnt0026 h3{scroll-margin-top:1rem}.cnt0026 p,.cnt0026 li{max-width:72ch}.impulses{margin:1.25rem 0;padding:.2rem 0 .2rem 1.25rem;border-left:2px solid #c8d3df}.impulses p{margin:.4rem 0}.principle{position:relative;margin:2rem 0;padding:1.1rem 0 1.1rem 1.25rem;font-size:clamp(1.2rem,2.1vw,1.45rem);line-height:1.45}.principle::before{position:absolute;top:1.2rem;bottom:1.2rem;left:0;width:4px;background:var(--c-orange);content:''}.quick-answer{margin:1.7rem 0;padding:1rem 1.15rem;border-left:4px solid var(--c-blue);background:#eaf1f8}.comparison,.scenario-board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.7rem 0}.comparison article,.scenario-board article{padding:1.15rem;border:1px solid var(--c-line);background:#fff}.comparison article:first-child,.scenario-board article:first-child{border-top:4px solid var(--c-blue)}.comparison article:last-child,.scenario-board article:last-child{border-top:4px solid var(--c-orange)}.scene-label,.bridge-label,.path-label,.example-note{color:var(--c-blue);font-size:.78rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase}.minus{display:block;margin:.3rem 0 .7rem;font-size:1.5rem}.check-zone,.found-point{margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--c-line);font-weight:700}.mobile-between{display:none}.where-why{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:1rem;margin:1.6rem 0;padding-block:1rem;border-block:1px solid var(--c-line)}.where-why p{display:grid;gap:.25rem;margin:0}.where-why span{color:var(--c-blue);font-size:.8rem}.where-why b{color:var(--c-orange);font-size:2rem}.compact-checklist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;margin:1.3rem 0;padding:0;border-top:1px solid var(--c-line);list-style:none}.compact-checklist li{padding:.75rem 0 .75rem 1.7rem;border-bottom:1px solid var(--c-line)}.compact-checklist li::before,.save-checklist li::before{float:left;margin-left:-1.7rem;color:var(--c-blue);content:'□';font-weight:800}.warning-line{padding:1rem 0;border-block:1px solid #c7d5e4;color:#374754;font-weight:600}.sale-direction{display:flex;flex-wrap:wrap;gap:.45rem 1rem;align-items:baseline}.sale-direction span{color:var(--c-muted);font-size:.8rem;font-weight:800;text-transform:uppercase}.diagnostic-path{margin:1.6rem 0;padding:1.25rem;background:var(--c-ink);color:#fff}.diagnostic-path ol{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin:.8rem 0 0;padding:0;list-style:none}.diagnostic-path li{position:relative;display:grid;gap:.25rem;padding:.8rem 1.5rem .8rem 0}.diagnostic-path li:not(:last-child)::after{position:absolute;top:50%;right:.45rem;color:var(--c-orange);content:'→';transform:translateY(-50%)}.diagnostic-path span{color:#b9c7d4;font-size:.8rem}.point-explanations{margin:1.5rem 0;padding-left:1.15rem;border-left:1px solid #b8c8d8}.point-explanations section{position:relative}.point-explanations section::before{position:absolute;top:.5rem;left:-1.42rem;width:.5rem;height:.5rem;border-radius:50%;background:var(--c-blue);content:''}.point-explanations h3{margin:1.5rem 0 .4rem}.scenario-board h3{margin:0 0 .75rem}.scenario-board ul{display:grid;gap:.35rem;margin:0;padding-left:1.15rem}.example-note{margin-bottom:.6rem}.false-inference{margin:1.5rem 0;border-block:1px solid var(--c-line)}.false-inference p{display:grid;grid-template-columns:minmax(10rem,1fr) auto minmax(12rem,1fr);gap:1rem;margin:0;padding:.85rem 0;border-bottom:1px solid var(--c-line)}.false-inference p:last-child{border:0}.false-inference span{color:var(--c-orange);font-size:1.25rem;font-weight:800}.decision-sequence{margin:1.5rem 0;padding:0;list-style:none;counter-reset:step}.decision-sequence li{position:relative;padding:0 0 1.25rem 3.2rem;counter-increment:step}.decision-sequence li::before{position:absolute;top:0;left:0;display:grid;width:2.25rem;height:2.25rem;place-items:center;border:1px solid var(--c-blue);border-radius:50%;color:var(--c-blue);content:counter(step);font-weight:800}.decision-sequence li:not(:last-child)::after{position:absolute;top:2.25rem;bottom:0;left:1.1rem;width:1px;background:#b8c8d8;content:''}.inline-sequence{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:1.3rem 0;padding:.8rem 0;border-block:1px solid var(--c-line);font-size:.92rem}.inline-sequence i{color:var(--c-orange);font-style:normal}.case-flow{margin:1.5rem 0;padding-left:1.2rem;border-left:3px solid var(--c-blue)}.case-flow p{position:relative;margin:0;padding:.75rem 0;border-bottom:1px solid var(--c-line)}.case-flow p:last-child{border:0}.save-checklist{margin:1.4rem 0;padding:0 1.2rem;border:1px solid var(--c-line);background:#fff;list-style:none}.save-checklist li{margin:0;padding:1rem 0 1rem 1.7rem;border-bottom:1px solid var(--c-line)}.save-checklist li:last-child{border:0}.editorial-bridge{display:grid;grid-template-columns:.8fr 1.2fr;gap:0;margin:2.5rem 0;padding:1.35rem;border-left:5px solid var(--c-orange);background:var(--c-ink);color:#fff}.editorial-bridge>div{padding:.25rem 1.1rem}.editorial-bridge>div+div{border-left:1px solid #ffffff25}.editorial-bridge ul{padding-left:1.15rem}.editorial-bridge p{color:#e0e5e8}.editorial-bridge a{display:inline-flex;min-height:44px;align-items:center;margin-top:.5rem;padding:.7rem 1rem;border-radius:var(--r-sm);background:var(--c-orange);color:#fff;font-weight:800;text-decoration:none}.final-line{margin:2rem 0 0;padding:1.25rem 0;border-block:1px solid var(--c-orange);font-size:clamp(1.25rem,2.2vw,1.55rem);line-height:1.4}
+  @media(max-width:700px){.cnt0026{font-size:1rem}.cnt0026>section{margin-top:2.5rem}.cnt0026 h2{font-size:1.6rem;line-height:1.15}.comparison,.scenario-board,.editorial-bridge{grid-template-columns:1fr}.mobile-between{display:block;margin:0;padding:.2rem .4rem;color:var(--c-muted);font-size:.88rem;font-weight:700;text-align:center}.compact-checklist{grid-template-columns:1fr}.where-why{grid-template-columns:1fr;text-align:left}.where-why b{line-height:1}.diagnostic-path ol{grid-template-columns:1fr}.diagnostic-path li{padding:.55rem 0 1.7rem}.diagnostic-path li:not(:last-child)::after{top:auto;right:auto;bottom:.2rem;left:.25rem;transform:none;content:'↓'}.false-inference p{grid-template-columns:1fr auto;gap:.15rem .7rem}.false-inference p strong{grid-column:1}.false-inference p span{grid-column:2;grid-row:1 / span 2}.inline-sequence{display:grid;grid-template-columns:1fr}.inline-sequence i{transform:rotate(90deg);transform-origin:left center}.editorial-bridge>div{padding:.35rem 0}.editorial-bridge>div+div{margin-top:1rem;padding-top:1rem;border-top:1px solid #ffffff25;border-left:0}.editorial-bridge a{width:100%;justify-content:center;text-align:center}}
+</style>

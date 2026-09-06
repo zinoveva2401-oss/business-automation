@@ -1,4 +1,5 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro'; import Breadcrumbs from '../components/Breadcrumbs.astro'; import ContactLinks from '../components/ContactLinks.astro';
 ---
-<BaseLayout title="Контакты — Розница в цифрах" description="Подтверждённые способы связи с проектом «Розница в цифрах»."><section class="placeholder-page"><div class="container"><p class="eyebrow">Связаться</p><h1>Контакты</h1><p>Контактные данные не публикуются до подтверждения владельцем. Здесь не используются вымышленные адреса или ссылки.</p></div></section></BaseLayout>
+<BaseLayout title="Контакты Светланы Тарасовой — Розница в цифрах" description="Личные контакты Светланы Тарасовой и публичные площадки проекта «Розница в цифрах»."><section class="contacts-page"><div class="container"><Breadcrumbs items={[{name:'Главная',href:'/'},{name:'Контакты'}]} /><p class="eyebrow">Связаться и читать</p><h1>Контакты</h1><ContactLinks placement="contacts_page" /></div></section></BaseLayout>
+<style>.contacts-page{padding-block:var(--section)}.contacts-page h1{margin:.2rem 0 2rem;font-size:clamp(2.4rem,5vw,4rem)}</style>
