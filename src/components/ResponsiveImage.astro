@@ -14,3 +14,8 @@ const fallback = match ? `${optimizedBase}.w${Math.min(available.at(-1) ?? 1600,
   {match && <source type="image/webp" srcset={webp} sizes={sizes} />}
   <img src={fallback} alt={alt} width={width} height={height} loading={loading} fetchpriority={fetchpriority} class={className} />
 </picture>
+
+<style>
+  picture { display: block; width: 100%; height: 100%; }
+  img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+</style>
