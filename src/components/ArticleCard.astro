@@ -1,10 +1,10 @@
 ---
 import ResponsiveImage from './ResponsiveImage.astro';
-const { article, featured = false, placement = 'catalog' } = Astro.props;
+const { article, featured = false, placement = 'catalog', priority = false } = Astro.props;
 ---
 <article class:list={['article-card',{featured}]} data-article-card data-category={article.data.category} data-cluster={article.data.cluster} data-search={`${article.data.title} ${article.data.description} ${article.data.primarySearchQuestion}`.toLocaleLowerCase('ru')} data-timestamp={article.data.publishedAt.valueOf()} data-featured={article.data.featured?'1':'0'}>
   <a class="article-card__link" href={`/articles/${article.data.slug}/`} data-analytics-event="click_related_article" data-analytics-content-id={article.data.id} data-analytics-category={article.data.category} data-analytics-placement={placement}>
-    <div class:list={['article-card__image',!article.data.cover&&'article-card__image--placeholder']}>{article.data.cover?<ResponsiveImage src={article.data.cover} alt={article.data.coverAlt||''} width={720} height={405} loading="lazy" sizes="(max-width: 700px) 100vw, 33vw" />:<i class="ti ti-file-description" aria-hidden="true"></i>}</div>
+    <div class:list={['article-card__image',!article.data.cover&&'article-card__image--placeholder']}>{article.data.cover?<ResponsiveImage src={article.data.cover} alt={article.data.coverAlt||''} width={720} height={405} loading={priority ? 'eager' : 'lazy'} fetchpriority={priority ? 'high' : 'auto'} sizes="(max-width: 700px) 100vw, 33vw" />:<i class="ti ti-file-description" aria-hidden="true"></i>}</div>
     <div class="article-card__body"><p class="article-card__category">{article.data.category}</p><h3>{article.data.title}</h3></div>
   </a>
 </article>
