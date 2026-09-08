@@ -1,0 +1,11 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  return (await getCollection('services'))
+    .filter(({ data }) => data.active)
+    .map(({ data }) => ({ params: { slug: data.slug } }));
+}
+
+return Astro.redirect(`/services/#${Astro.params.slug}`, 301);
+---

@@ -1,0 +1,6 @@
+ErrorDocument 404 /404.html
+
+RewriteEngine On
+RewriteRule ^services/store-sales-audit/?$ /services/#store-sales-audit [R=301,L,NE]
+RewriteRule ^services/store-work-system/?$ /services/#store-work-system [R=301,L,NE]
+RewriteRule ^services/single-store-problem/?$ /services/#single-store-problem [R=301,L,NE]
