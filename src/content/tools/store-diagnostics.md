@@ -6,7 +6,7 @@ description: "Инструмент для сравнения двух перио
 type: "HTML-инструмент"
 category: "Управление"
 cluster: "Диагностика магазина"
-status: "comingSoon"
+status: "draft"
 featured: false
 bestseller: false
 price: 2990
