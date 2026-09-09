@@ -14,7 +14,7 @@ featured: false
 cover: "/articles/cnt-0027-card.png"
 coverAlt: "Собеседование кандидата в продавцы и его общение с покупателем в магазине"
 relatedArticleIds: ["CNT-0007"]
-relatedProductIds: []
+relatedProductIds: ["store-team-management"]
 relatedServiceIds: ["single-store-problem"]
 contentRole: "cluster"
 seoTitle: "Как понять, будет ли кандидат хорошим продавцом: один тест"
