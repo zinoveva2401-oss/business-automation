@@ -13,8 +13,9 @@ draft: false
 featured: false
 cover: "/articles/cnt-0007-cover.png"
 coverAlt: "Покупатель в магазине и путь к покупке"
-relatedArticleIds: []
+relatedArticleIds: ["CNT-0024"]
 relatedProductIds: []
+relatedServiceIds: ["store-sales-audit"]
 contentRole: "cluster"
 seoTitle: "Покупатели заходят и не покупают: что проверить в магазине"
 seoDescription: "Почему покупатели заходят в магазин и уходят без покупки? Касса не покажет причину. Сначала определите, на каком этапе человек уходит, и только потом ищите причину."

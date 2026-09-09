@@ -1,0 +1,25 @@
+---
+import ArticleCard from './ArticleCard.astro';
+import ProductCard from './ProductCard.astro';
+import type { CollectionEntry } from 'astro:content';
+
+type Props = {
+  articles: CollectionEntry<'articles'>[];
+  products: CollectionEntry<'tools'>[];
+  services: CollectionEntry<'services'>[];
+};
+
+const { articles, products, services } = Astro.props as Props;
+---
+
+{(articles.length > 0 || products.length > 0 || services.length > 0) && <aside class="article-recommendations" aria-label="Следующий шаг">
+  <p class="eyebrow">Следующий шаг</p>
+  <p class="recommendation-lead">Выберите продолжение, которое подходит вашей ситуации.</p>
+  {articles.length > 0 && <section><h2>Продолжить разбираться</h2><div class="recommendation-grid article-grid">{articles.map((article) => <ArticleCard article={article} placement="article_recommendation" />)}</div></section>}
+  {products.length > 0 && <section><h2>Применить на практике</h2><div class="recommendation-grid product-grid">{products.map((product) => <ProductCard product={product} placement="article_recommendation" />)}</div></section>}
+  {services.length > 0 && <section><h2>Нужен индивидуальный разбор</h2><div class="service-recommendation-grid">{services.map((service) => <a class="service-recommendation" href={`/services/#${service.data.slug}`} data-analytics-event="click_service" data-analytics-service-id={service.data.id} data-analytics-placement="article_recommendation"><strong>{service.data.title}</strong><span>{service.data.description}</span><b>Обсудить задачу →</b></a>)}</div></section>}
+</aside>}
+
+<style>
+  .article-recommendations{margin-top:3.2rem;padding-top:1.6rem;border-top:1px solid var(--c-line)}.recommendation-lead{margin:-.35rem 0 1.2rem;color:#56616a}.article-recommendations section+section{margin-top:2rem}.article-recommendations h2{margin:0 0 .8rem;font-family:var(--font-editorial);font-size:1.5rem;font-weight:500}.recommendation-grid{display:grid;gap:1rem}.recommendation-grid.article-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0}.recommendation-grid.product-grid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0}.service-recommendation-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem}.service-recommendation{display:grid;gap:.45rem;padding:1.1rem;border:1px solid var(--c-line);border-left:3px solid var(--c-orange);border-radius:0 var(--r-md) var(--r-md) 0;background:#fff;color:var(--c-ink);text-decoration:none}.service-recommendation strong{font-family:var(--font-editorial);font-size:1.2rem;font-weight:500}.service-recommendation span{color:#56616a;font-size:.9rem;line-height:1.45}.service-recommendation b{margin-top:.25rem;color:var(--c-blue);font-size:.85rem}@media(max-width:700px){.recommendation-grid.article-grid,.recommendation-grid.product-grid,.service-recommendation-grid{grid-template-columns:1fr}.article-recommendations{margin-top:2.2rem}.recommendation-lead{font-size:.95rem}}
+</style>

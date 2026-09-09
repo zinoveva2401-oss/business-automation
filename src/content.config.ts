@@ -16,7 +16,7 @@ const articles = defineCollection({
     updatedAt: z.coerce.date().optional(), author: z.string(), draft: z.boolean().default(true),
     featured: z.boolean().default(false), cover: z.string().optional(), coverAlt: z.string().optional(),
     readingTime: z.number().int().positive(), relatedArticleIds: z.array(z.string()).default([]),
-    relatedProductIds: z.array(z.string()).default([]), contentRole: z.enum(['pillar', 'cluster', 'support']).default('support'),
+    relatedProductIds: z.array(z.string()).default([]), relatedServiceIds: z.array(z.string()).default([]), contentRole: z.enum(['pillar', 'cluster', 'support']).default('support'),
     seoTitle: z.string(), seoDescription: z.string(), canonicalUrl: z.string().url().optional(), ogImage: z.string().optional(),
   }),
 });

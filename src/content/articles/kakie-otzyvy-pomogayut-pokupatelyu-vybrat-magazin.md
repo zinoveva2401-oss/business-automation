@@ -14,8 +14,9 @@ draft: false
 featured: false
 cover: "/articles/cnt-0024-cover.png"
 coverAlt: "Отзывы покупателей о магазине на экране смартфона"
-relatedArticleIds: []
+relatedArticleIds: ["CNT-0007"]
 relatedProductIds: []
+relatedServiceIds: ["single-store-problem"]
 contentRole: "cluster"
 seoTitle: "Отзывы о магазине: какие помогают покупателю выбрать"
 seoDescription: "Почему конкретные отзывы помогают выбрать магазин, а общая похвала почти ничего не объясняет будущему покупателю."

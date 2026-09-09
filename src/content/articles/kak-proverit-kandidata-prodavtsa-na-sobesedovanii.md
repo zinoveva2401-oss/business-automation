@@ -13,8 +13,9 @@ draft: false
 featured: false
 cover: "/articles/cnt-0027-card.png"
 coverAlt: "Собеседование кандидата в продавцы и его общение с покупателем в магазине"
-relatedArticleIds: []
+relatedArticleIds: ["CNT-0007"]
 relatedProductIds: []
+relatedServiceIds: ["single-store-problem"]
 contentRole: "cluster"
 seoTitle: "Как понять, будет ли кандидат хорошим продавцом: один тест"
 seoDescription: "Разговорчивость на собеседовании ещё не доказывает умение продавать. Одна рабочая ситуация помогает увидеть, как кандидат ведёт себя с реальным покупателем."

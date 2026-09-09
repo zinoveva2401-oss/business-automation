@@ -13,8 +13,9 @@ draft: false
 featured: false
 cover: "/hero-retail-investigation.png.png"
 coverAlt: "Путь покупателя в магазине"
-relatedArticleIds: []
+relatedArticleIds: ["CNT-0007"]
 relatedProductIds: []
+relatedServiceIds: ["store-sales-audit"]
 contentRole: "cluster"
 seoTitle: "Что проверить, если магазин не выполняет план продаж"
 seoDescription: "План продаж магазина не выполнен? Разберите отклонение до того, как менять продавцов, рекламу или ассортимент. Короткий порядок первичной проверки."
