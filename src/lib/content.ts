@@ -5,7 +5,7 @@ export async function getPublishedArticles() {
 }
 
 export async function getVisibleProducts() {
-  return (await getCollection('tools')).filter(({ data }) => data.status === 'published' && data.purchaseStatus === 'active' && Boolean(data.purchaseUrl));
+  return (await getCollection('tools')).filter(({ data }) => data.status !== 'draft');
 }
 
 export async function getCatalogProducts() {

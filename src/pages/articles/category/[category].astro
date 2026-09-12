@@ -1,9 +1,5 @@
 ---
 import { categories } from '../../../lib/site';
-
-export function getStaticPaths() {
-  return categories.map((category) => ({ params: { category: category.slug }, props: { category } }));
-}
-
-return Astro.redirect(`/articles/?category=${Astro.props.category.slug}`, 301);
+export function getStaticPaths(){return categories.flatMap((topic)=>[{params:{category:topic.slug},props:{category:topic}},...(topic.legacySlug!==topic.slug?[{params:{category:topic.legacySlug},props:{category:topic}}]:[])])}
+return Astro.redirect('/articles/?category=' + Astro.props.category.slug,301);
 ---

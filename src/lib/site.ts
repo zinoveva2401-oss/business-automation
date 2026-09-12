@@ -1,14 +1,14 @@
-export const SITE_NAME = 'Розница в цифрах';
+export const SITE_NAME = 'Докрути';
 export const AUTHOR_NAME = 'Светлана Тарасова';
 
 export const categories = [
-  { name: 'Продажи', slug: 'prodazhi', icon: 'ti-chart-bar' },
-  { name: 'Товар', slug: 'tovar', icon: 'ti-package' },
-  { name: 'Покупатель', slug: 'pokupatel', icon: 'ti-user' },
-  { name: 'Персонал', slug: 'personal', icon: 'ti-users-group' },
-  { name: 'Управление', slug: 'upravlenie', icon: 'ti-clipboard-check' },
-  { name: 'Маркетинг', slug: 'marketing', icon: 'ti-speakerphone' },
-  { name: 'ИИ и автоматизация', slug: 'ai-avtomatizatsiya', icon: 'ti-ai' },
+  { name: 'Продажи', slug: 'prodazhi', legacy: 'Продажи', legacySlug: 'prodazhi', icon: 'ti-chart-bar' },
+  { name: 'Ассортимент и закупки', slug: 'assortiment-zakupki', legacy: 'Товар', legacySlug: 'tovar', icon: 'ti-package' },
+  { name: 'Клиенты', slug: 'klienty', legacy: 'Покупатель', legacySlug: 'pokupatel', icon: 'ti-user' },
+  { name: 'Команда', slug: 'komanda', legacy: 'Персонал', legacySlug: 'personal', icon: 'ti-users-group' },
+  { name: 'Управление и процессы', slug: 'upravlenie', legacy: 'Управление', legacySlug: 'upravlenie', icon: 'ti-clipboard-check' },
+  { name: 'Маркетинг', slug: 'marketing', legacy: 'Маркетинг', legacySlug: 'marketing', icon: 'ti-speakerphone' },
+  { name: 'ИИ и автоматизация', slug: 'ai-avtomatizatsiya', legacy: 'ИИ и автоматизация', legacySlug: 'ai-avtomatizatsiya', icon: 'ti-ai' },
 ] as const;
 
 export const contactLinks = [
@@ -26,8 +26,11 @@ export const projectLinks = [
 export const personalMaxLink = { id: 'max-personal', label: 'MAX, личный контакт', href: 'https://max.ru/u/f9LHodD0cOLF-PQtORzTwE5pK8qp1T1cWwz87rnQkkVb8yHYO66Qp8BcOO0?utm_source=chatgpt.com', event: 'click_max', icon: 'ti-message-circle' } as const;
 export const projectMaxLink = { id: 'max-channel', label: 'MAX-канал «Розница в цифрах»', href: 'https://max.ru/se13981398_biz?utm_source=chatgpt.com', event: 'click_max', icon: 'ti-message-circle' } as const;
 
-export const categoryByName = new Map(categories.map((item) => [item.name, item]));
-export const categoryBySlug = new Map(categories.map((item) => [item.slug, item]));
+export const categoryByName = new Map(categories.flatMap((item) => [[item.name, item], [item.legacy, item]]));
+export const categoryBySlug = new Map(categories.flatMap((item) => [[item.slug, item], [item.legacySlug, item]]));
+export const topicBySlug = new Map(categories.map((item) => [item.slug, item]));
+
+export const topicForCategory = (category: string) => categories.find((item) => item.name === category || item.legacy === category || item.slug === category);
 
 export const formatDate = (date: Date) => new Intl.DateTimeFormat('ru-RU', {
   day: 'numeric', month: 'long', year: 'numeric',
