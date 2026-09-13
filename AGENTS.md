@@ -83,4 +83,6 @@ Codex отвечает за проверенный результат, а не �
 
 Handoff создаётся только для реально незавершённой, заблокированной или передаваемой работы и оформляется по `docs/ai/HANDOFF_PROTOCOL.md`. Завершённая короткая задача handoff не создаёт.
 
-Финальный отчёт содержит только фактически изменённое, проверки, реальный результат и blockers. Не писать «готово» без regression evidence и не выдавать гарантий поискового ranking/продаж.
+Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива перед финальным отчётом обязательно пройти [`docs/ai/COMPLETION_GATE.md`](docs/ai/COMPLETION_GATE.md). Executor не является финальным судьёй: нужен независимый `DOKRUTI Completion Auditor`, immutable acceptance matrix, evidence по каждому критерию, consolidated fix и independent recheck. `FAIL`/`UNKNOWN` запрещают `VERIFIED`.
+
+Финальные внешние статусы только: `VERIFIED`, `BLOCKED`, `OWNER DECISION REQUIRED`. Финальный отчёт содержит только фактически изменённое, evidence, реальный результат и blockers. Не писать «готово» без regression evidence и не выдавать гарантий поискового ranking/продаж.

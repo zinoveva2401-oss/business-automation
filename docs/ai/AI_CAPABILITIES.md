@@ -29,6 +29,8 @@
 - Figma MCP — tool surface обнаружен; authentication/use нужно проверять при конкретной задаче;
 - Codex app tools, `image_gen`, local shell and workspace file operations.
 
+Native automatically invoked Codex Skills from a repository-local folder are not exposed in the current session surface. `.qwen/skills/` is a Qwen adapter and does not by itself prove Codex Skill invocation. Do not create a decorative repo-local verifier Skill; use `COMPLETION_GATE.md`, `multi_agent_v1` and the deterministic script.
+
 Остальные приложения/плагины не считаются доступными для этой задачи без live call. Изменяемые external writes, OAuth, публикация, удаление и платные actions требуют отдельного owner gate.
 
 ## 4. Google Drive readiness

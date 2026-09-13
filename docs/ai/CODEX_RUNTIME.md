@@ -8,6 +8,8 @@
 
 Codex — самостоятельная digital-production среда проекта. Он получает актуальный контекст, сам формирует маршрут, делает профессиональные решения, подключает доступные Skills/subagents/tools, проверяет результат и исправляет дефекты до release candidate. Сайт в SYSTEM-задаче не редизайнится автоматически.
 
+Для существенных задач обязательный финальный контроль описан в [`COMPLETION_GATE.md`](COMPLETION_GATE.md): executor не сертифицирует себя; независимый Completion Auditor получает исходный запрос и acceptance напрямую, проверяет фактические объекты, запускает fix loop при `FAIL`/`UNKNOWN` и только после recheck разрешает `VERIFIED`.
+
 ## 2. Task ledger
 
 Перед сложной задачей фиксировать:
@@ -59,10 +61,16 @@ Ledger может быть внутренним; в handoff переноситс
 
 Regression PASS означает, что для каждого сценария выбран маршрут, выполнены применимые проверки и отсутствует скрытая просьба владельцу «проверь ещё мобильную/SEO/ссылки».
 
-## 6. Quality and release gate
+## 6. Final completion gate
+
+Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива создать immutable acceptance matrix и передать её независимому `DOKRUTI Completion Auditor`. Матрица неизменна до конца задачи и содержит `CRITERION`, `EXPECTED`, `HOW TO VERIFY`, `EVIDENCE`, `STATUS`.
+
+Не считать evidence self-report, dry-run, предполагаемый workflow, существование Skill/инструкции, локальный HEAD, staging-only readback или build вместо требуемой проверки. При любом `FAIL`/`UNKNOWN` исполнитель получает единый defect register, делает consolidated fix и вызывает independent recheck. Внешний `PASS`, `DONE`, `VERIFIED` или `RELEASE CANDIDATE` запрещён до полного evidence-backed PASS. Deterministic check: `node scripts/verify-completion-gate.mjs acceptance.json verifier.json`.
+
+## 7. Quality and release gate
 
 Release candidate не готов при Critical/Major defect. По применимости должны быть доказаны: content integrity, route/link integrity, visual/brand integrity, responsive, keyboard/focus, semantic structure, contrast, reduced motion, metadata/schema, browser console/network, performance, security baseline, Red Team и regression. Не обещать ranking, продажи или «10/10» без evidence.
 
-## 7. Git and external actions
+## 8. Git and external actions
 
 Проверять local status, remote branch и commit ancestry перед изменениями. Сохранять чужие/unrelated dirty files. Commit/push/deploy/publication/deletion/access changes — только в явном scope задачи и после соответствующего QA. Для текущего runtime-cleanup публичный site UI/content/routes остаются unchanged.

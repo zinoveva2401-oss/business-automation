@@ -41,3 +41,7 @@ The first render is explicitly a draft; no “ready” handoff is allowed before
 `A PASS · B PASS · C PASS · D PASS`
 
 All four routes select source check, task-appropriate roles and proportional QA without requiring the owner to dispatch routine checks. No public files were changed or published by this dry-run.
+
+## E. Incomplete acceptance / false PASS prevention — PASS
+
+Controlled simulated matrix contains one mandatory criterion with `STATUS=UNKNOWN`. `scripts/verify-completion-gate.mjs --self-test` rejects it, returns `BLOCKED`, and never returns `VERIFIED`. The gate then accepts only the corrected all-PASS matrix with independent auditor evidence. This is a deterministic regression of the previous executor-as-final-judge defect, not a claim about public-site production quality.
