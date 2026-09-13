@@ -1,3 +1,7 @@
+> HISTORICAL SAFE — NON-CANONICAL / DO NOT EDIT AS CURRENT STATE
+>
+> This repository copy is retained for traceability only. It does not participate in active retrieval and cannot override the live Google Drive/Sheets sources in `docs/ai/SOURCE_MANIFEST.md`. Current brand, prices, products, statuses, queues and site decisions must be verified live.
+
 # SITE_SOURCE_OF_TRUTH_v1.1
 
 Статус: Утверждённая рабочая основа для проектирования  

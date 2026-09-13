@@ -1,122 +1,47 @@
 # AI_CAPABILITIES
 
-Статус: Действующий реестр возможностей
-Проект: «Розница в цифрах»
-Назначение: описание доступных инструментов и фиксация недостатков
+Статус: действующий time-stamped snapshot, проверен 13.09.2026.
+Проект: `Докрути`.
 
-## 1. Назначение
+Этот файл не заменяет live discovery конкретной сессии. Фактически доступный runtime имеет приоритет.
 
-Этот файл описывает возможности репозитория и внешних агентов.
+## 1. Подтверждённые repository capabilities
 
-Отсутствие записи о конкретном агенте в файлах репозитория НЕ означает,
-что агент недоступен. Внешние агенты (Codex, Qwen, Gemini, DeepSeek и другие)
-работают с репозиторием извне, и их возможности определяются их собственной средой.
+- Astro/TypeScript workspace: `npm run dev`, `npm run build`, `npm run preview`, `npm run check` из `package.json`.
+- Repo-local adapter: `.qwen/skills/karpathy-guidelines/SKILL.md`.
+- Active contracts: `AGENTS.md`, `docs/ai/`, `docs/ARTICLE_IMPORT.md`, `docs/PRODUCT_EXECUTION.md`.
 
-## 2. Repository Capabilities
+## 2. Подтверждённые Codex skills
 
-Физически есть в репозитории и доступно любому агенту.
+В текущем runtime обнаружены и пригодны по применимости: `astro-seo`, `design-review`, `frontend-design`, `kill-ai-slop`, `playwright`, `playwright-interactive`, `security-best-practices`, `screenshot`, `find-skills`, `ai-business-os`, `define-goal`, а также системные `openai-docs`, `imagegen`, `documents`, `pdf`, `presentations`, `spreadsheets`.
 
-### 2.1. Skills
+Наличие не означает обязательность чтения. Skill выбирается по классу и риску задачи; сайт в этой SYSTEM-задаче не переделывается.
 
-| Skill | Расположение | Назначение |
-|---|---|---|
-| karpathy-guidelines | .qwen/skills/karpathy-guidelines/SKILL.md | Инженерная дисциплина: минимализм, хирургические изменения, верификация |
+## 3. Подтверждённые runtime tools/connectors
 
-### 2.2. Build Tools
+Фактической проверкой текущей среды подтверждены:
 
-| Команда | Назначение |
-|---|---|
-| `npm run dev` | Локальный сервер разработки |
-| `npm run build` | Сборка статического сайта |
-| `npm run preview` | Предпросмотр собранного сайта |
-| `npm run check` | Проверка типов Astro |
+- `multi_agent_v1` — spawn/wait/send/close subagents;
+- Google Drive — authenticated profile, file metadata, native Google Docs text, Google Sheets metadata/ranges;
+- GitHub — authenticated profile, repository metadata и repo permissions;
+- Playwright MCP — browser navigation, snapshot, screenshot, console/network and interaction;
+- Context7 — documentation resolution/query;
+- Figma MCP — tool surface обнаружен; authentication/use нужно проверять при конкретной задаче;
+- Codex app tools, `image_gen`, local shell and workspace file operations.
 
-### 2.3. MCP Servers
+Остальные приложения/плагины не считаются доступными для этой задачи без live call. Изменяемые external writes, OAuth, публикация, удаление и платные actions требуют отдельного owner gate.
 
-Не настроены.
+## 4. Google Drive readiness
 
-### 2.4. Content Collections
+Google Drive/Sheets доступен из Codex read-only маршрутом и не требует owner action в текущей сессии. Проверены профиль владельца, spreadsheet `Бизнес-система`, sheet tabs и metadata/version/status целевых Docs. Не хранить OAuth tokens, passwords или API secrets в Git.
 
-| Коллекция | Путь | Механизм |
-|---|---|---|
-| articles | src/content/articles/ | Astro Content Collections + Zod schema |
-| tools | src/content/tools/ | Astro Content Collections + Zod schema |
-| services | src/content/services/ | Astro Content Collections + Zod schema |
+## 5. Capability gap protocol
 
-### 2.5. Static Assets
-
-| Каталог | Содержимое |
-|---|---|
-| public/ | Изображения, favicon, статические файлы продуктов |
-
-### 2.6. QA Tools
-
-| Инструмент | Расположение | Назначение |
-|---|---|---|
-| Playwright | .playwright-cli/ | Page captures для визуального QA |
-
-## 3. External / IDE Agents
-
-Агенты, которые работают с репозиторием извне. Их возможности определяются
-их собственной средой, не файлами репозитория.
-
-### 3.1. Известные на данный момент агенты
-
-| Агент | Точка входа в репозиторий | Примечание |
-|---|---|---|
-| Codex/OpenAI | AGENTS.md | Установлен и работает с репозиторием |
-| Qwen Code | QWEN.md, .qwen/skills/ | Установлен; бесплатная квота ограничена |
-| Gemini Code Assist | AGENTS.md | Установлен; потребительский доступ текущего аккаунта не работает |
-| DeepSeek | AGENTS.md | Потенциальный будущий исполнитель |
-| Другие модели | AGENTS.md | Могут подключаться в будущем |
-
-### 3.2. Принцип
-
-Каждый агент читает AGENTS.md как единый контракт.
-Модельно-специфичные файлы (QWEN.md, CLAUDE.md и т.п.) дополняют,
-но не переопределяют общий контракт.
-Список внешних агентов динамический и не является гарантией текущей доступности.
-Остатки токенов и квот не хранятся в репозитории как достоверные данные.
-
-## 4. Capability Gap Format
-
-Если агенту не хватает инструмента для качественного выполнения задачи:
+Если нужного средства нет, сообщить:
 
 ```text
 CAPABILITY GAP
-
-- Что нужно: [описание]
-- Почему недостаточно: [что есть, почему не покрывает]
-- Тип: Skill / MCP / библиотека / сервис / другое
-- Обязательное или желательное: [обязательное | желательное]
-- Существующая альтернатива: [если есть]
-- Ожидаемая польза: [что изменится]
+Что требуется → почему текущих средств недостаточно → тип средства → существующая альтернатива → обязательное/желательное → ожидаемая польза
 ```
 
-Ничего не устанавливать самостоятельно. Сообщить владельцу.
-
-## 5. Known Gaps
-
-### 5.1. CI/CD
-
-- Статус: отсутствует.
-- Тип: инфраструктура.
-- Обязательность: желательное.
-- Польза: автоматическая проверка сборки при handoff, предотвращение поломки main.
-- Текущий обходной путь: агент вручную запускает `npm run build`.
-- В текущий обязательный объём работ не включено.
-
-## 6. System Improvement Format
-
-Если проблема повторяется и приводит к расходу токенов или ошибкам:
-
-```text
-SYSTEM IMPROVEMENT SUGGESTION
-
-- Повторяющаяся проблема: [описание]
-- Предлагаемое решение: [что изменить]
-- Где реализовать: [файл / конфиг / навык]
-- Обязательное или желательное: [обязательное | желательное]
-```
-
-Не менять архитектуру самостоятельно. Предложить владельцу.
+До разрешения владельца не устанавливать Skill, MCP, plugin, package, model или service.
