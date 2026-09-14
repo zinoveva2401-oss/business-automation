@@ -8,7 +8,7 @@ import { formatPrice } from '../../lib/site';
 export async function getStaticPaths(){return(await getCollection('tools')).filter(({data})=>data.status!=='draft').map((entry)=>({params:{slug:entry.data.slug},props:{entry}}))}
 const {entry}=Astro.props;
 const purchasable=entry.data.status==='published'&&entry.data.purchaseStatus==='active'&&Boolean(entry.data.purchaseUrl);
-const schema=purchasable?{'@context':'https://schema.org','@type':'Product',name:entry.data.title,description:entry.data.description,image:[entry.data.cover,...entry.data.screenshots.map(({src})=>src)],offers:{'@type':'Offer',price:entry.data.price,priceCurrency:'RUB',availability:'https://schema.org/InStock',url:entry.data.purchaseUrl}}:undefined;
+const schema=purchasable?{'@context':'https://schema.org','@type':'Product',name:entry.data.title,description:entry.data.description,image:[entry.data.cover,...entry.data.screenshots.map(({src})=>src)].map((src)=>new URL(src,Astro.url).href),offers:{'@type':'Offer',price:entry.data.price,priceCurrency:'RUB',availability:'https://schema.org/InStock',url:entry.data.purchaseUrl}}:undefined;
 ---
 <BaseLayout title={entry.data.seoTitle} description={entry.data.seoDescription} image={entry.data.cover} type="product" canonicalUrl={entry.data.canonicalUrl} schema={schema} noindex={!purchasable}>
 <article class="product-page" data-analytics-view="view_product" data-analytics-product-id={entry.data.id} data-analytics-content-type="product" data-analytics-category={entry.data.category} data-analytics-cluster={entry.data.cluster} data-analytics-placement="product_page"><div class="container"><Breadcrumbs items={[{name:'Главная',href:'/'},{name:'Инструменты',href:'/tools/'},{name:entry.data.title}]} />

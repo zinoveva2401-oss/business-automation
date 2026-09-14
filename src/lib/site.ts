@@ -24,7 +24,7 @@ export const projectLinks = [
 ] as const;
 
 export const personalMaxLink = { id: 'max-personal', label: 'MAX, личный контакт', href: 'https://max.ru/u/f9LHodD0cOLF-PQtORzTwE5pK8qp1T1cWwz87rnQkkVb8yHYO66Qp8BcOO0?utm_source=chatgpt.com', event: 'click_max', icon: 'ti-message-circle' } as const;
-export const projectMaxLink = { id: 'max-channel', label: 'MAX-канал «Розница в цифрах»', href: 'https://max.ru/se13981398_biz?utm_source=chatgpt.com', event: 'click_max', icon: 'ti-message-circle' } as const;
+export const projectMaxLink = { id: 'max-channel', label: 'MAX-канал «Докрути»', href: 'https://max.ru/se13981398_biz?utm_source=chatgpt.com', event: 'click_max', icon: 'ti-message-circle' } as const;
 
 export const categoryByName = new Map(categories.flatMap((item) => [[item.name, item], [item.legacy, item]]));
 export const categoryBySlug = new Map(categories.flatMap((item) => [[item.slug, item], [item.legacySlug, item]]));
