@@ -1,0 +1,11 @@
+{
+  "inputs": [
+    {"type": "video", "count": 3},
+    {"type": "photo", "count": 4},
+    {"type": "voice", "count": 1},
+    {"type": "graphics", "count": 2}
+  ],
+  "pipeline": ["asset_inventory", "content_map", "story_edit_plan", "production"],
+  "captions": true,
+  "simple_stitch_rejected": true
+}

@@ -43,7 +43,7 @@ Active handoff относится только к одной незавершё�
 -
 ## ПРОВЕРЕНО
 -
-  - local/remote SHA и remote readback, если применимо;
+  - local/remote SHA и remote readback для tracked-file delivery; исключения только `READ-ONLY`/`NO-DELIVERY` или явный запрет внешней записи;
 ## ACCEPTANCE
 -
 ## OWNER DECISION REQUIRED

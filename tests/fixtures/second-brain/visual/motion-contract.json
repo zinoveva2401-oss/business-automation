@@ -1,0 +1,6 @@
+{
+  "meaningful": true,
+  "purpose": "Показывает рост clarity signal и раскрытие reasoning route.",
+  "reduced_motion_fallback": true,
+  "performance_budget_ms": 16
+}

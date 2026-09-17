@@ -1,0 +1,9 @@
+{
+  "decision_useful": true,
+  "decision": "Приоритизировать разрыв возвратов по каналу",
+  "states": ["loading", "empty", "error", "ready"],
+  "filters": ["period", "channel"],
+  "drill_down": true,
+  "freshness": "timestamped",
+  "mobile": "stacked"
+}

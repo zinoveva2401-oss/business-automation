@@ -1,0 +1,21 @@
+{
+  "duplicates_checked": true,
+  "assets": [
+    {
+      "id": "cnt-0037-return-gap",
+      "source": "existing repository asset",
+      "license": "project-owned/source reviewed",
+      "bytes": 2288942,
+      "format": "png",
+      "action": "used for weight audit only"
+    },
+    {
+      "id": "visual-fixture",
+      "source": "new local test fixture",
+      "license": "original project fixture",
+      "bytes": 1,
+      "format": "html",
+      "action": "browser golden test"
+    }
+  ]
+}

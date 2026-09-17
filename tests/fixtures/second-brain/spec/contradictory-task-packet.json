@@ -1,0 +1,39 @@
+{
+  "task_class": "SYSTEM",
+  "required_paths": [
+    "src/index.astro"
+  ],
+  "forbidden_paths": [
+    "src/index.astro"
+  ],
+  "source_of_truth": [
+    "owner task packet"
+  ],
+  "acceptance": [
+    {
+      "id": "scope",
+      "evidence": "diff"
+    }
+  ],
+  "required_capabilities": [
+    {
+      "name": "node",
+      "status": "VERIFIED"
+    }
+  ],
+  "tracked_file_delta": true,
+  "delivery_chain": [
+    "git_diff_status",
+    "tests_checks",
+    "commit",
+    "push",
+    "remote_readback",
+    "sha_match"
+  ],
+  "visual_required": false,
+  "performance_sensitive": false,
+  "paid_dependencies": [],
+  "irreversible_external_actions": [],
+  "owner_gate": {},
+  "quality_challenge_required": false
+}

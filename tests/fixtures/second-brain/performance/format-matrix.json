@@ -1,0 +1,17 @@
+{
+  "web": {
+    "responsive_formats": ["webp-master", "webp-mobile"],
+    "dimensions_checked": true,
+    "slow_connection_checked": true
+  },
+  "video": {
+    "master": {"format": "mp4-h264", "bytes": 12000000},
+    "delivery": {"format": "mp4-h264-mobile", "bytes": 2800000, "mobile_open": true}
+  },
+  "document": {
+    "bytes": 850000,
+    "compressed_images": true,
+    "mobile_readability": true,
+    "format_compatibility": true
+  }
+}

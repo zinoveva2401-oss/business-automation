@@ -1,0 +1,12 @@
+{
+  "asset": "fixture-image",
+  "beforeBytes": 2288942,
+  "afterBytes": 137000,
+  "deliveryBytes": 42000,
+  "formats": [
+    "png-source",
+    "webp-master",
+    "webp-mobile"
+  ],
+  "slowConnection": "checked"
+}
