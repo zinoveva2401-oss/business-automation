@@ -23,7 +23,7 @@
 | GitHub | VERIFIED | repository access, branch push and remote readback in this runtime history |
 | Figma / Airtable / Sites | NOT_PROBED | no file-level connector call; deployment intentionally not performed |
 | Independent multi-agent auditor | VERIFIED | Completion Auditor recheck |
-| Security review baseline | VERIFIED/PARTIAL | security skill/reference plus executable static scan; dependency audit endpoint returned a vulnerability response/error requiring follow-up |
+| Security review baseline | VERIFIED/PARTIAL | security skill/reference plus executable static scan; `npm audit --omit=dev --json` reports 4 pre-existing/transitive vulnerabilities requiring follow-up |
 | ImageMagick | MISSING | existing project image pipeline remains available |
 | Backend framework | MISSING | bounded local Node mock is sufficient for retry/idempotency golden test |
 
@@ -31,7 +31,7 @@
 
 ## Dependency and environment notes
 
-The media resolver checks, in order: approved environment path, project package export, then PATH. It does not reference `ernest-16-film`, a foreign worktree, a cache path or an absolute user directory. The installed package wrappers are LGPL-2.1; the selected Windows platform binaries are marked GPLv3 in `package-lock.json`. They are dev-only test/runtime dependencies and are not shipped to the site. `npm audit` reported 4 vulnerabilities (3 high, 1 critical) while the audit endpoint returned an error; this remains an explicit unresolved dependency-security note, not a hidden PASS.
+The media resolver checks, in order: approved environment path, project package export, then PATH. It does not reference `ernest-16-film`, a foreign worktree, a cache path or an absolute user directory. The installed package wrappers are LGPL-2.1; the selected Windows platform binaries are marked GPLv3 in `package-lock.json`. They are dev-only test/runtime dependencies and are not shipped to the site. `npm audit --omit=dev --json` returned 4 vulnerabilities (3 high, 1 critical), rooted in pre-existing/transitive Astro 5.13.5, js-yaml, sharp and svgo paths; this remains an explicit unresolved dependency-security note, not a hidden PASS.
 
 Generated speech, source frames and encoded videos are written to task-scoped `%TEMP%\\dokruti-second-brain-golden-*` directories. Only rights-safe screenshot evidence and small JSON/HTML fixtures remain tracked.
 
