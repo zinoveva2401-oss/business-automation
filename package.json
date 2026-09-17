@@ -17,5 +17,9 @@
     "astro": "5.13.5",
     "jszip": "^3.10.1",
     "typescript": "5.9.2"
+  },
+  "devDependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2"
   }
 }

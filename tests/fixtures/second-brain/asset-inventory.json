@@ -2,7 +2,9 @@
   "candidate_paths": [
     "tests/fixtures/second-brain/performance/source.svg",
     "tests/fixtures/second-brain/visual/index.html",
-    "tests/fixtures/second-brain/media/multi-source.json"
+    "tests/fixtures/second-brain/media/multi-source.json",
+    "tests/fixtures/second-brain/visual/evidence/desktop-1280.png",
+    "tests/fixtures/second-brain/visual/evidence/mobile-390.png"
   ],
   "required_checks": ["exists", "duplicate_hash", "dimensions", "format", "weight", "source_or_license"]
 }

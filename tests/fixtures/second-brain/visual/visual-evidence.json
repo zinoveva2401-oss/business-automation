@@ -10,5 +10,9 @@
     "reduced-motion behavior",
     "independent visual/art review"
   ],
-  "evidence_record": "tests/fixtures/second-brain/visual/browser-evidence.json"
+  "evidence_record": "tests/fixtures/second-brain/visual/browser-evidence.json",
+  "material_screenshot_artifacts": [
+    "tests/fixtures/second-brain/visual/evidence/desktop-1280.png",
+    "tests/fixtures/second-brain/visual/evidence/mobile-390.png"
+  ]
 }

@@ -3,7 +3,11 @@
   "interaction_need": true,
   "feedback_need": true,
   "repeat_monitoring": false,
-  "candidate_formats": ["ebook", "interactive-diagnostic", "dashboard"],
-  "input_fields": ["revenue", "visitors", "returns"],
-  "success_condition": "после ввода данных пользователь видит вычисленный показатель, объяснение и действие"
+  "current_format": "ebook + spreadsheet",
+  "candidate_formats": ["ebook + spreadsheet", "interactive-diagnostic", "dashboard"],
+  "input_fields": ["revenue_rub", "visitors", "purchases", "returns"],
+  "frequency": "weekly and repeat use",
+  "mobile_use": true,
+  "offline_need": false,
+  "success_condition": "после ввода данных пользователь видит вычисленные показатели, объяснение и действие"
 }

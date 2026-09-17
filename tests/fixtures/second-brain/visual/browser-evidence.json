@@ -1,6 +1,7 @@
 {
   "captured_by": "Codex CUA browser during RUN-CODEX-SECOND-BRAIN-001-2026-09-17",
   "material_evidence": "desktop and mobile screenshots emitted in Codex chat; this JSON records objective DOM and interaction measurements",
+  "material_screenshot_artifacts": ["tests/fixtures/second-brain/visual/evidence/desktop-1280.png", "tests/fixtures/second-brain/visual/evidence/mobile-390.png"],
   "desktop": {
     "viewport": {"innerWidth": 1280, "innerHeight": 800},
     "document": {"clientWidth": 1265, "scrollWidth": 1265, "horizontal_overflow": false},
@@ -17,6 +18,14 @@
     "hero_columns": "339.2px",
     "reduced_motion_media_query": false,
     "keyboard_focus_after_tab": {"id": "reveal", "tag": "BUTTON"}
+  },
+  "network_capability": {
+    "required": "real browser network throttling with measured transfer and load timings",
+    "status": "BLOCKED CAPABILITY",
+    "executed": false,
+    "available_cua_capabilities": ["visibility", "viewport"],
+    "reason": "the exposed CUA browser capability surface has no network emulation/throttling control",
+    "free_alternative": "Chrome DevTools Network throttling or Playwright/CDP route exposed by the owner"
   },
   "product_smoke": {"state_after_valid_input": "ready", "computed_conversion": "8.00%", "computed_return_rate": "9.4%", "average_revenue_per_visitor": "83.33 RUB/visitor", "edge_state": "edge", "invalid_state": "error", "absurd_state": "needs-review"},
   "dashboard_smoke": {"initial_ready_rows": 3, "filtered_messenger_rows": 1}

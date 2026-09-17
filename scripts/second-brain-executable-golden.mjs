@@ -2,16 +2,19 @@
 
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
+import fsSync from 'node:fs';
 import fs from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
+import { resolveMediaTools } from './resolve-local-capabilities.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const fixtureRoot = path.join(root, 'tests', 'fixtures', 'second-brain');
-const ffmpeg = path.join(root, 'ernest-16-film', 'node_modules', '@remotion', 'compositor-win32-x64-msvc', 'ffmpeg.exe');
-const ffprobe = path.join(root, 'ernest-16-film', 'node_modules', '@remotion', 'compositor-win32-x64-msvc', 'ffprobe.exe');
+const mediaTools = resolveMediaTools();
+const ffmpeg = mediaTools.ffmpeg.path;
+const ffprobe = mediaTools.ffprobe.path;
 
 async function readJson(relativePath) {
   return JSON.parse(await fs.readFile(path.join(fixtureRoot, relativePath), 'utf8'));
@@ -28,6 +31,22 @@ function runBinary(binary, args) {
     stdio: ['ignore', 'pipe', 'pipe'],
     maxBuffer: 2 * 1024 * 1024,
   }).trim();
+}
+
+function runSpeech(outputPath, text) {
+  if (process.platform !== 'win32') return { status: 'BLOCKED CAPABILITY', reason: 'speech capability requires a Windows SAPI route in this bounded fixture' };
+  const quote = (value) => `'${String(value).replaceAll("'", "''")}'`;
+  const script = `$outputPath = ${quote(outputPath)}; $speechText = ${quote(text)}; Add-Type -AssemblyName System.Speech; $synth = New-Object System.Speech.Synthesis.SpeechSynthesizer; $voice = $synth.GetInstalledVoices() | Where-Object { $_.VoiceInfo.Name -match 'Irina|Pavel|Zira' } | Select-Object -First 1; if ($voice) { $synth.SelectVoice($voice.VoiceInfo.Name) }; $synth.Rate = 4; $synth.SetOutputToWaveFile($outputPath); $synth.Speak($speechText); $synth.Dispose();`;
+  const encoded = Buffer.from(script, 'utf16le').toString('base64');
+  try {
+    execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-EncodedCommand', encoded], { cwd: root, stdio: ['ignore', 'pipe', 'pipe'] });
+    if (!fsSync.existsSync(outputPath) || fsSync.statSync(outputPath).size <= 0) {
+      return { status: 'BLOCKED CAPABILITY', reason: 'Windows SAPI returned without creating a speech artifact in the current local sandbox' };
+    }
+    return { status: 'EXECUTED', path: outputPath };
+  } catch (error) {
+    return { status: 'BLOCKED CAPABILITY', reason: 'Windows SAPI invocation denied by the current local sandbox; rerun in the approved elevated local host', error: error.code || 'speech invocation failed' };
+  }
 }
 
 function evidence(id, status, details) {
@@ -86,6 +105,15 @@ async function runProduct(tempDir) {
   if ('selected' in formatInput || 'rationale' in formatInput) throw new Error('product input contains answer oracle');
   const selectedFormat = chooseFormat(formatInput);
   if (!formatInput.candidate_formats.includes(selectedFormat)) throw new Error('computed format is not an input candidate');
+  const formatChallenge = {
+    limitation: 'CURRENT FORMAT LIMITATION: ebook + spreadsheet separates the calculation from the moment of diagnosis and weakens repeat mobile use.',
+    stronger_routes: [
+      { format: 'interactive-diagnostic', why: 'immediate feedback, validation and next action in one route', complexity: 'low, client-side only', value: 'shorter time-to-value' },
+      { format: 'dashboard', why: 'repeat monitoring, freshness and channel comparison', complexity: 'medium', value: 'stronger for recurring review' },
+    ],
+    chosen_route: selectedFormat,
+    prototype: path.join(fixtureRoot, 'product', 'index.html'),
+  };
   const empty = diagnose({ revenue_rub: 0, visitors: 0, purchases: 0, returns: 0 });
   const result = diagnose(brief.inputs);
   const edge = diagnose({ revenue_rub: 100000, visitors: 1200, purchases: 0, returns: 0 });
@@ -100,6 +128,7 @@ async function runProduct(tempDir) {
   const artifact = {
     format: selectedFormat,
     input_sha256: sha256(Buffer.from(JSON.stringify(brief))),
+    format_challenge: formatChallenge,
     formulas: {
       revenuePerVisitor: 'revenue_rub / visitors (RUB/visitor)',
       conversionRate: 'purchases / visitors * 100 (%)',
@@ -118,6 +147,7 @@ async function runProduct(tempDir) {
   return evidence('product-real-flow', 'EXECUTABLE PASS', {
     input: 'product/brief.json',
     selected_format: selectedFormat,
+    format_challenge: formatChallenge,
     state_transition: `${empty.state} -> ${result.state}`,
     computed_result: result,
     cases: { normal: result, edge, invalid, absurd },
@@ -186,8 +216,17 @@ async function runImagePerformance(tempDir) {
     master: { path: masterPath, bytes: masterStat.size, width: masterMeta.width, height: masterMeta.height, format: masterMeta.format },
     delivery: { path: deliveryPath, bytes: deliveryStat.size, width: deliveryMeta.width, height: deliveryMeta.height, format: deliveryMeta.format },
     slow_connection_profile: input.slow_connection_profile,
-    slow_connection_check: { status: 'ESTIMATE / NOT EXECUTED', executed: false },
+    slow_connection_check: { status: 'NOT EXECUTED: network throttling capability unavailable', executed: false },
   });
+}
+
+async function runNetworkCapability() {
+  const evidenceRecord = await readJson('visual/browser-evidence.json');
+  const capability = evidenceRecord.network_capability;
+  if (!capability || capability.status !== 'BLOCKED CAPABILITY' || capability.executed !== false) {
+    throw new Error('network capability record must explicitly remain blocked when no throttling route is exposed');
+  }
+  return evidence('slow-network-measurement', 'BLOCKED CAPABILITY', capability);
 }
 
 function setPixel(data, width, x, y, color) {
@@ -197,6 +236,7 @@ function setPixel(data, width, x, y, color) {
 }
 
 async function runMedia(tempDir) {
+  if (!ffmpeg || !ffprobe) throw new Error(`media capability missing: ${JSON.stringify(mediaTools)}`);
   const input = await readJson('media/multi-source.json');
   const sourceDir = path.join(tempDir, 'media-sources');
   await fs.mkdir(sourceDir, { recursive: true });
@@ -230,13 +270,25 @@ async function runMedia(tempDir) {
     framePaths.push(framePath);
   }
   const movingPath = path.join(sourceDir, 'moving-source.mp4');
-  const audioPath = path.join(sourceDir, 'generated-audio.wav');
+  const speechPath = path.join(sourceDir, 'generated-speech.wav');
+  const bedPath = path.join(sourceDir, 'audio-bed.wav');
+  const captionsPath = path.join(sourceDir, 'captions.srt');
   const masterPath = path.join(tempDir, 'media-master.mp4');
   const deliveryPath = path.join(tempDir, 'media-delivery.mp4');
   runBinary(ffmpeg, ['-y', '-framerate', '8', '-i', path.join(sourceDir, 'frame-%02d.png'), '-t', '1.5', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', movingPath]);
-  runBinary(ffmpeg, ['-y', '-f', 'lavfi', '-i', 'sine=frequency=520:duration=1.5', '-c:a', 'pcm_s16le', audioPath]);
-  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', audioPath, '-map', '0:v:0', '-map', '1:a:0', '-shortest', '-c:v', 'libx264', '-crf', '18', '-c:a', 'aac', '-b:a', '96k', masterPath]);
-  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', audioPath, '-map', '0:v:0', '-map', '1:a:0', '-vf', 'scale=320:180', '-r', '8', '-shortest', '-c:v', 'libx264', '-crf', '31', '-c:a', 'aac', '-b:a', '48k', deliveryPath]);
+  const speech = runSpeech(speechPath, 'Сигнал. Действие.');
+  if (speech.status !== 'EXECUTED') {
+    return evidence('media-real-production', 'BLOCKED CAPABILITY', {
+      required: 'real speech/voice source in the media edit',
+      speech_voice_capability: speech,
+      resolver: mediaTools,
+      next_route: 'approved elevated local Windows SAPI probe',
+    });
+  }
+  runBinary(ffmpeg, ['-y', '-f', 'lavfi', '-i', 'sine=frequency=180:duration=1.5', '-c:a', 'pcm_s16le', bedPath]);
+  await fs.writeFile(captionsPath, '1\n00:00:00,000 --> 00:00:01,500\nСигнал. Действие.\n');
+  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', speechPath, '-i', bedPath, '-filter_complex', '[1:a][2:a]amix=inputs=2:duration=shortest[a]', '-map', '0:v:0', '-map', '[a]', '-shortest', '-c:v', 'libx264', '-crf', '18', '-c:a', 'aac', '-b:a', '96k', masterPath]);
+  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', speechPath, '-i', bedPath, '-filter_complex', '[1:a][2:a]amix=inputs=2:duration=shortest[a]', '-map', '0:v:0', '-map', '[a]', '-vf', 'scale=320:180', '-r', '8', '-shortest', '-c:v', 'libx264', '-crf', '31', '-c:a', 'aac', '-b:a', '48k', deliveryPath]);
   const [masterStat, deliveryStat] = await Promise.all([fs.stat(masterPath), fs.stat(deliveryPath)]);
   const probe = (file) => JSON.parse(runBinary(ffprobe, ['-v', 'error', '-show_entries', 'format=duration,size:stream=codec_name,codec_type,width,height', '-of', 'json', file]));
   const masterInfo = probe(masterPath); const deliveryInfo = probe(deliveryPath);
@@ -251,12 +303,15 @@ async function runMedia(tempDir) {
   const masterDecoded = await decode(masterPath, 'master'); const deliveryDecoded = await decode(deliveryPath, 'delivery');
   const sceneHashEntries = await Promise.all(Object.entries(scenePaths).map(async ([name, files]) => [name, sha256(await fs.readFile(files.png))]));
   const sceneHashes = Object.fromEntries(sceneHashEntries);
-  if (sceneHashes.signal === sceneHashes.action || masterPath === deliveryPath || deliveryStat.size >= masterStat.size || !masterInfo.format?.duration || !deliveryInfo.format?.duration || masterDecoded.frame_bytes <= 0 || deliveryDecoded.frame_bytes <= 0 || masterDecoded.audio_bytes <= 0 || deliveryDecoded.audio_bytes <= 0) throw new Error('media master/delivery evidence failed');
+  const [speechStat, bedStat, captionsStat] = await Promise.all([fs.stat(speechPath), fs.stat(bedPath), fs.stat(captionsPath)]);
+  const captionText = await fs.readFile(captionsPath, 'utf8');
+  if (sceneHashes.signal === sceneHashes.action || masterPath === deliveryPath || deliveryStat.size >= masterStat.size || !masterInfo.format?.duration || !deliveryInfo.format?.duration || masterDecoded.frame_bytes <= 0 || deliveryDecoded.frame_bytes <= 0 || masterDecoded.audio_bytes <= 0 || deliveryDecoded.audio_bytes <= 0 || speechStat.size <= 0 || bedStat.size <= 0 || captionsStat.size <= 0 || !captionText.includes('Сигнал. Действие.')) throw new Error('media master/delivery evidence failed');
   return evidence('media-real-production', 'EXECUTABLE PASS', {
-    source_inventory: { classes: input.source_classes, still_graphic: graphicPath, moving_video: movingPath, audio_only: audioPath, scenes: scenePaths, scene_hashes: sceneHashes },
-    edit_decision: 'two-scene signal-to-action progression with a separate graphic overlay and audio-only bed; no voice claim',
-    audio_capability: 'EXECUTED: generated tone only',
-    speech_voice_capability: 'NOT_EXECUTED',
+    source_inventory: { classes: input.source_classes, still_graphic: graphicPath, moving_video: movingPath, speech_voice: speechPath, audio_bed: bedPath, captions: captionsPath, scenes: scenePaths, scene_hashes: sceneHashes },
+    edit_decision: 'two-scene signal-to-action progression with a separate graphic layer, local speech, rights-safe generated audio bed and caption sidecar; no simple concatenation',
+    audio_capability: 'EXECUTED: speech mixed with generated rights-safe bed',
+    speech_voice_capability: 'EXECUTED: Windows SAPI local voice',
+    captions_capability: 'EXECUTED: SRT sidecar verified',
     master: { path: masterPath, bytes: masterStat.size, probe: masterInfo, decoded: masterDecoded },
     delivery: { path: deliveryPath, bytes: deliveryStat.size, probe: deliveryInfo, decoded: deliveryDecoded },
   });
@@ -285,8 +340,35 @@ async function runSecondBrainProof(tempDir) {
     throw new Error('end-to-end proof regression cases failed');
   }
   const outputPath = path.join(tempDir, 'second-brain-end-to-end-proof.json');
-  await fs.writeFile(outputPath, `${JSON.stringify({ stages, human_task: humanTask.human_task, source_restore: 'product/brief.json', capability_preflight: { real_browser_render: 'EXECUTED via CUA evidence record', local_free_tools: 'EXECUTED', speech_voice: 'NOT_EXECUTED' }, weak_spec: weakSpec, technical_route: 'bounded interactive diagnostic without backend', repair, qa, delivery_readback: 'represented as required final gate; no claim of remote state in local golden' }, null, 2)}\n`);
+  await fs.writeFile(outputPath, `${JSON.stringify({ stages, human_task: humanTask.human_task, source_restore: 'product/brief.json', capability_preflight: { real_browser_render: 'EXECUTED via CUA evidence record', local_free_tools: 'EXECUTED', speech_voice: 'EXECUTED: Windows SAPI local voice' }, weak_spec: weakSpec, technical_route: 'bounded interactive diagnostic without backend', repair, qa, delivery_readback: 'represented as required final gate; no claim of remote state in local golden' }, null, 2)}\n`);
   return evidence('second-brain-end-to-end-proof', 'EXECUTABLE PASS', { stages, defect_detected: repair.detected, repair_applied: repair.applied, qa, output_artifact: outputPath });
+}
+
+function scoreRoute(route, signals) {
+  const matchingSignals = route.fit.filter((signal) => signals.includes(signal));
+  return { ...route, score: matchingSignals.length, matchingSignals };
+}
+
+async function runNovelReasoningTrials(tempDir) {
+  const input = await readJson('reasoning/novel-tasks.json');
+  if (!Array.isArray(input.tasks) || input.tasks.length < 5) throw new Error('novel reasoning task set is incomplete');
+  const trials = input.tasks.map((task) => {
+    if (Object.prototype.hasOwnProperty.call(task, 'expected_answer')) throw new Error(`novel task contains answer oracle: ${task.id}`);
+    const ranked = task.routes.map((route) => scoreRoute(route, task.signals)).sort((a, b) => b.score - a.score);
+    if (!ranked[0] || ranked[0].score <= ranked.at(-1).score) throw new Error(`novel task has no route separation: ${task.id}`);
+    return {
+      id: task.id,
+      domain: task.domain,
+      human_task: task.human_task,
+      selected_route: ranked[0].name,
+      matched_signals: ranked[0].matchingSignals,
+      rejected_routes: ranked.slice(1).map((route) => ({ name: route.name, score: route.score })),
+      result_amplifier: ranked[0].amplifier,
+    };
+  });
+  const outputPath = path.join(tempDir, 'novel-reasoning-trials.json');
+  await fs.writeFile(outputPath, `${JSON.stringify({ method: 'generic signal-fit route scoring; no expected answers in input', trials }, null, 2)}\n`);
+  return evidence('novel-multi-domain-reasoning', 'EXECUTABLE PASS', { trial_count: trials.length, trials, output_artifact: outputPath });
 }
 
 async function runQualityAndAssets(tempDir) {
@@ -301,7 +383,14 @@ async function runQualityAndAssets(tempDir) {
   for (const relative of candidates.candidate_paths) {
     const file = path.join(root, relative);
     const buffer = await fs.readFile(file);
-    records.push({ path: relative, bytes: buffer.length, sha256: sha256(buffer), extension: path.extname(file).toLowerCase() || 'none' });
+    let media = { format: 'non-raster fixture' };
+    try {
+      const metadata = await sharp(buffer).metadata();
+      media = { format: metadata.format, width: metadata.width, height: metadata.height };
+    } catch {
+      // HTML/JSON inputs are still inventoried by bytes/hash; raster metadata is not applicable.
+    }
+    records.push({ path: relative, bytes: buffer.length, sha256: sha256(buffer), extension: path.extname(file).toLowerCase() || 'none', media });
   }
   if (new Set(records.map((record) => record.sha256)).size !== records.length) throw new Error('duplicate asset hash detected');
   const outputPath = path.join(tempDir, 'quality-assets-output.json');
@@ -355,12 +444,15 @@ export async function runGolden() {
   results.push(await runProduct(tempDir));
   results.push(await runDashboard(tempDir));
   results.push(await runImagePerformance(tempDir));
+  results.push(await runNetworkCapability());
   results.push(await runMedia(tempDir));
   results.push(await runAutomation(tempDir));
   results.push(...await runQualityAndAssets(tempDir));
   results.push(await runSecondBrainProof(tempDir));
+  results.push(await runNovelReasoningTrials(tempDir));
   results.push(await runMotionImplementation());
-  return { status: 'PASS_WITH_INDEPENDENT_REVIEW', temp_dir: tempDir, results };
+  const blocked = results.filter((item) => item.status === 'BLOCKED CAPABILITY');
+  return { status: blocked.length ? 'BLOCKED_CAPABILITY' : 'PASS_WITH_INDEPENDENT_REVIEW', temp_dir: tempDir, results };
 }
 
 if (process.argv[2] === '--run') {

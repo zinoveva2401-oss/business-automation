@@ -1,4 +1,4 @@
 # Golden fixtures
-Bounded inputs и browser artifacts для `CODEX-SECOND-BRAIN-001` находятся в `tests/fixtures/second-brain/`. Inputs описывают job/constraints/candidate paths; measured results создаются `scripts/second-brain-executable-golden.mjs` во временной директории.
+Bounded inputs и browser artifacts для `CODEX-SECOND-BRAIN-001` находятся в `tests/fixtures/second-brain/`. Inputs описывают job/constraints/candidate paths; measured results создаются `scripts/second-brain-executable-golden.mjs` во временной директории. Media tools разрешаются portable resolver-ом из project dev dependency/PATH; speech proof требует elevated Windows SAPI. Material desktop/mobile screenshots хранятся в `tests/fixtures/second-brain/visual/evidence/`.
 Запуск: `node scripts/second-brain-executable-golden.mjs --run` и `node scripts/skill-regression-harness.mjs`.
-Fixture data не является business truth, visual approval или live deployment claim. Production files остаются вне runtime/test scope.
+Fixture data не является business truth, visual approval или live deployment claim. `BLOCKED CAPABILITY` означает, что применимый capability не был скрыт как PASS; сейчас network throttling требует отдельного exposed browser route. Production files остаются вне runtime/test scope.

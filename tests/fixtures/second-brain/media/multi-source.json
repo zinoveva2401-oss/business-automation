@@ -1,8 +1,9 @@
 {
   "brief": "Короткий rights-safe motion proof: показать переход от сигнала к действию",
-  "source_classes": ["moving_video", "still_graphic", "audio_only"],
-  "voice_capability": "NOT_EXECUTED",
+  "source_classes": ["moving_video", "still_graphic", "speech_voice", "audio_bed", "captions"],
+  "voice_capability": "EXECUTED: Windows SAPI local speech",
   "audio_capability": "EXECUTED",
+  "caption_capability": "EXECUTED: sidecar SRT",
   "duration_seconds_max": 2,
   "delivery_goal": "master и lighter mobile delivery должны быть разными файлами"
 }

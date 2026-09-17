@@ -1,16 +1,14 @@
 #!/usr/bin/env node
 
 import { execFileSync } from 'node:child_process';
-import fs from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { resolveMediaTools } from './resolve-local-capabilities.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const bundledPython = 'C:\\Users\\user\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe';
-const remotionFfmpeg = path.join(root, 'ernest-16-film', 'node_modules', '@remotion', 'compositor-win32-x64-msvc', 'ffmpeg.exe');
-const remotionFfprobe = path.join(root, 'ernest-16-film', 'node_modules', '@remotion', 'compositor-win32-x64-msvc', 'ffprobe.exe');
 const require = createRequire(import.meta.url);
+const mediaTools = resolveMediaTools();
 
 function commandStatus(command, args = []) {
   try {
@@ -49,41 +47,42 @@ function main() {
       npm: commandStatus('npm.cmd', ['--version']),
       git: commandStatus('git', ['--version']),
       pnpm: commandStatus('pnpm.cmd', ['--version']),
-      bundled_python: fs.existsSync(bundledPython)
-        ? commandStatus(bundledPython, ['--version'])
-        : { status: 'MISSING', evidence: bundledPython },
-      ffmpeg_path: fs.existsSync(remotionFfmpeg)
-        ? commandStatus(remotionFfmpeg, ['-version'])
-        : { status: 'MISSING', evidence: remotionFfmpeg },
-      ffprobe_path: fs.existsSync(remotionFfprobe)
-        ? commandStatus(remotionFfprobe, ['-version'])
-        : { status: 'MISSING', evidence: remotionFfprobe },
+      python_on_path: commandStatus('python', ['--version']),
+      ffmpeg_path: mediaTools.ffmpeg.status === 'VERIFIED'
+        ? { ...commandStatus(mediaTools.ffmpeg.path, ['-version']), source: mediaTools.ffmpeg.source }
+        : mediaTools.ffmpeg,
+      ffprobe_path: mediaTools.ffprobe.status === 'VERIFIED'
+        ? { ...commandStatus(mediaTools.ffprobe.path, ['-version']), source: mediaTools.ffprobe.source }
+        : mediaTools.ffprobe,
       ffmpeg_on_path: commandStatus('ffmpeg', ['-version']),
       ffprobe_on_path: commandStatus('ffprobe', ['-version']),
       playwright_cli: commandStatus('playwright', ['--version']),
       image_magick: commandStatus('magick', ['-version']),
+      speech_sapi: { status: 'PARTIAL', evidence: 'Windows SAPI voice was executed in an elevated local probe; normal sandbox invocation is denied' },
     },
     project_libraries: {
       astro: packageStatus('astro'),
       typescript: packageStatus('typescript'),
       jszip: packageStatus('jszip'),
-      remotion: packageStatus('remotion', path.join(root, 'ernest-16-film')),
       playwright_package: packageStatus('playwright'),
     },
     external_probes: {
       verification_mode: 'Recorded live MCP/CUA probes from this run; this local script does not impersonate those connectors.',
-      google_drive: { status: 'VERIFIED', evidence: 'profile, canonical spreadsheet search, metadata and bounded range reads' },
-      github: { status: 'VERIFIED', evidence: 'repository metadata, branch access, push and remote readback' },
-      figma: { status: 'PARTIAL', evidence: 'authenticated identity probe; file-level design access not tested' },
-      airtable: { status: 'VERIFIED', evidence: 'ping' },
-      sites: { status: 'VERIFIED', evidence: 'owned Sites listing; no deploy performed' },
+      google_drive: { status: 'NOT_PROBED', evidence: 'no Google Drive connector call in this local run' },
+      github: { status: 'VERIFIED', evidence: 'git remote readback is executed by the delivery gate' },
+      figma: { status: 'NOT_PROBED', evidence: 'no file-level design probe in this local run' },
+      airtable: { status: 'NOT_PROBED', evidence: 'no Airtable connector call in this local run' },
+      sites: { status: 'NOT_PROBED', evidence: 'no Sites connector call; deployment is out of scope' },
       browser_cua: { status: 'VERIFIED', evidence: 'real fixture render, desktop/mobile layout evidence and interaction check in CUA' },
+      browser_network_throttling: { status: 'BLOCKED CAPABILITY', evidence: 'CUA capabilities probe exposed visibility and viewport, but no network emulation/throttling control' },
       multi_agent: { status: 'VERIFIED', evidence: 'independent Completion Auditor pass/recheck workflow available' },
       codex_automation: { status: 'AVAILABLE', evidence: 'automation_update surface; no scheduling mutation performed' },
       security_review: { status: 'AVAILABLE', evidence: 'security-best-practices skill and JS frontend reference read' },
     },
     gaps: [
-      'ffmpeg/ffprobe are not on PATH but verified Remotion-bundled binaries exist; generic PATH media workflows remain PARTIAL',
+      ...(mediaTools.ffmpeg.status === 'VERIFIED' && mediaTools.ffprobe.status === 'VERIFIED' ? [] : ['Portable ffmpeg/ffprobe resolver has no usable binary']),
+      'Windows SAPI speech route is elevated-only in this local sandbox; golden media proof was executed in the approved elevated probe',
+      'Real slow-network measurement is blocked: no network throttling capability is exposed by the current CUA surface',
       'Playwright CLI/package is not installed; browser QA uses CUA/manual evidence, capability is PARTIAL',
       'ImageMagick/magick is not available; image conversion relies on existing project pipeline',
       'No backend framework is installed; Node mock/API flow is sufficient for bounded automation golden tests',
