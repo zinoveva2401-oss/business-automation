@@ -41,17 +41,42 @@ function chooseFormat(brief) {
 }
 
 function diagnose(input) {
-  if (!Number.isFinite(input.revenue) || !Number.isFinite(input.visitors) || !Number.isFinite(input.returns)
-    || input.revenue <= 0 || input.visitors <= 0 || input.returns < 0 || input.returns > input.visitors) {
-    return { state: 'error', message: 'Некорректные входные данные' };
+  const { revenue_rub: revenueRub, visitors, purchases, returns } = input;
+  if (![revenueRub, visitors, purchases, returns].every(Number.isFinite)
+    || revenueRub <= 0 || visitors <= 0 || purchases < 0 || returns < 0
+    || purchases > visitors || returns > purchases) {
+    return { state: 'error', message: 'Некорректные входные данные: покупки <= посетители, возвраты <= покупки' };
   }
-  const conversion = Number((input.revenue / input.visitors * 100).toFixed(2));
-  const returnRate = Number((input.returns / input.visitors * 100).toFixed(1));
+  const revenuePerVisitor = Number((revenueRub / visitors).toFixed(2));
+  const conversionRate = Number((purchases / visitors * 100).toFixed(2));
+  const returnRate = purchases === 0 ? null : Number((returns / purchases * 100).toFixed(1));
+  if (revenuePerVisitor > 1000000) {
+    return {
+      state: 'needs-review',
+      message: 'Средняя выручка на посетителя выглядит как выброс; нужен source check',
+      revenuePerVisitor,
+      conversionRate,
+      returnRate,
+      nextAction: 'проверить выгрузку выручки и период расчёта',
+    };
+  }
+  if (purchases === 0) {
+    return {
+      state: 'edge',
+      message: 'Доля возвратов не рассчитывается без покупок',
+      revenuePerVisitor,
+      conversionRate,
+      returnRate,
+      nextAction: 'проверить путь от посещения до первой покупки',
+    };
+  }
   return {
     state: 'ready',
-    conversion,
+    units: { revenuePerVisitor: 'RUB/visitor', conversionRate: '%', returnRate: '%' },
+    revenuePerVisitor,
+    conversionRate,
     returnRate,
-    nextAction: returnRate > 7 ? 'разобрать причину возвратов по каналу' : 'сравнить конверсию по каналам',
+    nextAction: returnRate > 10 ? 'разобрать причину возвратов по каналу' : 'сравнить конверсию и возвраты по каналам',
   };
 }
 
@@ -61,12 +86,26 @@ async function runProduct(tempDir) {
   if ('selected' in formatInput || 'rationale' in formatInput) throw new Error('product input contains answer oracle');
   const selectedFormat = chooseFormat(formatInput);
   if (!formatInput.candidate_formats.includes(selectedFormat)) throw new Error('computed format is not an input candidate');
-  const empty = diagnose({ revenue: 0, visitors: 0, returns: 0 });
+  const empty = diagnose({ revenue_rub: 0, visitors: 0, purchases: 0, returns: 0 });
   const result = diagnose(brief.inputs);
-  if (empty.state !== 'error' || result.state !== 'ready' || !result.nextAction) throw new Error('product state machine failed');
+  const edge = diagnose({ revenue_rub: 100000, visitors: 1200, purchases: 0, returns: 0 });
+  const invalid = diagnose({ revenue_rub: 100000, visitors: 1200, purchases: 10, returns: 11 });
+  const absurd = diagnose({ revenue_rub: 10000000, visitors: 1, purchases: 1, returns: 0 });
+  if (empty.state !== 'error' || result.state !== 'ready' || result.revenuePerVisitor !== 83.33
+    || result.conversionRate !== 8 || result.returnRate !== 9.4 || !result.nextAction
+    || edge.state !== 'edge' || edge.returnRate !== null
+    || invalid.state !== 'error' || absurd.state !== 'needs-review') {
+    throw new Error('product state machine, units, or negative cases failed');
+  }
   const artifact = {
     format: selectedFormat,
     input_sha256: sha256(Buffer.from(JSON.stringify(brief))),
+    formulas: {
+      revenuePerVisitor: 'revenue_rub / visitors (RUB/visitor)',
+      conversionRate: 'purchases / visitors * 100 (%)',
+      returnRate: 'returns / purchases * 100 (%) when purchases > 0',
+    },
+    cases: { normal: result, edge, invalid, absurd },
     result,
     artifact_path: path.join(fixtureRoot, 'product', 'index.html'),
   };
@@ -81,6 +120,9 @@ async function runProduct(tempDir) {
     selected_format: selectedFormat,
     state_transition: `${empty.state} -> ${result.state}`,
     computed_result: result,
+    cases: { normal: result, edge, invalid, absurd },
+    outlier_blocked_from_pass: absurd.state !== 'ready',
+    next_action: result.nextAction,
     output_artifact: outputPath,
   });
 }
@@ -144,6 +186,7 @@ async function runImagePerformance(tempDir) {
     master: { path: masterPath, bytes: masterStat.size, width: masterMeta.width, height: masterMeta.height, format: masterMeta.format },
     delivery: { path: deliveryPath, bytes: deliveryStat.size, width: deliveryMeta.width, height: deliveryMeta.height, format: deliveryMeta.format },
     slow_connection_profile: input.slow_connection_profile,
+    slow_connection_check: { status: 'ESTIMATE / NOT EXECUTED', executed: false },
   });
 }
 
@@ -157,39 +200,93 @@ async function runMedia(tempDir) {
   const input = await readJson('media/multi-source.json');
   const sourceDir = path.join(tempDir, 'media-sources');
   await fs.mkdir(sourceDir, { recursive: true });
-  const graphicSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="640" height="360" fill="#17130F"/><path d="M40 280 C160 280 180 80 320 180 S500 300 600 90" fill="none" stroke="#D9562F" stroke-width="8"/><circle cx="600" cy="90" r="13" fill="#2F80ED"/></svg>`;
+  const sceneSvgs = {
+    signal: `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="640" height="360" fill="#17130F"/><text x="40" y="70" fill="#F4F5F6" font-family="sans-serif" font-size="28">SIGNAL / вход</text><path d="M40 280 C160 280 180 80 320 180 S500 300 600 90" fill="none" stroke="#D9562F" stroke-width="8"/><circle cx="600" cy="90" r="13" fill="#2F80ED"/></svg>`,
+    action: `<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360"><rect width="640" height="360" fill="#E8EEF5"/><rect x="38" y="42" width="564" height="276" fill="none" stroke="#2F80ED" stroke-width="4"/><text x="70" y="110" fill="#17130F" font-family="sans-serif" font-size="30">ACTION / следующий шаг</text><path d="M90 220 H520" stroke="#D9562F" stroke-width="10"/><path d="M470 180 L530 220 L470 260" fill="none" stroke="#D9562F" stroke-width="10"/></svg>`,
+  };
+  const graphicSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="220" height="70"><rect x="1" y="1" width="218" height="68" rx="10" fill="#262626" fill-opacity=".94" stroke="#D9562F" stroke-width="2"/><text x="18" y="43" fill="#F4F5F6" font-family="sans-serif" font-size="22">ДОКРУТИ</text></svg>`;
   const graphicPath = path.join(sourceDir, 'still-graphic.svg');
   const graphicPng = path.join(sourceDir, 'still-graphic.png');
   await fs.writeFile(graphicPath, graphicSvg);
   await sharp(Buffer.from(graphicSvg)).png().toFile(graphicPng);
-  const { data: base, info } = await sharp(graphicPng).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const scenePaths = {};
+  const sceneBuffers = {};
+  for (const [name, svg] of Object.entries(sceneSvgs)) {
+    const svgPath = path.join(sourceDir, `scene-${name}.svg`);
+    const pngPath = path.join(sourceDir, `scene-${name}.png`);
+    await fs.writeFile(svgPath, svg);
+    await sharp(Buffer.from(svg)).png().toFile(pngPath);
+    scenePaths[name] = { svg: svgPath, png: pngPath };
+    sceneBuffers[name] = await sharp(pngPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  }
   const framePaths = [];
   for (let index = 0; index < 12; index += 1) {
-    const frame = Buffer.from(base);
-    const x = 60 + index * 42;
-    for (let y = 250; y < 290; y += 1) for (let dx = -10; dx <= 10; dx += 1) setPixel(frame, info.width, x + dx, y, [217, 86, 47]);
+    const scene = index < 6 ? sceneBuffers.signal : sceneBuffers.action;
+    const frame = Buffer.from(scene.data);
+    const x = 60 + (index % 6) * 96;
+    for (let y = 250; y < 290; y += 1) for (let dx = -10; dx <= 10; dx += 1) setPixel(frame, scene.info.width, x + dx, y, [217, 86, 47]);
     const framePath = path.join(sourceDir, `frame-${String(index).padStart(2, '0')}.png`);
-    await sharp(frame, { raw: { width: info.width, height: info.height, channels: 4 } }).png().toFile(framePath);
+    await sharp(frame, { raw: { width: scene.info.width, height: scene.info.height, channels: 4 } }).composite([{ input: graphicPng, left: 20, top: 20 }]).png().toFile(framePath);
     framePaths.push(framePath);
   }
   const movingPath = path.join(sourceDir, 'moving-source.mp4');
-  const voicePath = path.join(sourceDir, 'generated-voice.wav');
+  const audioPath = path.join(sourceDir, 'generated-audio.wav');
   const masterPath = path.join(tempDir, 'media-master.mp4');
   const deliveryPath = path.join(tempDir, 'media-delivery.mp4');
   runBinary(ffmpeg, ['-y', '-framerate', '8', '-i', path.join(sourceDir, 'frame-%02d.png'), '-t', '1.5', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', movingPath]);
-  runBinary(ffmpeg, ['-y', '-f', 'lavfi', '-i', 'sine=frequency=520:duration=1.5', '-c:a', 'pcm_s16le', voicePath]);
-  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', voicePath, '-map', '0:v:0', '-map', '1:a:0', '-shortest', '-c:v', 'libx264', '-crf', '18', '-c:a', 'aac', '-b:a', '96k', masterPath]);
-  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', voicePath, '-map', '0:v:0', '-map', '1:a:0', '-vf', 'scale=320:180', '-r', '8', '-shortest', '-c:v', 'libx264', '-crf', '31', '-c:a', 'aac', '-b:a', '48k', deliveryPath]);
+  runBinary(ffmpeg, ['-y', '-f', 'lavfi', '-i', 'sine=frequency=520:duration=1.5', '-c:a', 'pcm_s16le', audioPath]);
+  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', audioPath, '-map', '0:v:0', '-map', '1:a:0', '-shortest', '-c:v', 'libx264', '-crf', '18', '-c:a', 'aac', '-b:a', '96k', masterPath]);
+  runBinary(ffmpeg, ['-y', '-i', movingPath, '-i', audioPath, '-map', '0:v:0', '-map', '1:a:0', '-vf', 'scale=320:180', '-r', '8', '-shortest', '-c:v', 'libx264', '-crf', '31', '-c:a', 'aac', '-b:a', '48k', deliveryPath]);
   const [masterStat, deliveryStat] = await Promise.all([fs.stat(masterPath), fs.stat(deliveryPath)]);
   const probe = (file) => JSON.parse(runBinary(ffprobe, ['-v', 'error', '-show_entries', 'format=duration,size:stream=codec_name,codec_type,width,height', '-of', 'json', file]));
   const masterInfo = probe(masterPath); const deliveryInfo = probe(deliveryPath);
-  if (masterPath === deliveryPath || deliveryStat.size >= masterStat.size || !masterInfo.format?.duration || !deliveryInfo.format?.duration) throw new Error('media master/delivery evidence failed');
+  const decode = async (file, label) => {
+    const decodedFrame = path.join(tempDir, `${label}-decoded-frame.png`);
+    const decodedAudio = path.join(tempDir, `${label}-decoded-audio.wav`);
+    runBinary(ffmpeg, ['-v', 'error', '-i', file, '-map', '0:v:0', '-frames:v', '1', '-c:v', 'png', '-f', 'image2', decodedFrame]);
+    runBinary(ffmpeg, ['-v', 'error', '-i', file, '-map', '0:a:0', '-t', '0.25', '-c:a', 'pcm_s16le', decodedAudio]);
+    const [frameStat, audioStat] = await Promise.all([fs.stat(decodedFrame), fs.stat(decodedAudio)]);
+    return { frame: decodedFrame, audio: decodedAudio, frame_bytes: frameStat.size, audio_bytes: audioStat.size };
+  };
+  const masterDecoded = await decode(masterPath, 'master'); const deliveryDecoded = await decode(deliveryPath, 'delivery');
+  const sceneHashEntries = await Promise.all(Object.entries(scenePaths).map(async ([name, files]) => [name, sha256(await fs.readFile(files.png))]));
+  const sceneHashes = Object.fromEntries(sceneHashEntries);
+  if (sceneHashes.signal === sceneHashes.action || masterPath === deliveryPath || deliveryStat.size >= masterStat.size || !masterInfo.format?.duration || !deliveryInfo.format?.duration || masterDecoded.frame_bytes <= 0 || deliveryDecoded.frame_bytes <= 0 || masterDecoded.audio_bytes <= 0 || deliveryDecoded.audio_bytes <= 0) throw new Error('media master/delivery evidence failed');
   return evidence('media-real-production', 'EXECUTABLE PASS', {
-    source_inventory: { classes: input.source_classes, still_graphic: graphicPath, moving_video: movingPath, generated_voice: voicePath },
-    edit_decision: 'graphic bed + moving trace signal + generated voice; no simple concatenation',
-    master: { path: masterPath, bytes: masterStat.size, probe: masterInfo },
-    delivery: { path: deliveryPath, bytes: deliveryStat.size, probe: deliveryInfo },
+    source_inventory: { classes: input.source_classes, still_graphic: graphicPath, moving_video: movingPath, audio_only: audioPath, scenes: scenePaths, scene_hashes: sceneHashes },
+    edit_decision: 'two-scene signal-to-action progression with a separate graphic overlay and audio-only bed; no voice claim',
+    audio_capability: 'EXECUTED: generated tone only',
+    speech_voice_capability: 'NOT_EXECUTED',
+    master: { path: masterPath, bytes: masterStat.size, probe: masterInfo, decoded: masterDecoded },
+    delivery: { path: deliveryPath, bytes: deliveryStat.size, probe: deliveryInfo, decoded: deliveryDecoded },
   });
+}
+
+async function runSecondBrainProof(tempDir) {
+  const humanTask = await readJson('proof/human-task.json');
+  const brief = await readJson('product/brief.json');
+  const weakSpec = /выручк.*посетител|возврат/i.test(humanTask.human_task) && !/покупк/i.test(humanTask.human_task);
+  if (!weakSpec || humanTask.expected_answer !== null) throw new Error('end-to-end proof did not start from a weak human task');
+  const normal = diagnose(brief.inputs);
+  const edge = diagnose({ revenue_rub: 100000, visitors: 1200, purchases: 0, returns: 0 });
+  const invalid = diagnose({ revenue_rub: 100000, visitors: 1200, purchases: 10, returns: 11 });
+  const absurd = diagnose({ revenue_rub: 10000000, visitors: 1, purchases: 1, returns: 0 });
+  const repair = {
+    detected: 'conversion numerator was absent from the human task; revenue must not be used as conversion numerator',
+    applied: 'restore completed purchases as an explicit input and keep revenue as RUB/visitor only',
+    formulas: ['revenue_rub / visitors', 'purchases / visitors * 100', 'returns / purchases * 100 when purchases > 0'],
+  };
+  const stages = [
+    'human task', 'source restore', 'capability preflight', 'weak-spec check', 'technical route',
+    'implementation', 'real result', 'applicable QA', 'defect detection', 'consolidated repair', 'regression', 'delivery/readback',
+  ];
+  const qa = { normal, edge, invalid, absurd, outlier_blocked_from_pass: absurd.state !== 'ready' };
+  if (normal.state !== 'ready' || edge.state !== 'edge' || invalid.state !== 'error' || absurd.state !== 'needs-review' || !qa.outlier_blocked_from_pass) {
+    throw new Error('end-to-end proof regression cases failed');
+  }
+  const outputPath = path.join(tempDir, 'second-brain-end-to-end-proof.json');
+  await fs.writeFile(outputPath, `${JSON.stringify({ stages, human_task: humanTask.human_task, source_restore: 'product/brief.json', capability_preflight: { real_browser_render: 'EXECUTED via CUA evidence record', local_free_tools: 'EXECUTED', speech_voice: 'NOT_EXECUTED' }, weak_spec: weakSpec, technical_route: 'bounded interactive diagnostic without backend', repair, qa, delivery_readback: 'represented as required final gate; no claim of remote state in local golden' }, null, 2)}\n`);
+  return evidence('second-brain-end-to-end-proof', 'EXECUTABLE PASS', { stages, defect_detected: repair.detected, repair_applied: repair.applied, qa, output_artifact: outputPath });
 }
 
 async function runQualityAndAssets(tempDir) {
@@ -261,6 +358,7 @@ export async function runGolden() {
   results.push(await runMedia(tempDir));
   results.push(await runAutomation(tempDir));
   results.push(...await runQualityAndAssets(tempDir));
+  results.push(await runSecondBrainProof(tempDir));
   results.push(await runMotionImplementation());
   return { status: 'PASS_WITH_INDEPENDENT_REVIEW', temp_dir: tempDir, results };
 }

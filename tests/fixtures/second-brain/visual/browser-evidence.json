@@ -1,19 +1,23 @@
 {
   "captured_by": "Codex CUA browser during RUN-CODEX-SECOND-BRAIN-001-2026-09-17",
+  "material_evidence": "desktop and mobile screenshots emitted in Codex chat; this JSON records objective DOM and interaction measurements",
   "desktop": {
     "viewport": {"innerWidth": 1280, "innerHeight": 800},
     "document": {"clientWidth": 1265, "scrollWidth": 1265, "horizontal_overflow": false},
     "brand_version": "8.2",
     "animation_name": "traceTravel",
     "motion_time_sample_changed_transform": true,
-    "interaction_state_after_button": "expanded"
+    "interaction_state_after_button": "expanded",
+    "keyboard_focus_after_tab": {"id": "reveal", "tag": "BUTTON"}
   },
   "mobile": {
     "viewport": {"innerWidth": 390, "innerHeight": 844},
     "document": {"clientWidth": 375, "scrollWidth": 375, "horizontal_overflow": false},
     "media_query_max_430_matches": true,
-    "hero_columns": "339.2px"
+    "hero_columns": "339.2px",
+    "reduced_motion_media_query": false,
+    "keyboard_focus_after_tab": {"id": "reveal", "tag": "BUTTON"}
   },
-  "product_smoke": {"state_after_valid_input": "ready", "computed_conversion": "8333.33%", "computed_return_rate": "7.5%"},
+  "product_smoke": {"state_after_valid_input": "ready", "computed_conversion": "8.00%", "computed_return_rate": "9.4%", "average_revenue_per_visitor": "83.33 RUB/visitor", "edge_state": "edge", "invalid_state": "error", "absurd_state": "needs-review"},
   "dashboard_smoke": {"initial_ready_rows": 3, "filtered_messenger_rows": 1}
 }

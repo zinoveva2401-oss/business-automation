@@ -1,6 +1,8 @@
 {
   "brief": "Короткий rights-safe motion proof: показать переход от сигнала к действию",
-  "source_classes": ["moving_video", "still_graphic", "generated_voice"],
+  "source_classes": ["moving_video", "still_graphic", "audio_only"],
+  "voice_capability": "NOT_EXECUTED",
+  "audio_capability": "EXECUTED",
   "duration_seconds_max": 2,
   "delivery_goal": "master и lighter mobile delivery должны быть разными файлами"
 }

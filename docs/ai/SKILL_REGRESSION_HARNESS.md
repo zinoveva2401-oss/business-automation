@@ -1,5 +1,5 @@
 # Skill Regression Harness
 `node scripts/skill-regression-harness.mjs` запускает bounded regression для технического runtime. Harness не заменяет независимый Completion Auditor и не является отдельным Second Brain продуктом.
-Проверки: Completion Gate self-test; immutable SPEC-LINT preflight hash; negative nested/semantic SPEC-LINT case; executable golden runner для product/dashboard/performance/media/weak-input/asset flows; objective visual/brand contract; security baseline; conflict-marker scan.
+Проверки: Completion Gate self-test с criterion-specific evidence negative case; immutable SPEC-LINT preflight hash; negative nested/semantic SPEC-LINT case; executable golden runner для product/dashboard/performance/media/weak-input/asset и bounded end-to-end proof flows; objective visual/brand contract; real browser evidence record; security baseline; conflict-marker scan.
 Для machine-checkable capability runner сам создаёт output artifacts и измеряет их. Inputs содержат задачу/ограничения, но не oracle-поля вроде `selected`, `rationale`, `decision_useful`, claimed bytes или PASS.
 Статусы: `EXECUTABLE PASS`, `INDEPENDENT REVIEW REQUIRED`, `FAIL`, `BLOCKED CAPABILITY`. Общий результат не может быть PASS, если нужен independent review. PASS harness не доказывает live deployment, бизнес-истину или финальную brand approval.

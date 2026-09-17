@@ -52,7 +52,7 @@ Codex отвечает за проверенный результат, а не �
 ### Runtime guardrails
 
 - `ONE RUN → ONE PERSISTENT CHAT → ONE CANONICAL WORKING BRANCH`. Новый chat, branch, worktree или PR создавать только при техническом повреждении, исчерпанном контексте либо реально необходимой независимости; при смене production-chat фиксировать checkpoint/handoff.
-- До существенной задачи выполнить `CAPABILITY PREFLIGHT`: определить Skills/MCP/tools, missing inputs и QA route. Если acceptance требует отсутствующего capability, `STOP BEFORE PRODUCTION`; слабую замену молча не объявлять эквивалентной.
+- До существенной задачи выполнить `CAPABILITY PREFLIGHT`: определить Skills/MCP/tools, missing inputs и QA route. Если capability отсутствует, сначала проверить доступный бесплатный маршрут. Reversible technical install известной бесплатной зависимости допустим без отдельного owner gate только при нулевой стоимости, приемлемой лицензии/безопасности, минимальном dependency footprint и обновлении проверяемого manifest/lock; paid, credentialed commercial, material spend, risky/irreversible install или неясная license/security требуют OWNER GATE.
 - При противоречивом или слабом ТЗ сначала зафиксировать `OWNER INTENT`, ошибочный method, frozen constraints и более сильный technical route. Frozen business/product/brand/commercial/legal решения самостоятельно не менять.
 - Для длинной задачи вести checkpoint: `CURRENT STAGE`, `DONE`, `EVIDENCE`, `NEXT EXACT ACTION`.
 
@@ -62,7 +62,7 @@ Codex — технический Second Brain `Докрути`, а не Business
 
 Для значимой `SYSTEM`/`DEVELOPMENT`/`RELEASE` работы до implementation обязателен executable SPEC-LINT preflight с hash task packet, starting HEAD, branch и pre-work status. Реальный результат важнее схемы: self-authored JSON-поля `PASS`, `true`, `meaningful`, `decision_useful`, выбранный ответ или заявленный размер не являются capability evidence. Product/media/performance/visual evidence должна быть получена из реального execution, output artifact и measurement; subjective visual/product judgement требует independent review. Слабый input сначала оспаривается с 1–3 более сильными маршрутами.
 
-Free-first обязателен: paid dependency, credentialed commercial service или платный plugin требуют OWNER GATE; не создавать paid dependency ради теста. Executor не сертифицирует Second Brain сам. Максимальный внутренний итог этого RUN — `READY FOR INDEPENDENT BUSINESS OS QA`.
+Free-first обязателен: paid dependency, credentialed commercial service, material spend, risky/irreversible install или неясная license/security требуют OWNER GATE; известная бесплатная reversible technical dependency допускается только при проверенном нулевом cost, license/security, минимальном footprint и tracked manifest/lock. Не создавать paid dependency ради теста. Executor не сертифицирует Second Brain сам. Максимальный внутренний итог этого RUN — `READY FOR INDEPENDENT BUSINESS OS QA`.
 
 ## 5. Профессиональные контуры
 
@@ -86,7 +86,7 @@ Free-first обязателен: paid dependency, credentialed commercial servic
 
 ## 7. Минимальный QA baseline
 
-По применимости проверять desktop/laptop/tablet/mobile, keyboard/focus, semantic structure, contrast, reduced motion, touch targets, images/media, forms, links/routes/404, build/check, browser console/network, metadata/schema, performance, visual integrity и brand integrity. Для browser/UI-задач использовать Playwright и фактический render. Для security-sensitive или release-задач подключать security review.
+По применимости проверять desktop/laptop/tablet/mobile, keyboard/focus, semantic structure, contrast, reduced motion, touch targets, images/media, forms, links/routes/404, build/check, browser console/network, metadata/schema, performance, visual integrity и brand integrity. Для browser/UI-задач обязателен `REAL BROWSER RENDER + OBJECTIVE EVIDENCE`; инструмент выбирается capability preflight: CUA, available browser automation, Playwright или иной реально доступный подход. Для security-sensitive или release-задач подключать security review.
 
 Для UI/site/digital product `build != visual PASS`: обязательны real browser render, desktop evidence, mobile evidence, comparison с утверждённым reference при наличии, visual defect pass, repair и rerender. Фактический render/evidence должен быть доступен в Codex chat или artifact.
 

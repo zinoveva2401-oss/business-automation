@@ -37,7 +37,15 @@ function runGolden() { return jsonOutput(runNode('scripts/second-brain-executabl
 function goldenSuite(golden, id) { const item = golden.results.find((entry) => entry.id === id); return item ? item : fail(id, 'golden result missing'); }
 function runBrowserRecord() {
   const evidence = JSON.parse(fs.readFileSync(path.join(fixtures, 'visual', 'browser-evidence.json'), 'utf8'));
-  const valid = evidence.desktop.viewport.innerWidth === 1280 && evidence.mobile.viewport.innerWidth === 390 && evidence.mobile.document.horizontal_overflow === false && evidence.desktop.motion_time_sample_changed_transform === true;
+  const valid = evidence.captured_by.includes('CUA browser')
+    && evidence.material_evidence.includes('screenshots emitted in Codex chat')
+    && evidence.desktop.viewport.innerWidth === 1280
+    && evidence.mobile.viewport.innerWidth === 390
+    && evidence.mobile.viewport.innerWidth <= 430
+    && evidence.mobile.document.horizontal_overflow === false
+    && evidence.desktop.motion_time_sample_changed_transform === true
+    && evidence.product_smoke.computed_conversion === '8.00%'
+    && evidence.product_smoke.computed_return_rate === '9.4%';
   return valid ? review('browser-desktop-mobile-evidence', evidence) : fail('browser-desktop-mobile-evidence', evidence);
 }
 function runVisualContract() {
@@ -47,10 +55,10 @@ function runVisualContract() {
 }
 function runSecurity() { return pass('security-baseline', runNode('scripts/security-baseline-scan.mjs', ['--self-test'])); }
 function runMarkers() { const scan = spawnSync('git', ['grep', '-nE', '^(<<<<<<< |>>>>>>> |=======)$', '--', 'AGENTS.md', 'docs', 'scripts', 'tests'], { cwd: root, encoding: 'utf8' }); return scan.status === 1 ? pass('conflict-marker-scan', '0 markers in scoped runtime/test paths') : fail('conflict-marker-scan', `${scan.stdout}\n${scan.stderr}`.trim()); }
-function runPolicy() { const files = ['AGENTS.md', 'docs/ai/CODEX_RUNTIME.md', 'docs/ai/COMPLETION_GATE.md', 'docs/ai/HANDOFF_PROTOCOL.md']; const text = files.map((file) => fs.readFileSync(path.join(root, file), 'utf8')).join('\n'); const valid = text.includes('READ-ONLY') && text.includes('remote readback') && text.includes('PUSH !='); return valid ? pass('cross-document-git-policy', 'four contract documents include default tracked-delta delivery and PUSH != MERGE') : fail('cross-document-git-policy', 'required policy terms missing'); }
+function runPolicy() { const files = ['AGENTS.md', 'docs/ai/CODEX_RUNTIME.md', 'docs/ai/COMPLETION_GATE.md', 'docs/ai/HANDOFF_PROTOCOL.md']; const text = files.map((file) => fs.readFileSync(path.join(root, file), 'utf8')).join('\n'); const valid = text.includes('READ-ONLY') && text.includes('remote readback') && text.includes('PUSH !=') && text.includes('tracked-file delta'); return valid ? pass('cross-document-git-policy', 'four contract documents include default tracked-delta delivery and PUSH != MERGE') : fail('cross-document-git-policy', 'required policy terms missing'); }
 function main() {
   const golden = runGolden();
-  const results = [runGate(), runSpec(), runConflict(), goldenSuite(golden, 'product-real-flow'), goldenSuite(golden, 'dashboard-real-flow'), goldenSuite(golden, 'media-real-production'), goldenSuite(golden, 'automation-retry-idempotency'), goldenSuite(golden, 'performance-real-transformation'), goldenSuite(golden, 'weak-input-quality-challenge'), goldenSuite(golden, 'asset-intelligence'), goldenSuite(golden, 'motion-implementation'), runBrowserRecord(), runVisualContract(), runSecurity(), runMarkers(), runPolicy()];
+  const results = [runGate(), runSpec(), runConflict(), goldenSuite(golden, 'product-real-flow'), goldenSuite(golden, 'dashboard-real-flow'), goldenSuite(golden, 'media-real-production'), goldenSuite(golden, 'automation-retry-idempotency'), goldenSuite(golden, 'performance-real-transformation'), goldenSuite(golden, 'weak-input-quality-challenge'), goldenSuite(golden, 'asset-intelligence'), goldenSuite(golden, 'second-brain-end-to-end-proof'), goldenSuite(golden, 'motion-implementation'), runBrowserRecord(), runVisualContract(), runSecurity(), runMarkers(), runPolicy()];
   const failed = results.filter((item) => item.status === 'FAIL');
   const reviews = results.filter((item) => item.status === 'INDEPENDENT REVIEW REQUIRED');
   const output = { status: failed.length ? 'FAIL' : reviews.length ? 'PASS_WITH_INDEPENDENT_REVIEW' : 'PASS', total: results.length, executable_passed: results.filter((item) => item.status === 'EXECUTABLE PASS').length, independent_review_required: reviews.length, failed: failed.map((item) => item.id), results };

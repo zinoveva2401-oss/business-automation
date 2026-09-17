@@ -57,6 +57,7 @@ function validateCriteria(matrix) {
   }
 
   const ids = new Set();
+  const artifactIdentities = new Set();
   for (const [index, criterion] of matrix.criteria.entries()) {
     for (const field of ['id', 'criterion', 'expected', 'how_to_verify', 'status']) {
       if (typeof criterion?.[field] !== 'string' || criterion[field].trim() === '') {
@@ -67,13 +68,24 @@ function validateCriteria(matrix) {
     if (!evidence || typeof evidence !== 'object' || Array.isArray(evidence)) {
       fail(`Criterion ${index + 1} requires a material evidence object`);
     }
+    const evidenceCriterionId = typeof evidence.criterion_id === 'string' ? evidence.criterion_id.trim() : '';
+    const evidenceClaim = typeof evidence.claim === 'string' ? evidence.claim.trim() : '';
+    if (evidenceCriterionId !== criterion.id || !evidenceClaim) {
+      fail(`Criterion ${index + 1} evidence is not criterion-specific`);
+    }
     const evidenceText = Object.entries(evidence).filter(([, value]) => typeof value === 'string').map(([key, value]) => `${key}=${value}`).join('; ');
     const artifactPath = typeof evidence.artifact_path === 'string' ? evidence.artifact_path.trim() : '';
     const artifactSha256 = typeof evidence.artifact_sha256 === 'string' ? evidence.artifact_sha256.trim().toLowerCase() : '';
-    if (!artifactPath || !/^[a-f0-9]{64}$/.test(artifactSha256) || !/(measurement|measured|inspection|screenshot|readback|hash|command|output)/i.test(evidenceText)) {
+    const relevanceText = `${evidenceClaim} ${evidence.measurement || ''} ${evidence.inspection || ''}`;
+    if (!artifactPath || !/^[a-f0-9]{64}$/.test(artifactSha256) || !relevanceText.toLowerCase().includes(criterion.id.toLowerCase()) || !/(measurement|measured|inspection|screenshot|readback|hash|command|output)/i.test(evidenceText)) {
       fail(`Criterion ${index + 1} lacks material artifact/measurement evidence`);
     }
     const resolvedArtifact = path.isAbsolute(artifactPath) ? artifactPath : path.resolve(process.cwd(), artifactPath);
+    const artifactIdentity = `${path.normalize(resolvedArtifact).toLowerCase()}|${artifactSha256}`;
+    if (artifactIdentities.has(artifactIdentity)) {
+      fail(`Criterion ${criterion.id} reuses artifact identity/hash from another criterion`);
+    }
+    artifactIdentities.add(artifactIdentity);
     try {
       const stat = fs.statSync(resolvedArtifact);
       if (!stat.isFile() || stat.size === 0) fail(`Criterion ${index + 1} artifact is missing or empty: ${artifactPath}`);
@@ -144,6 +156,18 @@ function validFixture() {
     'remote_readback',
     'independent_auditor',
   ];
+  const artifactByCriterion = {
+    source_restore: 'AGENTS.md',
+    scope_integrity: 'docs/ai/CODEX_RUNTIME.md',
+    profile_checks: 'docs/ai/COMPLETION_GATE.md',
+    spec_lint_preflight: 'docs/ai/SPEC_LINT_V2.md',
+    independent_review: 'docs/ai/SECOND_BRAIN_GOLDEN_TESTS_2026-09-17.md',
+    git_diff_review: 'scripts/verify-completion-gate.mjs',
+    commit: 'scripts/skill-regression-harness.mjs',
+    push: 'scripts/security-baseline-scan.mjs',
+    remote_readback: 'tests/fixtures/second-brain/product/brief.json',
+    independent_auditor: 'tests/fixtures/second-brain/proof/human-task.json',
+  };
   return {
     task_class: 'SYSTEM',
     delivery_required: true,
@@ -154,7 +178,7 @@ function validFixture() {
       criterion: id,
       expected: 'PASS evidence',
       how_to_verify: 'read actual fixture evidence',
-      evidence: { artifact_path: 'tests/fixtures/second-brain/repair-acceptance-matrix.json', artifact_sha256: createHash('sha256').update(fs.readFileSync('tests/fixtures/second-brain/repair-acceptance-matrix.json')).digest('hex'), measurement: 'verified output', inspection: `independent check for ${id}` },
+      evidence: { criterion_id: id, artifact_path: artifactByCriterion[id], artifact_sha256: createHash('sha256').update(fs.readFileSync(artifactByCriterion[id])).digest('hex'), claim: `criterion-specific evidence for ${id}`, measurement: `verified output for ${id}`, inspection: `independent check for ${id}` },
       status: 'PASS',
     })),
   };
@@ -197,6 +221,18 @@ function selfTest() {
   expectBlocked(
     'self-report evidence',
     { ...valid, criteria: valid.criteria.map((criterion) => ({ ...criterion, evidence: { artifact_path: 'tests/fixtures/second-brain/repair-acceptance-matrix.json', artifact_sha256: '0'.repeat(64), measurement: 'looks good' } })) },
+  );
+
+  expectBlocked(
+    'same arbitrary evidence reused across independent criteria',
+    { ...valid, criteria: valid.criteria.map((criterion) => ({ ...criterion, evidence: valid.criteria[0].evidence })) },
+  );
+
+  expectBlocked(
+    'same artifact with relabeled criterion evidence',
+    { ...valid, criteria: valid.criteria.map((criterion) => (criterion.id === 'push'
+      ? { ...criterion, evidence: { ...valid.criteria[0].evidence, criterion_id: 'push', claim: 'criterion-specific evidence for push', measurement: 'verified output for push', inspection: 'independent check for push' } }
+      : criterion)) },
   );
 
   expectBlocked(

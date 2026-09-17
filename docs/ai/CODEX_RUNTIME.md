@@ -34,7 +34,7 @@ Ledger может быть внутренним; в handoff переноситс
 - SEO/AEO, structured data, accessibility, performance, analytics;
 - security/privacy, browser/visual/content QA and independent Red Team.
 
-Независимый subagent/reviewer подключать для сложного результата или red-team прохода, если это реально доступно. До производства зафиксировать capability preflight, missing inputs и QA route. Если acceptance требует capability, которого нет, `STOP BEFORE PRODUCTION`; установку нового средства не выполнять без owner approval и слабую замену не выдавать за эквивалент.
+Независимый subagent/reviewer подключать для сложного результата или red-team прохода, если это реально доступно. До производства зафиксировать capability preflight, missing inputs и QA route. Для browser/UI-задач invariant: `REAL BROWSER RENDER + OBJECTIVE EVIDENCE REQUIRED`; маршрут выбирается из реально доступных CUA, browser automation, Playwright или другого capability. Если нужного capability нет, сначала проверить бесплатный доступный маршрут; reversible technical install известной бесплатной зависимости допустим без отдельного owner gate только при zero cost, проверенных license/security, минимальном footprint и обновлённом tracked manifest/lock. OWNER GATE остаётся обязательным для paid, credentialed commercial, material spend, risky/irreversible install или неясного license/security риска; слабую замену нельзя выдавать за эквивалент.
 
 ## 3.1 Weak-spec review
 

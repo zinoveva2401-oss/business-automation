@@ -1,0 +1,5 @@
+{
+  "human_task": "Сделай короткую диагностику магазина по выручке, посетителям и возвратам. Покажи конверсию и следующий шаг; решение должно работать без backend.",
+  "constraints": ["bounded local proof", "free-first", "no private or paid source"],
+  "expected_answer": null
+}

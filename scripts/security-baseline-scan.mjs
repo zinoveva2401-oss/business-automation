@@ -26,6 +26,7 @@ const targets = [
   'tests/fixtures/second-brain/performance/format-matrix.json',
   'tests/fixtures/second-brain/quality/weak-input.json',
   'tests/fixtures/second-brain/media/multi-source.json',
+  'tests/fixtures/second-brain/proof/human-task.json',
   'tests/fixtures/second-brain/asset-inventory.json',
   'tests/fixtures/second-brain/repair-acceptance-matrix.json',
   'tests/fixtures/second-brain/spec/valid-task-packet.json',

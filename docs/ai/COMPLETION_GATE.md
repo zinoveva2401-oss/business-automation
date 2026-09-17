@@ -24,6 +24,8 @@ EVIDENCE
 STATUS = PASS / FAIL / UNKNOWN
 ```
 
+`EVIDENCE` должна быть criterion-specific: исполняемый объект обязан содержать `criterion_id`, совпадающий с ID критерия, непустой `claim`, относящийся к этому ID, `artifact_path`, точный `artifact_sha256` и поле измерения/инспекции/команды/readback. Один произвольный artifact с совпадающим SHA не может автоматически подтверждать несколько независимых критериев; deterministic verifier проверяет relevance и блокирует reused/copied evidence.
+
 Исполняемый формат и deterministic gate: `scripts/verify-completion-gate.mjs`.
 
 Acceptance JSON обязан содержать metadata:
