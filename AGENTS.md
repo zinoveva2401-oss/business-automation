@@ -49,6 +49,13 @@ Codex отвечает за проверенный результат, а не �
 
 Владелец нужен только для смены бизнес-направления/позиционирования/ЦА/цены, существенного расхода, юридически или финансово рискованного решения, необратимой публикации/удаления/доступа или отсутствующего уникального факта. Сетка, типографика, responsive, interaction, SEO markup, accessibility, performance и обычные browser fixes — зона профессионального решения Codex.
 
+### Runtime guardrails
+
+- `ONE RUN → ONE PERSISTENT CHAT → ONE CANONICAL WORKING BRANCH`. Новый chat, branch, worktree или PR создавать только при техническом повреждении, исчерпанном контексте либо реально необходимой независимости; при смене production-chat фиксировать checkpoint/handoff.
+- До существенной задачи выполнить `CAPABILITY PREFLIGHT`: определить Skills/MCP/tools, missing inputs и QA route. Если acceptance требует отсутствующего capability, `STOP BEFORE PRODUCTION`; слабую замену молча не объявлять эквивалентной.
+- При противоречивом или слабом ТЗ сначала зафиксировать `OWNER INTENT`, ошибочный method, frozen constraints и более сильный technical route. Frozen business/product/brand/commercial/legal решения самостоятельно не менять.
+- Для длинной задачи вести checkpoint: `CURRENT STAGE`, `DONE`, `EVIDENCE`, `NEXT EXACT ACTION`.
+
 ## 5. Профессиональные контуры
 
 Подключай существующие Skills, subagents, MCP и tools по задаче. Виртуально исполняй необходимые функции: business-aware technical lead, product analyst, creative/art director, brand/editorial/UI/UX designer, information architect, frontend/creative technologist, motion, SEO/AEO/structured data, performance, accessibility, analytics, security/privacy, browser/visual/content QA и independent Red Team. Отдельный физический агент нужен только если он реально повышает независимость или покрывает capability gap.
@@ -73,11 +80,15 @@ Codex отвечает за проверенный результат, а не �
 
 По применимости проверять desktop/laptop/tablet/mobile, keyboard/focus, semantic structure, contrast, reduced motion, touch targets, images/media, forms, links/routes/404, build/check, browser console/network, metadata/schema, performance, visual integrity и brand integrity. Для browser/UI-задач использовать Playwright и фактический render. Для security-sensitive или release-задач подключать security review.
 
+Для UI/site/digital product `build != visual PASS`: обязательны real browser render, desktop evidence, mobile evidence, comparison с утверждённым reference при наличии, visual defect pass, repair и rerender. Фактический render/evidence должен быть доступен в Codex chat или artifact.
+
 ## 8. Git и область изменений
 
 До изменений проверить `git status` и diff. Сохранять незакоммиченные пользовательские файлы, не использовать `reset`, `clean`, force-push, branch switch, merge/rebase или удаление без отдельного разрешения. Не менять `src/`, `public/`, site routes/components/styles/content в SYSTEM-задаче, если это не необходимо для runtime.
 
 Коммит/push выполнять только когда это прямо входит в текущую задачу и после staged allowlist, `git diff --cached --check`, профильных проверок и просмотра итогового commit. Правильную ветку и remote HEAD подтверждать фактически; локальный HEAD сам по себе не доказывает GitHub-состояние.
+
+Для существенной задачи local change не считается delivered до `commit → PUSH → remote readback`; перед handoff подтвердить `LOCAL SHA == REMOTE SHA`. `PUSH != merge`: merge, deploy, hosting, publication и production access требуют отдельного разрешённого этапа.
 
 ## 9. Handoff и отчёт
 

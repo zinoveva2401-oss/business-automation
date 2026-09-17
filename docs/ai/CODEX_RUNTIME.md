@@ -10,6 +10,12 @@ Codex — самостоятельная digital-production среда прое�
 
 Для существенных задач обязательный финальный контроль описан в [`COMPLETION_GATE.md`](COMPLETION_GATE.md): executor не сертифицирует себя; независимый Completion Auditor получает исходный запрос и acceptance напрямую, проверяет фактические объекты, запускает fix loop при `FAIL`/`UNKNOWN` и только после recheck разрешает `VERIFIED`.
 
+## 1.1 Executable lifecycle
+
+`INTAKE → SOURCE RESTORE → CAPABILITY PREFLIGHT → WEAK-SPEC REVIEW → PLAN → IMPLEMENT → PROFILE QA → REAL RESULT → SELF-QA → RED TEAM → FIX → REGRESSION → COMMIT → PUSH → REMOTE READBACK → INDEPENDENT COMPLETION AUDITOR → READY FOR BUSINESS OS QA`
+
+`ONE RUN → ONE PERSISTENT CHAT → ONE CANONICAL WORKING BRANCH`. Новый chat/branch/worktree/PR допускается только при технической необходимости, исчерпанном контексте или требуемой независимости; смена chat требует checkpoint/handoff. `PUSH != merge`: merge/deploy/publication остаются отдельным разрешённым этапом.
+
 ## 2. Task ledger
 
 Перед сложной задачей фиксировать:
@@ -28,7 +34,11 @@ Ledger может быть внутренним; в handoff переноситс
 - SEO/AEO, structured data, accessibility, performance, analytics;
 - security/privacy, browser/visual/content QA and independent Red Team.
 
-Независимый subagent/reviewer подключать для сложного результата или red-team прохода, если это реально доступно. Если capability gap доказан, сначала использовать доступную альтернативу и зафиксировать gap; установку нового средства не выполнять без owner approval.
+Независимый subagent/reviewer подключать для сложного результата или red-team прохода, если это реально доступно. До производства зафиксировать capability preflight, missing inputs и QA route. Если acceptance требует capability, которого нет, `STOP BEFORE PRODUCTION`; установку нового средства не выполнять без owner approval и слабую замену не выдавать за эквивалент.
+
+## 3.1 Weak-spec review
+
+До реализации проверить противоречия ТЗ, отделить `OWNER INTENT` от ошибочного method, зафиксировать frozen constraints и выбрать более сильный technical route. Frozen business/product/brand/commercial/legal решения не менять самостоятельно.
 
 ## 4. Production loops
 
@@ -61,11 +71,17 @@ Ledger может быть внутренним; в handoff переноситс
 
 Regression PASS означает, что для каждого сценария выбран маршрут, выполнены применимые проверки и отсутствует скрытая просьба владельцу «проверь ещё мобильную/SEO/ссылки».
 
+## 5.1 Recovery and checkpoint protocol
+
+До изменений сохранить минимальные recovery evidence: один dirty-state diff/patch, список untracked и SHA256. Не делать полную копию repository. Для длинного RUN после каждой существенной стадии фиксировать `CURRENT STAGE`, `DONE`, `EVIDENCE`, `NEXT EXACT ACTION`, `RETURN TO`; уникальные dirty/untracked изменения не интегрировать без scope.
+
 ## 6. Final completion gate
 
 Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива создать immutable acceptance matrix и передать её независимому `DOKRUTI Completion Auditor`. Матрица неизменна до конца задачи и содержит `CRITERION`, `EXPECTED`, `HOW TO VERIFY`, `EVIDENCE`, `STATUS`.
 
 Не считать evidence self-report, dry-run, предполагаемый workflow, существование Skill/инструкции, локальный HEAD, staging-only readback или build вместо требуемой проверки. При любом `FAIL`/`UNKNOWN` исполнитель получает единый defect register, делает consolidated fix и вызывает independent recheck. Внешний `PASS`, `DONE`, `VERIFIED` или `RELEASE CANDIDATE` запрещён до полного evidence-backed PASS. Deterministic check: `node scripts/verify-completion-gate.mjs acceptance.json verifier.json`.
+
+Acceptance JSON обязан содержать metadata `task_class`, `delivery_required`, `visual_required`, `independent_review_required`. Для `DEVELOPMENT/SYSTEM/RELEASE` обязательны IDs `source_restore`, `scope_integrity`, `profile_checks`, `independent_review`; delivery добавляет `git_diff_review`, `commit`, `push`, `remote_readback`; visual добавляет `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`; independent review добавляет `independent_auditor`. Gate проверяет наличие IDs, а не только статус уже перечисленных criteria.
 
 ## 7. Quality and release gate
 
@@ -74,3 +90,5 @@ Release candidate не готов при Critical/Major defect. По приме�
 ## 8. Git and external actions
 
 Проверять local status, remote branch и commit ancestry перед изменениями. Сохранять чужие/unrelated dirty files. Commit/push/deploy/publication/deletion/access changes — только в явном scope задачи и после соответствующего QA. Для текущего runtime-cleanup публичный site UI/content/routes остаются unchanged.
+
+Для существенной задачи materialized delivery доказывается только цепочкой `git diff/status → профильные проверки → staged allowlist → commit → PUSH → remote readback`, с равенством local и remote SHA. При недоступном remote readback статус остаётся `BLOCKED AT PUSH`/`BLOCKED`, local commit SHA сохраняется в отчёте.

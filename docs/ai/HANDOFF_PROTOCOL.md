@@ -22,10 +22,14 @@ Active handoff относится только к одной незавершё�
 ```markdown
 # HANDOFF: [task]
 - TASK_ID:
+- RUN_ID:
 - TASK_CLASS: PATCH / INTEGRATION / DEVELOPMENT / SYSTEM
 - MAIN:
 - SOURCE_OF_DECISION:
 - WORKING_BRANCH:
+- LOCAL_SHA:
+- REMOTE_SHA:
+- PUSH_VERIFIED: YES / NO / UNKNOWN
 - LAST_KNOWN_GOOD_COMMIT:
 - RETURN_TO:
 
@@ -39,6 +43,7 @@ Active handoff относится только к одной незавершё�
 -
 ## ПРОВЕРЕНО
 -
+  - local/remote SHA и remote readback, если применимо;
 ## ACCEPTANCE
 -
 ## OWNER DECISION REQUIRED

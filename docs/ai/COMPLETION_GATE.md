@@ -26,6 +26,19 @@ STATUS = PASS / FAIL / UNKNOWN
 
 Исполняемый формат и deterministic gate: `scripts/verify-completion-gate.mjs`.
 
+Acceptance JSON обязан содержать metadata:
+
+```json
+{
+  "task_class": "SYSTEM",
+  "delivery_required": true,
+  "visual_required": false,
+  "independent_review_required": true
+}
+```
+
+Для `DEVELOPMENT`, `SYSTEM` и `RELEASE` gate требует IDs: `source_restore`, `scope_integrity`, `profile_checks`, `independent_review`. При `delivery_required=true` обязательны также `git_diff_review`, `commit`, `push`, `remote_readback`. При `visual_required=true` обязательны `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`. При `independent_review_required=true` обязателен `independent_auditor`. Отсутствующий ID — `BLOCKED`, даже если все присутствующие criteria имеют `STATUS=PASS`.
+
 Для разрешения `VERIFIED` одновременно нужны:
 
 - все обязательные criteria имеют `STATUS=PASS`;
@@ -61,4 +74,4 @@ Auditor получает исходный запрос, `MAIN`, полный acc
 node scripts/verify-completion-gate.mjs acceptance.json verifier.json
 ```
 
-Команда завершается ошибкой при любом `FAIL`/`UNKNOWN`, отсутствующем evidence, не независимом reviewer или verdict, не равном `PASS`. `--self-test` проверяет в том числе намеренно незавершённую матрицу и должен доказать, что false PASS блокируется.
+Команда завершается ошибкой при любом `FAIL`/`UNKNOWN`, отсутствующем mandatory ID/evidence, не независимом reviewer или verdict, не равном `PASS`. `--self-test` проверяет UNKNOWN, пропущенные push/readback, visual evidence, independent reviewer и полный valid fixture.
