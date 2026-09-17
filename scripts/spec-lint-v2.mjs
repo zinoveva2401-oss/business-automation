@@ -43,7 +43,17 @@ function list(value) {
 }
 
 function normalizedPath(value) {
-  return String(value).replaceAll('\\', '/').replace(/^\.\//, '').replace(/\/$/, '');
+  const parts = String(value)
+    .replaceAll('\\', '/')
+    .replace(/\/+/g, '/')
+    .split('/')
+    .filter((part) => part !== '' && part !== '.');
+  const resolved = [];
+  for (const part of parts) {
+    if (part === '..') resolved.pop();
+    else resolved.push(part);
+  }
+  return resolved.join('/').replace(/\/$/, '');
 }
 
 function hasText(value) {
@@ -54,6 +64,22 @@ function hasGate(gates, id) {
   return list(gates).some((gate) => (
     typeof gate === 'string' ? gate === id : gate?.id === id
   ));
+}
+
+function isSameOrWithin(child, parent) {
+  return child === parent || child.startsWith(`${parent}/`);
+}
+
+function pathConflicts(requiredPaths, forbiddenPaths) {
+  const conflicts = [];
+  for (const required of requiredPaths) {
+    for (const forbidden of forbiddenPaths) {
+      if (isSameOrWithin(required, forbidden) || isSameOrWithin(forbidden, required)) {
+        conflicts.push({ required, forbidden });
+      }
+    }
+  }
+  return conflicts;
 }
 
 function checkTaskPacket(packet) {
@@ -68,9 +94,12 @@ function checkTaskPacket(packet) {
 
   const requiredPaths = list(packet.required_paths).map(normalizedPath);
   const forbiddenPaths = list(packet.forbidden_paths).map(normalizedPath);
-  const overlap = requiredPaths.filter((path) => forbiddenPaths.includes(path));
-  if (overlap.length > 0) {
-    issues.push(issue('constraints.overlap', `Required and forbidden paths overlap: ${overlap.join(', ')}`));
+  const conflicts = pathConflicts(requiredPaths, forbiddenPaths);
+  if (conflicts.length > 0) {
+    issues.push(issue(
+      'constraints.path_scope_conflict',
+      `Required and forbidden paths overlap or nest: ${conflicts.map(({ required, forbidden }) => `${required} <> ${forbidden}`).join(', ')}`,
+    ));
   }
 
   if (list(packet.contradictory_constraints).length > 0) {
@@ -110,7 +139,39 @@ function checkTaskPacket(packet) {
   const readOnly = packet.read_only === true || packet.no_delivery === true;
   const externalWriteProhibited = packet.external_write_prohibited === true;
   const trackedDelta = packet.tracked_file_delta === true;
+  if (packet.production_changes_allowed === false) {
+    const productionRoots = list(packet.production_roots).map(normalizedPath);
+    for (const required of requiredPaths) {
+      if (productionRoots.some((root) => isSameOrWithin(required, root))) {
+        issues.push(issue(
+          'semantic.production_scope_conflict',
+          `Production changes are forbidden but required path is inside production root: ${required}`,
+        ));
+      }
+    }
+  }
+  if (packet.installation_allowed === false) {
+    for (const dependency of list(packet.required_dependencies)) {
+      const alternatives = list(dependency?.alternatives);
+      const hasVerifiedAlternative = alternatives.some((alternative) => alternative?.status === 'VERIFIED');
+      if (dependency?.status === 'MISSING' && !hasVerifiedAlternative) {
+        issues.push(issue(
+          'semantic.installation_conflict',
+          `Installation is forbidden and unavailable dependency has no VERIFIED alternative: ${dependency.name || 'unnamed'}`,
+        ));
+      }
+    }
+  }
+  if (externalWriteProhibited && trackedDelta && packet.delivery_required === true) {
+    issues.push(issue(
+      'semantic.external_delivery_conflict',
+      'External write is prohibited while tracked delivery is required',
+    ));
+  }
   if (trackedDelta && !readOnly && !externalWriteProhibited) {
+    if (packet.delivery_required === false) {
+      issues.push(issue('delivery.disabled', 'Tracked-file delivery cannot be disabled for a non-read-only delta'));
+    }
     const delivery = list(packet.delivery_chain);
     DELIVERY_CHAIN.forEach((gate) => {
       if (!delivery.includes(gate)) {
@@ -176,6 +237,7 @@ function validPacket() {
     acceptance: [{ id: 'scope', evidence: 'post-work diff and status' }],
     required_capabilities: [{ name: 'node', status: 'VERIFIED' }],
     tracked_file_delta: true,
+    delivery_required: true,
     delivery_chain: DELIVERY_CHAIN,
     visual_required: false,
     performance_sensitive: false,
@@ -191,11 +253,41 @@ function selfTest() {
   if (checkTaskPacket(valid).status !== 'PASS') {
     throw new Error('SPEC_LINT_SELF_TEST_FAIL: valid fixture was blocked');
   }
+  if (checkTaskPacket({ ...valid, delivery_required: undefined }).status !== 'PASS') {
+    throw new Error('SPEC_LINT_SELF_TEST_FAIL: omitted delivery_required was not defaulted to mandatory');
+  }
+  expectFail('explicitly disabled delivery', { ...valid, delivery_required: false });
 
   expectFail('required/forbidden overlap', {
     ...valid,
     required_paths: ['src\\index.astro'],
     forbidden_paths: ['./src/index.astro'],
+  });
+  expectFail('forbidden parent and required child', {
+    ...valid,
+    required_paths: ['src/a.ts'],
+    forbidden_paths: ['src/'],
+  });
+  expectFail('required parent and forbidden child', {
+    ...valid,
+    required_paths: ['src/'],
+    forbidden_paths: ['src/a.ts'],
+  });
+  expectFail('production semantic conflict', {
+    ...valid,
+    required_paths: ['src/a.ts'],
+    production_changes_allowed: false,
+    production_roots: ['src/'],
+  });
+  expectFail('installation semantic conflict', {
+    ...valid,
+    installation_allowed: false,
+    required_dependencies: [{ name: 'missing-tool', status: 'MISSING', alternatives: [] }],
+  });
+  expectFail('external delivery semantic conflict', {
+    ...valid,
+    external_write_prohibited: true,
+    delivery_required: true,
   });
   expectFail('missing source of truth', { ...valid, source_of_truth: [] });
   expectFail('missing capability', {

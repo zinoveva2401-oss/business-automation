@@ -1,18 +1,9 @@
 {
-  "user_job": "Получить решение по развитию магазина на основе нескольких показателей",
-  "formats": [
-    {
-      "id": "ebook",
-      "rationale": "Полезен для последовательного чтения, но слаб для расчёта и обратной связи."
-    },
-    {
-      "id": "interactive-diagnostic",
-      "rationale": "Лучше соединяет ввод данных, объяснение результата и следующий шаг."
-    },
-    {
-      "id": "dashboard",
-      "rationale": "Силен для повторного мониторинга, но избыточен для разовой диагностики."
-    }
-  ],
-  "selected": "interactive-diagnostic"
+  "user_job": "Понять, почему магазин теряет результат, по нескольким показателям и получить следующий шаг",
+  "interaction_need": true,
+  "feedback_need": true,
+  "repeat_monitoring": false,
+  "candidate_formats": ["ebook", "interactive-diagnostic", "dashboard"],
+  "input_fields": ["revenue", "visitors", "returns"],
+  "success_condition": "после ввода данных пользователь видит вычисленный показатель, объяснение и действие"
 }

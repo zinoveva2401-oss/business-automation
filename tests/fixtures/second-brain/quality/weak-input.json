@@ -1,13 +1,5 @@
 {
-  "status": "CHALLENGED",
   "input": "Одна статичная карточка, generic gradient, нет mobile state и следующего действия.",
-  "problems": [
-    "не доказана отличимость от шаблонного AI landing",
-    "нет пользовательского маршрута после первого экрана",
-    "визуальная иерархия не объясняет изменение состояния"
-  ],
-  "stronger_options": [
-    "editorial signal map с progressive disclosure",
-    "decision-first tool screen с пустым/loading/error состояниями"
-  ]
+  "requested_format": "single landing card",
+  "constraints": ["mobile required", "must explain state change", "must lead to next action"]
 }

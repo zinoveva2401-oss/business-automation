@@ -1,11 +1,4 @@
 # Golden fixtures
-
-Fixtures for `CODEX-SECOND-BRAIN-001` live under `tests/fixtures/second-brain/` and keep acceptance evidence explicit: status, source/format rationale, dimensions/bytes, reduced-motion behavior, security scope, or Git readback.
-
-Run the bounded suite from repository root:
-
-```powershell
-node scripts/skill-regression-harness.mjs
-```
-
-A fixture PASS is not a claim about live deployment or business truth. Production files remain outside this runtime/test scope.
+Bounded inputs и browser artifacts для `CODEX-SECOND-BRAIN-001` находятся в `tests/fixtures/second-brain/`. Inputs описывают job/constraints/candidate paths; measured results создаются `scripts/second-brain-executable-golden.mjs` во временной директории.
+Запуск: `node scripts/second-brain-executable-golden.mjs --run` и `node scripts/skill-regression-harness.mjs`.
+Fixture data не является business truth, visual approval или live deployment claim. Production files остаются вне runtime/test scope.

@@ -1,23 +1,14 @@
 {
-  "real_render": true,
-  "rerendered_after_review": true,
-  "visual_review": "PASS",
-  "url": "http://127.0.0.1:4173/",
-  "interaction": "button reveal + keyboard path PASS",
-  "overflow": "none",
-  "desktop": {
-    "captured": true,
-    "width": 737,
-    "height": 622,
-    "layout": "desktop two-column",
-    "evidence": "inline CUA screenshot: http://127.0.0.1:4173/"
-  },
-  "mobile": {
-    "captured": true,
-    "viewport_width": 737,
-    "layout_width": 390,
-    "height": 622,
-    "layout": "mobile single-column preview",
-    "evidence": "inline CUA screenshot: http://127.0.0.1:4173/?mobile=1; device emulation unavailable in current CUA surface"
-  }
+  "page": "tests/fixtures/second-brain/visual/index.html",
+  "required_brand_source": "02_Бренд-система",
+  "required_brand_version": "8.2",
+  "required_observations": [
+    "actual window.innerWidth and window.innerHeight",
+    "desktop and true mobile viewport screenshots",
+    "responsive layout facts",
+    "interaction and keyboard/focus",
+    "reduced-motion behavior",
+    "independent visual/art review"
+  ],
+  "evidence_record": "tests/fixtures/second-brain/visual/browser-evidence.json"
 }

@@ -37,7 +37,9 @@ Acceptance JSON обязан содержать metadata:
 }
 ```
 
-Для `DEVELOPMENT`, `SYSTEM` и `RELEASE` gate требует IDs: `source_restore`, `scope_integrity`, `profile_checks`, `independent_review`. При `delivery_required=true` обязательны также `git_diff_review`, `commit`, `push`, `remote_readback`. При `visual_required=true` обязательны `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`. При `independent_review_required=true` обязателен `independent_auditor`. Отсутствующий ID — `BLOCKED`, даже если все присутствующие criteria имеют `STATUS=PASS`.
+Для `DEVELOPMENT`, `SYSTEM` и `RELEASE` gate требует IDs: `source_restore`, `scope_integrity`, `profile_checks`, `spec_lint_preflight`, `independent_review`. При `delivery_required=true` обязательны также `git_diff_review`, `commit`, `push`, `remote_readback`. При `visual_required=true` обязательны `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`. При `independent_review_required=true` обязателен `independent_auditor`. Отсутствующий ID или evidence — `BLOCKED`, даже если все присутствующие criteria имеют `STATUS=PASS`.
+
+Если после работы остаётся tracked-file delta и задача не `READ-ONLY`/`NO-DELIVERY`, delivery обязателен по умолчанию: отсутствующее поле `delivery_required` трактуется как `true`, а явное `false` блокируется и не может отменить commit → PUSH → remote readback → SHA match. `PUSH != MERGE`: merge, deploy, hosting, publication и production access остаются отдельным scope/approval.
 
 Для разрешения `VERIFIED` одновременно нужны:
 

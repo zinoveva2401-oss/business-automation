@@ -1,9 +1,10 @@
 {
-  "decision_useful": true,
-  "decision": "Приоритизировать разрыв возвратов по каналу",
-  "states": ["loading", "empty", "error", "ready"],
-  "filters": ["period", "channel"],
-  "drill_down": true,
-  "freshness": "timestamped",
-  "mobile": "stacked"
+  "user_job": "Сравнить каналы и выбрать один операционный приоритет",
+  "rows": [
+    {"channel": "Сайт", "conversion": 0.031, "returns": 0.08},
+    {"channel": "Мессенджер", "conversion": 0.052, "returns": 0.14},
+    {"channel": "Партнёры", "conversion": 0.021, "returns": 0.05}
+  ],
+  "filters": ["channel"],
+  "freshness_source": "runtime timestamp"
 }

@@ -1,11 +1,6 @@
 {
-  "inputs": [
-    {"type": "video", "count": 3},
-    {"type": "photo", "count": 4},
-    {"type": "voice", "count": 1},
-    {"type": "graphics", "count": 2}
-  ],
-  "pipeline": ["asset_inventory", "content_map", "story_edit_plan", "production"],
-  "captions": true,
-  "simple_stitch_rejected": true
+  "brief": "Короткий rights-safe motion proof: показать переход от сигнала к действию",
+  "source_classes": ["moving_video", "still_graphic", "generated_voice"],
+  "duration_seconds_max": 2,
+  "delivery_goal": "master и lighter mobile delivery должны быть разными файлами"
 }

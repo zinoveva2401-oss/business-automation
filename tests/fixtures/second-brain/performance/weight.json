@@ -1,12 +1,10 @@
 {
-  "asset": "fixture-image",
-  "beforeBytes": 2288942,
-  "afterBytes": 137000,
-  "deliveryBytes": 42000,
-  "formats": [
-    "png-source",
-    "webp-master",
-    "webp-mobile"
-  ],
-  "slowConnection": "checked"
+  "source": "tests/fixtures/second-brain/performance/source.svg",
+  "master_format": "webp",
+  "delivery_format": "webp",
+  "master_width": 768,
+  "delivery_width": 480,
+  "master_quality": 82,
+  "delivery_quality": 68,
+  "slow_connection_profile": "bounded 4g estimate"
 }

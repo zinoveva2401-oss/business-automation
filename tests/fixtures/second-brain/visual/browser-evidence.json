@@ -1,0 +1,19 @@
+{
+  "captured_by": "Codex CUA browser during RUN-CODEX-SECOND-BRAIN-001-2026-09-17",
+  "desktop": {
+    "viewport": {"innerWidth": 1280, "innerHeight": 800},
+    "document": {"clientWidth": 1265, "scrollWidth": 1265, "horizontal_overflow": false},
+    "brand_version": "8.2",
+    "animation_name": "traceTravel",
+    "motion_time_sample_changed_transform": true,
+    "interaction_state_after_button": "expanded"
+  },
+  "mobile": {
+    "viewport": {"innerWidth": 390, "innerHeight": 844},
+    "document": {"clientWidth": 375, "scrollWidth": 375, "horizontal_overflow": false},
+    "media_query_max_430_matches": true,
+    "hero_columns": "339.2px"
+  },
+  "product_smoke": {"state_after_valid_input": "ready", "computed_conversion": "8333.33%", "computed_return_rate": "7.5%"},
+  "dashboard_smoke": {"initial_ready_rows": 3, "filtered_messenger_rows": 1}
+}

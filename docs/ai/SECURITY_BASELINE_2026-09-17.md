@@ -1,16 +1,5 @@
 # Security Baseline — 2026-09-17
-
-Scope: files added for the second-brain runtime harness and test fixtures. No production/site files were modified by this run.
-
+Scope: runtime/test code и bounded fixtures для `CODEX-SECOND-BRAIN-001`. Production/site files вне scope и не переписывались.
 Executable check: `node scripts/security-baseline-scan.mjs --self-test`.
-
-Rules checked:
-
-- no hardcoded API keys, passwords, secrets or access tokens;
-- no `eval`/dynamic `Function` execution;
-- no `innerHTML`, `insertAdjacentHTML` or `document.write` sinks in new files;
-- no wildcard `postMessage` target.
-
-Result: PASS, zero findings in the declared new-file scope.
-
-The security review also followed the installed JavaScript/web guidance: safe DOM APIs, no secret storage, no CSP weakening, no unnecessary third-party runtime, and explicit scope boundaries. Existing production storage/HTML patterns were recorded as out of scope for this SYSTEM run; they were not silently rewritten.
+Проверяются hardcoded keys/passwords/secrets/tokens; eval/dynamic Function; unsafe HTML sinks; wildcard postMessage; external dependency или credentialed service.
+Implementation использует safe DOM APIs, local generated media, bundled ffmpeg/ffprobe и current Brand SOT. PASS static baseline не является полной production security certification.

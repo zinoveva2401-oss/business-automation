@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs';
+import { createHash } from 'node:crypto';
+import path from 'node:path';
 
 const TASK_CLASSES = new Set(['PATCH', 'INTEGRATION', 'DEVELOPMENT', 'SYSTEM', 'RELEASE']);
 const PRODUCTION_TASK_CLASSES = new Set(['DEVELOPMENT', 'SYSTEM', 'RELEASE']);
@@ -33,7 +35,7 @@ function validateMetadata(matrix) {
 
 function mandatoryCriterionIds(matrix) {
   const required = PRODUCTION_TASK_CLASSES.has(matrix.task_class)
-    ? ['source_restore', 'scope_integrity', 'profile_checks', 'independent_review']
+    ? ['source_restore', 'scope_integrity', 'profile_checks', 'spec_lint_preflight', 'independent_review']
     : [];
 
   if (matrix.delivery_required) {
@@ -56,10 +58,29 @@ function validateCriteria(matrix) {
 
   const ids = new Set();
   for (const [index, criterion] of matrix.criteria.entries()) {
-    for (const field of ['id', 'criterion', 'expected', 'how_to_verify', 'evidence', 'status']) {
+    for (const field of ['id', 'criterion', 'expected', 'how_to_verify', 'status']) {
       if (typeof criterion?.[field] !== 'string' || criterion[field].trim() === '') {
         fail(`Criterion ${index + 1} is missing ${field}`);
       }
+    }
+    const evidence = criterion?.evidence;
+    if (!evidence || typeof evidence !== 'object' || Array.isArray(evidence)) {
+      fail(`Criterion ${index + 1} requires a material evidence object`);
+    }
+    const evidenceText = Object.entries(evidence).filter(([, value]) => typeof value === 'string').map(([key, value]) => `${key}=${value}`).join('; ');
+    const artifactPath = typeof evidence.artifact_path === 'string' ? evidence.artifact_path.trim() : '';
+    const artifactSha256 = typeof evidence.artifact_sha256 === 'string' ? evidence.artifact_sha256.trim().toLowerCase() : '';
+    if (!artifactPath || !/^[a-f0-9]{64}$/.test(artifactSha256) || !/(measurement|measured|inspection|screenshot|readback|hash|command|output)/i.test(evidenceText)) {
+      fail(`Criterion ${index + 1} lacks material artifact/measurement evidence`);
+    }
+    const resolvedArtifact = path.isAbsolute(artifactPath) ? artifactPath : path.resolve(process.cwd(), artifactPath);
+    try {
+      const stat = fs.statSync(resolvedArtifact);
+      if (!stat.isFile() || stat.size === 0) fail(`Criterion ${index + 1} artifact is missing or empty: ${artifactPath}`);
+      const actualSha256 = createHash('sha256').update(fs.readFileSync(resolvedArtifact)).digest('hex');
+      if (actualSha256 !== artifactSha256) fail(`Criterion ${index + 1} artifact hash mismatch: ${artifactPath}`);
+    } catch {
+      fail(`Criterion ${index + 1} artifact is unreadable: ${artifactPath}`);
     }
     if (!/^[a-z0-9_]+$/.test(criterion.id)) {
       fail(`Criterion ${index + 1} has invalid id ${criterion.id}`);
@@ -115,6 +136,7 @@ function validFixture() {
     'source_restore',
     'scope_integrity',
     'profile_checks',
+    'spec_lint_preflight',
     'independent_review',
     'git_diff_review',
     'commit',
@@ -132,7 +154,7 @@ function validFixture() {
       criterion: id,
       expected: 'PASS evidence',
       how_to_verify: 'read actual fixture evidence',
-      evidence: `verified object: ${id}`,
+      evidence: { artifact_path: 'tests/fixtures/second-brain/repair-acceptance-matrix.json', artifact_sha256: createHash('sha256').update(fs.readFileSync('tests/fixtures/second-brain/repair-acceptance-matrix.json')).digest('hex'), measurement: 'verified output', inspection: `independent check for ${id}` },
       status: 'PASS',
     })),
   };
@@ -173,8 +195,18 @@ function selfTest() {
   );
 
   expectBlocked(
+    'self-report evidence',
+    { ...valid, criteria: valid.criteria.map((criterion) => ({ ...criterion, evidence: { artifact_path: 'tests/fixtures/second-brain/repair-acceptance-matrix.json', artifact_sha256: '0'.repeat(64), measurement: 'looks good' } })) },
+  );
+
+  expectBlocked(
     'missing mandatory push',
     { ...valid, criteria: valid.criteria.filter((criterion) => criterion.id !== 'push') },
+  );
+
+  expectBlocked(
+    'missing SPEC-LINT preflight',
+    { ...valid, criteria: valid.criteria.filter((criterion) => criterion.id !== 'spec_lint_preflight') },
   );
 
   expectBlocked(

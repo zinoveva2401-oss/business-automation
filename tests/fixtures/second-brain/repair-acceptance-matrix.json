@@ -1,0 +1,63 @@
+{
+  "run_id": "RUN-CODEX-SECOND-BRAIN-001-2026-09-17",
+  "main": "CODEX-SECOND-BRAIN-001",
+  "stage": "STAGE-SECOND-BRAIN-INDEPENDENT-QA-REPAIR",
+  "task_class": "SYSTEM",
+  "source_of_truth": [
+    "owner repair task",
+    "Бизнес-система / 02_РАБОТА / CODEX-SECOND-BRAIN-001",
+    "Бизнес-система / 06_РЕШЕНИЯ / DEC-125",
+    "Бизнес-система / 10_САЙТ_ТЕХКОНТУР",
+    "Бизнес-система / 11_КОНКУРЕНТЫ_И_РЕФЕРЕНСЫ",
+    "Google Drive / 02_Бренд-система Version 8.2"
+  ],
+  "required_paths": [
+    "AGENTS.md",
+    "docs/ai/CODEX_RUNTIME.md",
+    "docs/ai/COMPLETION_GATE.md",
+    "docs/ai/SPEC_LINT_V2.md",
+    "docs/ai/SKILL_REGRESSION_HARNESS.md",
+    "scripts/spec-lint-v2.mjs",
+    "scripts/skill-regression-harness.mjs",
+    "scripts/verify-completion-gate.mjs",
+    "tests/fixtures/second-brain"
+  ],
+  "forbidden_paths": [
+    "src/",
+    "public/",
+    "products/",
+    "paid-products/"
+  ],
+  "production_changes_allowed": false,
+  "acceptance": [
+    {"id": "persistent_contract", "evidence": "AGENTS and CODEX_RUNTIME contain durable Second Brain rules"},
+    {"id": "semantic_spec_lint", "evidence": "executable positive and negative structured packet tests"},
+    {"id": "spec_lint_chokepoint", "evidence": "preflight hash/HEAD/branch/status and Completion Gate criterion"},
+    {"id": "product_real_flow", "evidence": "frozen brief to working interactive artifact with measured output"},
+    {"id": "dashboard_real_flow", "evidence": "working stateful dashboard artifact and DOM behavior"},
+    {"id": "media_real_flow", "evidence": "actual master and delivery renders with media metadata"},
+    {"id": "visual_brand_sot", "evidence": "real render tied to live Brand 8.2 and Site Visual SOT"},
+    {"id": "mobile_true_viewport", "evidence": "running browser window.innerWidth <= 430 plus screenshot"},
+    {"id": "performance_real_measurement", "evidence": "filesystem/tool-derived bytes, dimensions and decodability"},
+    {"id": "motion_real_evidence", "evidence": "actual state/time change and reduced-motion browser evidence"},
+    {"id": "security_scope", "evidence": "static scan over all changed runtime/test files and no private source copied"},
+    {"id": "independent_review", "evidence": "independent Completion Auditor verdict"},
+    {"id": "git_delivery", "evidence": "allowlisted commit, push, remote readback and SHA match"}
+  ],
+  "required_capabilities": [
+    {"name": "node", "status": "VERIFIED"},
+    {"name": "bundled_ffmpeg_ffprobe", "status": "VERIFIED"},
+    {"name": "browser_cua_viewport_override", "status": "VERIFIED"}
+  ],
+  "tracked_file_delta": true,
+  "delivery_chain": ["git_diff_status", "tests_checks", "commit", "push", "remote_readback", "sha_match"],
+  "visual_required": true,
+  "visual_qa": ["real_render", "desktop", "mobile", "visual_review"],
+  "performance_sensitive": true,
+  "performance_gate": ["formats", "dimensions", "compression", "weight_before_after", "slow_connection"],
+  "paid_dependencies": [],
+  "irreversible_external_actions": [],
+  "owner_gate": {},
+  "quality_challenge_required": true,
+  "quality_challenge": {"status": "PASS"}
+}

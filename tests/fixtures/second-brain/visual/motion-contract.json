@@ -1,6 +1,7 @@
 {
-  "meaningful": true,
-  "purpose": "Показывает рост clarity signal и раскрытие reasoning route.",
-  "reduced_motion_fallback": true,
+  "target": "tests/fixtures/second-brain/visual/index.html",
+  "animated_element": "#trace-point",
+  "purpose": "Показывает причинный путь от сигнала к следующему действию.",
+  "reduced_motion_selector": "@media (prefers-reduced-motion: reduce)",
   "performance_budget_ms": 16
 }

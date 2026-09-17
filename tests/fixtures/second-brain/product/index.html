@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ru" data-product-format="interactive-diagnostic">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Докрути — диагностический маршрут</title>
+  <style>
+    :root { --chocolate:#17130F; --graphite:#262626; --paper:#F4F5F6; --trace:#D9562F; --blue:#2F80ED; --muted:#B8B0A6; }
+    * { box-sizing:border-box; } body { margin:0; background:var(--chocolate); color:var(--paper); font:16px/1.5 system-ui,sans-serif; }
+    main { max-width:760px; margin:auto; padding:48px 22px; } h1 { font:500 clamp(42px,8vw,72px)/.95 Georgia,serif; letter-spacing:-.05em; } p { color:var(--muted); }
+    form, #result { margin-top:28px; padding:22px; border:1px solid rgba(244,245,246,.2); background:var(--graphite); } fieldset { border:0; padding:0; display:grid; gap:14px; }
+    label { display:grid; gap:6px; color:var(--muted); } input { min-height:48px; padding:10px; font:inherit; } button { min-height:48px; border:0; background:var(--trace); color:var(--paper); padding:12px 18px; font-weight:700; cursor:pointer; } button:focus-visible { outline:3px solid var(--blue); outline-offset:3px; }
+    #result[data-state="idle"], #result[data-state="loading"], #result[data-state="empty"], #result[data-state="error"] { display:block; } [hidden] { display:none !important; }
+    .value { color:var(--paper); font-size:28px; } .next { border-left:3px solid var(--trace); padding-left:14px; }
+  </style>
+</head>
+<body><main><p>ДОКРУТИ / bounded product golden</p><h1>Что мешает результату?</h1><p>Введите три показателя и получите вычисленный сигнал, объяснение и следующий шаг.</p>
+  <form id="diagnostic-form"><fieldset><label>Выручка <input name="revenue" type="number" min="1" required></label><label>Посетители <input name="visitors" type="number" min="1" required></label><label>Возвраты <input name="returns" type="number" min="0" required></label><button type="submit">Проверить сигнал</button></fieldset></form>
+  <section id="result" data-state="idle" aria-live="polite"><strong id="state-label">Ожидаю данные</strong><p id="result-copy">После отправки появится расчёт.</p><p class="value" id="conversion" hidden></p><p class="next" id="next-action" hidden></p></section>
+  <script>
+    const form = document.querySelector('#diagnostic-form'); const result = document.querySelector('#result'); const state = document.querySelector('#state-label'); const copy = document.querySelector('#result-copy'); const conversion = document.querySelector('#conversion'); const next = document.querySelector('#next-action');
+    form.addEventListener('submit', (event) => { event.preventDefault(); result.dataset.state = 'loading'; state.textContent = 'Считаю сигнал'; conversion.hidden = true; next.hidden = true; const data = new FormData(form); const revenue = Number(data.get('revenue')); const visitors = Number(data.get('visitors')); const returns = Number(data.get('returns')); if (!revenue || !visitors || returns < 0 || returns > visitors) { result.dataset.state = 'error'; state.textContent = 'Нужны корректные данные'; copy.textContent = 'Проверьте числа: возвраты не могут быть больше посетителей.'; return; } const rate = (revenue / visitors * 100).toFixed(2); const returnRate = (returns / visitors * 100).toFixed(1); result.dataset.state = 'ready'; state.textContent = 'Сигнал найден'; copy.textContent = `Конверсия по выручке: ${rate}%. Доля возвратов: ${returnRate}%.`; conversion.textContent = `${rate}%`; conversion.hidden = false; next.textContent = returnRate > 7 ? 'Следующий шаг: разобрать причину возвратов по каналу.' : 'Следующий шаг: сравнить конверсию по каналам.'; next.hidden = false; });
+  </script>
+</main></body></html>

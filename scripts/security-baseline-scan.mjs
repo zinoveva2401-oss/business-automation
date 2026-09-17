@@ -7,28 +7,30 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const targets = [
   'scripts/spec-lint-v2.mjs',
+  'scripts/run-spec-lint-preflight.mjs',
+  'scripts/verify-completion-gate.mjs',
   'scripts/skill-regression-harness.mjs',
+  'scripts/second-brain-executable-golden.mjs',
   'scripts/audit-codex-capabilities.mjs',
   'scripts/security-baseline-scan.mjs',
   'tests/fixtures/second-brain/visual/index.html',
   'tests/fixtures/second-brain/visual/visual-evidence.json',
   'tests/fixtures/second-brain/visual/motion-contract.json',
+  'tests/fixtures/second-brain/visual/browser-evidence.json',
   'tests/fixtures/second-brain/product/format-fit.json',
   'tests/fixtures/second-brain/product/dashboard-states.json',
+  'tests/fixtures/second-brain/product/brief.json',
+  'tests/fixtures/second-brain/product/index.html',
+  'tests/fixtures/second-brain/dashboard/index.html',
   'tests/fixtures/second-brain/performance/weight.json',
   'tests/fixtures/second-brain/performance/format-matrix.json',
   'tests/fixtures/second-brain/quality/weak-input.json',
   'tests/fixtures/second-brain/media/multi-source.json',
   'tests/fixtures/second-brain/asset-inventory.json',
+  'tests/fixtures/second-brain/repair-acceptance-matrix.json',
   'tests/fixtures/second-brain/spec/valid-task-packet.json',
   'tests/fixtures/second-brain/spec/contradictory-task-packet.json',
   'tests/golden/README.md',
-  'docs/ai/CODEX_CAPABILITY_AUDIT_2026-09-17.md',
-  'docs/ai/SECOND_BRAIN_GOLDEN_TESTS_2026-09-17.md',
-  'docs/ai/SPEC_LINT_V2.md',
-  'docs/ai/SKILL_REGRESSION_HARNESS.md',
-  'docs/ai/SECURITY_BASELINE_2026-09-17.md',
-  'docs/ai/HANDOFF_PROTOCOL.md',
 ];
 
 const patterns = [
@@ -36,6 +38,7 @@ const patterns = [
   { id: 'code-evaluation', regex: /\b(?:eval|Function)\s*\(/ },
   { id: 'unsafe-html-sink', regex: /(?:innerHTML|insertAdjacentHTML|document\.write)\s*=/ },
   { id: 'wildcard-postmessage', regex: /postMessage\([^\n]*['"]\*['"]/ },
+  { id: 'private-source-reference', regex: /(?:C:\\Users|\/Users\/|file:\/\/|drive\.google\.com)/i },
 ];
 
 function scan() {
