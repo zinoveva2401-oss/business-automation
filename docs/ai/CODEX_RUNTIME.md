@@ -89,6 +89,6 @@ Release candidate не готов при Critical/Major defect. По приме�
 
 ## 8. Git and external actions
 
-Проверять local status, remote branch и commit ancestry перед изменениями. Сохранять чужие/unrelated dirty files. Commit/push/deploy/publication/deletion/access changes — только в явном scope задачи и после соответствующего QA. Для текущего runtime-cleanup публичный site UI/content/routes остаются unchanged.
+Проверять local status, remote branch и commit ancestry перед изменениями. Сохранять чужие/unrelated dirty files. Для `READ-ONLY`/`NO-DELIVERY` задач или при явном запрете внешней записи commit/push не выполнять. Во всех остальных задачах, если после работы остаётся tracked-file delta, delivery по умолчанию обязателен: `git diff/status → профильные проверки → staged allowlist → commit → PUSH → remote readback → LOCAL SHA == REMOTE SHA`; отдельная фраза «сделай push» в ТЗ не требуется. Временный эксперимент, полностью отменённый до handoff и не оставивший tracked-file delta, commit/push не требует. Для текущего runtime-cleanup публичный site UI/content/routes остаются unchanged.
 
-Для существенной задачи materialized delivery доказывается только цепочкой `git diff/status → профильные проверки → staged allowlist → commit → PUSH → remote readback`, с равенством local и remote SHA. При недоступном remote readback статус остаётся `BLOCKED AT PUSH`/`BLOCKED`, local commit SHA сохраняется в отчёте.
+Materialized delivery существенной задачи доказывается только этой цепочкой. При недоступном remote readback статус остаётся `BLOCKED AT PUSH`/`BLOCKED`, local commit SHA сохраняется в отчёте. `PUSH != merge`: merge, deploy, hosting, publication и production access требуют отдельного scope/approval.

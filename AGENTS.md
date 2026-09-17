@@ -86,9 +86,9 @@ Codex отвечает за проверенный результат, а не �
 
 До изменений проверить `git status` и diff. Сохранять незакоммиченные пользовательские файлы, не использовать `reset`, `clean`, force-push, branch switch, merge/rebase или удаление без отдельного разрешения. Не менять `src/`, `public/`, site routes/components/styles/content в SYSTEM-задаче, если это не необходимо для runtime.
 
-Коммит/push выполнять только когда это прямо входит в текущую задачу и после staged allowlist, `git diff --cached --check`, профильных проверок и просмотра итогового commit. Правильную ветку и remote HEAD подтверждать фактически; локальный HEAD сам по себе не доказывает GitHub-состояние.
+Для `READ-ONLY`/`NO-DELIVERY` задач или при явном запрете внешней записи commit/push не выполнять. Во всех остальных задачах, если после работы остаётся tracked-file delta, delivery по умолчанию обязателен: `git diff/status → tests/checks → commit → PUSH → remote readback → LOCAL SHA == REMOTE SHA`; это не требует отдельной фразы «сделай push» в каждом ТЗ. Временный эксперимент, полностью отменённый до handoff и не оставивший tracked-file delta, commit/push не требует. Перед commit проверять staged allowlist, `git diff --cached --check` и итоговый commit; ветку и remote HEAD подтверждать фактически.
 
-Для существенной задачи local change не считается delivered до `commit → PUSH → remote readback`; перед handoff подтвердить `LOCAL SHA == REMOTE SHA`. `PUSH != merge`: merge, deploy, hosting, publication и production access требуют отдельного разрешённого этапа.
+Для существенной задачи local change не считается delivered до этой цепочки. `PUSH != merge`: merge, deploy, hosting, publication и production access требуют отдельного разрешённого этапа.
 
 ## 9. Handoff и отчёт
 
