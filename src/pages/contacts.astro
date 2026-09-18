@@ -1,3 +1,42 @@
 ---
-return Astro.redirect('/#question',301);
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ContactLinks from '../components/ContactLinks.astro';
 ---
+<BaseLayout title="Контакты «Докрути» — задать вопрос" description="Личные и проектные каналы «Докрути», чтобы описать рабочую задачу и выбрать следующий шаг.">
+  <article class="contacts-page">
+    <section class="contacts-hero">
+      <div class="container">
+        <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: 'Контакты' }]} />
+        <p class="eyebrow">Контакты</p>
+        <h1>Опишите задачу.<br /><em>Начнём с фактов.</em></h1>
+        <p>Выберите удобный канал. Личные контакты — для вопроса и рабочей ситуации; проектные — чтобы читать материалы «Докрути».</p>
+      </div>
+    </section>
+    <section class="contacts-body">
+      <div class="container">
+        <ContactLinks placement="contacts_page" />
+        <div class="contacts-cta">
+          <div>
+            <p class="eyebrow">Если нужен прямой маршрут</p>
+            <h2>Можно начать с письма</h2>
+          </div>
+          <a class="button button--primary" href="mailto:hello@dokruti.ru">hello@dokruti.ru <i class="ti ti-arrow-up-right" aria-hidden="true"></i></a>
+        </div>
+      </div>
+    </section>
+  </article>
+</BaseLayout>
+<style>
+  .contacts-page{background:var(--c-paper);color:var(--c-graphite)}
+  .contacts-hero{padding:1rem 0 clamp(4rem,9vw,8rem);background:var(--c-navy);color:#fff}
+  .contacts-hero h1{max-width:850px;margin:.5rem 0 1.2rem;font-size:clamp(3.2rem,7vw,6.8rem);line-height:.9}
+  .contacts-hero h1 em{color:#e7a6b5;font-style:normal}
+  .contacts-hero>div>p:last-child{max-width:600px;margin:0;color:#e2e8ef;font-size:1.1rem;line-height:1.6}
+  .contacts-body{padding:clamp(4rem,8vw,7rem) 0;background:#fff}
+  .contacts-cta{display:flex;align-items:end;justify-content:space-between;gap:2rem;margin-top:clamp(4rem,8vw,7rem);padding-top:2rem;border-top:1px solid var(--c-graphite)}
+  .contacts-cta h2{margin:.3rem 0 0;font-size:clamp(2.2rem,4vw,4rem);line-height:1}
+  .contacts-cta .button{flex:0 0 auto}
+  @media(max-width:700px){.contacts-hero h1{font-size:3.3rem}.contacts-hero>div>p:last-child{font-size:1rem}.contacts-cta{display:grid;align-items:start}.contacts-cta .button{width:max-content;max-width:100%}}
+  @media(max-width:430px){.contacts-hero h1{font-size:2.8rem}}
+</style>

@@ -1,5 +1,11 @@
 ---
 import { categories } from '../../../lib/site';
 export function getStaticPaths(){return categories.flatMap((topic)=>[{params:{category:topic.slug},props:{category:topic}},...(topic.legacySlug!==topic.slug?[{params:{category:topic.legacySlug},props:{category:topic}}]:[])])}
-return Astro.redirect('/articles/?category=' + Astro.props.category.slug,301);
+const destination='/articles/?category='+Astro.props.category.slug;
 ---
+<meta http-equiv="refresh" content={`0;url=${destination}`} />
+<link rel="canonical" href={destination} />
+<meta name="robots" content="noindex" />
+<title>Переход к материалам по задаче — «Докрути»</title>
+<p>Переходим к материалам по задаче.</p>
+<p><a href={destination}>Открыть библиотеку</a></p>

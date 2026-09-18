@@ -4,9 +4,106 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 import { getPublishedArticles } from '../../lib/content';
 import { categories } from '../../lib/site';
-const articles=await getPublishedArticles();
-const clusters=[...new Set(articles.map(({data})=>data.cluster))];
+const articles = await getPublishedArticles();
+const featuredArticle = articles.find(({ data }) => data.id === 'CNT-0007') ?? articles[0];
+const supportingArticles = featuredArticle ? articles.filter((article) => article.data.id !== featuredArticle.data.id) : articles;
+const clusters = [...new Set(articles.map(({ data }) => data.cluster))];
+const selectedCategory = Astro.url.searchParams.get('category') ?? '';
 ---
-<BaseLayout title="Библиотека «Докрути» — статьи и разборы" description="Практические материалы о продажах, клиентах, команде, управлении, маркетинге и автоматизации."><section class="catalog"><div class="container"><Breadcrumbs items={[{name:'Главная',href:'/'},{name:'Библиотека'}]}/><header><p class="eyebrow">Библиотека</p><h1>Материалы для следующего шага</h1><p class="catalog-lead">Разборы рабочих ситуаций, в которых важно сначала найти причину, а потом выбирать действие.</p></header><form class="filters" data-article-filters><label>Поиск<input type="search" name="search" placeholder="Название или вопрос"/></label><label>Тема<select name="category"><option value="">Все темы</option>{categories.map((topic)=><option value={topic.slug}>{topic.name}</option>)}</select></label><label>Кластер<select name="cluster"><option value="">Все кластеры</option>{clusters.map((cluster)=><option value={cluster}>{cluster}</option>)}</select></label><label>Сортировка<select name="sort"><option value="new">Сначала новые</option><option value="old">Сначала старые</option><option value="featured">Сначала избранные</option></select></label></form><p class="result-count" data-result-count>Материалов: {articles.length}</p><div class="article-grid" data-article-results>{articles.map((article,index)=><ArticleCard article={article} placement="articles_catalog" priority={index===0}/>)}</div></div></section></BaseLayout>
-<script>const form=document.querySelector<HTMLFormElement>('[data-article-filters]');const results=document.querySelector<HTMLElement>('[data-article-results]');const counter=document.querySelector<HTMLElement>('[data-result-count]');if(form&&results&&counter){const cards=[...results.querySelectorAll<HTMLElement>('[data-article-card]')];const aliases=new Map([['prodazhi','Продажи'],['assortiment-zakupki','Товар'],['tovar','Товар'],['klienty','Покупатель'],['pokupatel','Покупатель'],['komanda','Персонал'],['personal','Персонал'],['upravlenie','Управление'],['marketing','Маркетинг'],['ai-avtomatizatsiya','ИИ и автоматизация']]);const apply=()=>{const values=Object.fromEntries(new FormData(form));const query=String(values.search||'').toLocaleLowerCase('ru');const category=aliases.get(String(values.category))||'';const cluster=String(values.cluster||'');const matches=cards.filter((card)=>(!query||(card.dataset.search||'').includes(query))&&(!category||card.dataset.category===category)&&(!cluster||card.dataset.cluster===cluster));cards.sort((a,b)=>values.sort==='old'?Number(a.dataset.timestamp)-Number(b.dataset.timestamp):values.sort==='featured'?Number(b.dataset.featured)-Number(a.dataset.featured):Number(b.dataset.timestamp)-Number(a.dataset.timestamp));cards.forEach((card)=>{card.hidden=!matches.includes(card);results.append(card)});counter.textContent='Найдено: '+matches.length;const params=new URLSearchParams();if(values.category)params.set('category',String(values.category));if(values.cluster)params.set('cluster',String(values.cluster));if(values.search)params.set('search',String(values.search));if(values.sort&&values.sort!=='new')params.set('sort',String(values.sort));history.replaceState(null,'',location.pathname+(params.size?'?'+params:''))};const params=new URLSearchParams(location.search);for(const name of ['category','cluster','search','sort']){const field=form.elements.namedItem(name);const value=params.get(name);if(value!==null&&field instanceof HTMLInputElement||value!==null&&field instanceof HTMLSelectElement)field.value=value||''}form.addEventListener('input',apply);apply()}</script>
-<style>.catalog{padding-block:var(--section);background:var(--c-paper)}.catalog header{max-width:780px}.catalog h1{margin:.3rem 0 .7rem;font-size:clamp(2.6rem,5vw,4.5rem);line-height:.96}.catalog-lead{max-width:650px;margin:0;color:#505b63;font-size:1rem;line-height:1.55}.filters{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:.75rem;margin:2rem 0 1rem}.filters label{display:grid;gap:.35rem;color:var(--c-muted);font-size:.75rem;font-weight:700}.filters input,.filters select{min-width:0;height:45px;padding:.6rem;border:1px solid var(--c-line);border-radius:0;background:#fff;color:var(--c-graphite);font:inherit}.result-count{color:var(--c-muted);font-size:.8rem}.article-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:1.2rem}@media(max-width:1024px){.filters{grid-template-columns:1fr 1fr}.article-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:700px){.filters{grid-template-columns:1fr}.article-grid{grid-template-columns:1fr}.catalog h1{font-size:2.7rem}}</style>
+<BaseLayout title="Библиотека «Докрути» — статьи и разборы" description="Практические материалы о продажах, клиентах, команде, управлении, маркетинге и автоматизации.">
+  <section class="catalog">
+    <div class="container">
+      <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: 'Библиотека' }]} />
+      <header class="catalog-header">
+        <p class="eyebrow">Библиотека</p>
+        <h1>Сначала увидеть причину.<br /><em>Потом выбрать действие.</em></h1>
+        <p class="catalog-lead">Разборы рабочих ситуаций, в которых важно начать с наблюдаемого факта и одной следующей проверки.</p>
+      </header>
+      <nav class="topic-filters" aria-label="Фильтр по темам">
+        <a href="/articles/" aria-current={selectedCategory ? undefined : 'page'}>Все темы</a>
+        {categories.map((topic) => <a href={`/articles/?category=${topic.slug}`} aria-current={selectedCategory === topic.slug ? 'page' : undefined}>{topic.name}</a>)}
+      </nav>
+      <form class="filters" data-article-filters>
+        <label>Поиск<input type="search" name="search" placeholder="Название или вопрос" /></label>
+        <label>Тема<select name="category"><option value="">Все темы</option>{categories.map((topic) => <option value={topic.slug}>{topic.name}</option>)}</select></label>
+        <label>Кластер<select name="cluster"><option value="">Все кластеры</option>{clusters.map((cluster) => <option value={cluster}>{cluster}</option>)}</select></label>
+        <label>Сортировка<select name="sort"><option value="new">Сначала новые</option><option value="old">Сначала старые</option><option value="featured">Сначала избранные</option></select></label>
+      </form>
+      <p class="result-count" data-result-count>Материалов: {articles.length}</p>
+      {featuredArticle && <section class="library-feature" aria-labelledby="featured-title">
+        <div class="library-feature__label"><span>Избранный разбор</span><span>Материал {featuredArticle.data.id}</span></div>
+        <ArticleCard article={featuredArticle} featured placement="articles_featured" priority />
+      </section>}
+      <section class="supporting-materials" aria-labelledby="supporting-title">
+        <div class="supporting-heading"><div><p class="eyebrow">Ещё по теме</p><h2 id="supporting-title">Материалы для следующей проверки</h2></div><span>{supportingArticles.length} материалов</span></div>
+        <div class="supporting-list" data-article-results>{supportingArticles.map((article, index) => <ArticleCard article={article} placement="articles_catalog" priority={index === 0} />)}</div>
+      </section>
+    </div>
+  </section>
+</BaseLayout>
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-article-filters]');
+  const results = document.querySelector<HTMLElement>('[data-article-results]');
+  const counter = document.querySelector<HTMLElement>('[data-result-count]');
+  if (form && results && counter) {
+    const cards = [...document.querySelectorAll<HTMLElement>('[data-article-card]')];
+    const parents = new Map(cards.map((card) => [card, card.parentElement]));
+    const aliases = new Map([['sales', 'Продажи'], ['prodazhi', 'Продажи'], ['assortiment-i-zakupki', 'Ассортимент и закупки'], ['assortiment-zakupki', 'Товар'], ['tovar', 'Товар'], ['klienty', 'Клиенты'], ['pokupatel', 'Покупатель'], ['komanda', 'Команда'], ['personal', 'Персонал'], ['upravlenie-i-processy', 'Управление и процессы'], ['upravlenie', 'Управление'], ['marketing', 'Маркетинг'], ['ii-i-avtomatizaciya', 'ИИ и автоматизация'], ['ai-avtomatizatsiya', 'ИИ и автоматизация']]);
+    const apply = () => {
+      const values = Object.fromEntries(new FormData(form));
+      const query = String(values.search || '').toLocaleLowerCase('ru');
+      const category = aliases.get(String(values.category)) || '';
+      const cluster = String(values.cluster || '');
+      const matches = cards.filter((card) => (!query || (card.dataset.search || '').includes(query)) && (!category || card.dataset.category === category) && (!cluster || card.dataset.cluster === cluster));
+      cards.sort((a, b) => values.sort === 'old' ? Number(a.dataset.timestamp) - Number(b.dataset.timestamp) : values.sort === 'featured' ? Number(b.dataset.featured) - Number(a.dataset.featured) : Number(b.dataset.timestamp) - Number(a.dataset.timestamp));
+      cards.forEach((card) => { card.hidden = !matches.includes(card); parents.get(card)?.append(card); });
+      counter.textContent = `Найдено: ${matches.length}`;
+      const params = new URLSearchParams();
+      if (values.category) params.set('category', String(values.category));
+      if (values.cluster) params.set('cluster', String(values.cluster));
+      if (values.search) params.set('search', String(values.search));
+      if (values.sort && values.sort !== 'new') params.set('sort', String(values.sort));
+      history.replaceState(null, '', location.pathname + (params.size ? `?${params}` : ''));
+    };
+    const params = new URLSearchParams(location.search);
+    for (const name of ['category', 'cluster', 'search', 'sort']) {
+      const field = form.elements.namedItem(name);
+      const value = params.get(name);
+      if (value !== null && field instanceof HTMLInputElement || value !== null && field instanceof HTMLSelectElement) field.value = value;
+    }
+    form.addEventListener('input', apply);
+    apply();
+  }
+</script>
+<style>
+  .catalog{padding-block:clamp(3rem,7vw,6rem) var(--section);background:var(--c-paper)}
+  .catalog-header{max-width:830px;padding:2rem 0 2.5rem}
+  .catalog-header h1{margin:.35rem 0 1.2rem;font-size:clamp(3rem,6.5vw,6.2rem);line-height:.9}
+  .catalog-header h1 em{color:var(--c-orange);font-style:normal}
+  .catalog-lead{max-width:650px;margin:0;color:#505b63;font-size:1.08rem;line-height:1.6}
+  .topic-filters{display:flex;flex-wrap:wrap;border-top:1px solid var(--c-graphite);border-bottom:1px solid var(--c-graphite)}
+  .topic-filters a{padding:.8rem .9rem;border-right:1px solid var(--c-line);font-size:.78rem;font-weight:700;text-decoration:none}
+  .topic-filters a:first-child{border-left:1px solid var(--c-line)}
+  .topic-filters a:hover,.topic-filters a[aria-current="page"]{background:var(--c-graphite);color:#fff}
+  .filters{display:grid;grid-template-columns:2fr repeat(3,1fr);gap:.75rem;margin:1.6rem 0 .8rem}
+  .filters label{display:grid;gap:.35rem;color:var(--c-muted);font-size:.75rem;font-weight:700}
+  .filters input,.filters select{min-width:0;height:45px;padding:.6rem;border:1px solid var(--c-line);border-radius:0;background:#fff;color:var(--c-graphite);font:inherit}
+  .result-count{margin:.8rem 0 1.6rem;color:var(--c-muted);font-size:.8rem}
+  .library-feature{display:grid;grid-template-columns:150px minmax(0,1fr);gap:1.5rem;margin:0 0 clamp(4rem,8vw,7rem);padding-top:1rem;border-top:1px solid var(--c-graphite)}
+  .library-feature__label{display:grid;align-content:space-between;padding-bottom:1rem;color:var(--c-muted);font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+  .library-feature__label span:first-child{color:var(--c-orange)}
+  .library-feature :global(.article-card){border:0;border-top:3px solid var(--c-orange);border-radius:0}
+  .library-feature :global(.article-card__link){grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);grid-template-rows:1fr}
+  .library-feature :global(.article-card__image){order:2;aspect-ratio:auto;min-height:340px}
+  .library-feature :global(.article-card__body){display:flex;flex-direction:column;justify-content:center;padding:2rem 2.2rem;background:#fff}
+  .supporting-heading{display:flex;align-items:end;justify-content:space-between;gap:1.5rem;margin-bottom:1.5rem}
+  .supporting-heading h2{max-width:680px;margin:.3rem 0 0;font-size:clamp(2rem,3.5vw,3.6rem);line-height:.95}
+  .supporting-heading>span{color:var(--c-muted);font-size:.8rem;white-space:nowrap}
+  .supporting-list{display:grid;gap:0;border-top:1px solid var(--c-graphite)}
+  .supporting-list :global(.article-card){border:0;border-bottom:1px solid var(--c-line);border-radius:0}
+  .supporting-list :global(.article-card__link){grid-template-columns:180px minmax(0,1fr);grid-template-rows:1fr;min-height:150px}
+  .supporting-list :global(.article-card__image){aspect-ratio:auto}
+  .supporting-list :global(.article-card__body){display:flex;flex-direction:column;justify-content:center;padding:1.1rem 1.4rem}
+  @media(max-width:1024px){.filters{grid-template-columns:1fr 1fr}.library-feature :global(.article-card__link){grid-template-columns:1fr 1fr}}
+  @media(max-width:700px){.catalog-header h1{font-size:3.3rem}.topic-filters{display:grid;grid-template-columns:1fr 1fr}.topic-filters a{border-top:1px solid var(--c-line)}.topic-filters a:first-child{border-left:0}.filters{grid-template-columns:1fr}.library-feature{grid-template-columns:1fr;gap:.8rem}.library-feature__label{display:flex;justify-content:space-between;gap:1rem}.library-feature :global(.article-card__link),.supporting-list :global(.article-card__link){grid-template-columns:1fr;grid-template-rows:auto 1fr}.library-feature :global(.article-card__image){order:0;min-height:0;aspect-ratio:16/9}.library-feature :global(.article-card__body){padding:1.2rem 1rem}.supporting-list :global(.article-card__image){aspect-ratio:16/9}.supporting-list :global(.article-card__body){padding:1rem}.supporting-heading{align-items:start;flex-direction:column;gap:.5rem}.supporting-heading>span{white-space:normal}}
+</style>

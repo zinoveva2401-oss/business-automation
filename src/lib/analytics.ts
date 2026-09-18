@@ -1,8 +1,6 @@
 export const analyticsEvents = [
-  'view_article', 'click_related_article', 'click_article_category', 'click_product', 'view_product',
-  'click_product_catalog', 'click_product_purchase', 'click_service', 'click_contact', 'click_social',
-  'click_vk', 'click_telegram', 'click_vc', 'click_dzen', 'click_teletype', 'click_instagram', 'click_email', 'click_max',
-  'start_checkout', 'outbound_checkout', 'payment_success', 'download_success',
+  'page_view','click_topic','open_article','click_article','click_related_article','click_service',
+  'open_product','view_product','click_product','click_question','click_contact','click_distribution_channel',
 ] as const;
 
 export type AnalyticsEvent = typeof analyticsEvents[number];
