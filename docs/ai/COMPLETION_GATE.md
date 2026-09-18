@@ -8,9 +8,9 @@
 
 Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива исполнитель не имеет права сам поставить внешний финальный статус. Обязательная схема:
 
-`EXECUTOR → INDEPENDENT COMPLETION AUDITOR → CONSOLIDATED FIX → INDEPENDENT RECHECK → HANDOFF`
+`EXECUTOR LOCAL GATES → READY_FOR_INDEPENDENT_QA → EXTERNAL BUSINESS OS QA → VERIFIED`
 
-Аудитор — один узкий независимый subagent с рабочим именем `DOKRUTI Completion Auditor` / `Release Verifier`. Он не продолжает production и не принимает self-report за evidence.
+Локальный executor не может доказать независимость проверяющего внутри собственного runtime. Поля `independent`, `reviewer`, `acceptance_received_directly`, `original_request_received_directly`, `verdict`, имя subagent, secret или nonce в executor-owned JSON не создают доверенного происхождения проверки. Внешний Business OS получает исходный запрос, acceptance matrix, scope и фактическое post-work состояние отдельно от executor и только после своей blind/independent проверки может присвоить внешний `VERIFIED`.
 
 ## 2. Immutable acceptance matrix
 
@@ -43,7 +43,9 @@ Acceptance JSON обязан содержать metadata:
 
 Если после работы остаётся tracked-file delta и задача не `READ-ONLY`/`NO-DELIVERY`, delivery обязателен по умолчанию: отсутствующее поле `delivery_required` трактуется как `true`, а явное `false` блокируется и не может отменить commit → PUSH → remote readback → SHA match. `PUSH != MERGE`: merge, deploy, hosting, publication и production access остаются отдельным scope/approval.
 
-Для разрешения `VERIFIED` одновременно нужны:
+Локальный deterministic gate проверяет material acceptance criteria, но при `independent_review_required=true` возвращает только `READY_FOR_INDEPENDENT_QA`. Он не может вернуть `VERIFIED`, даже если локальный `verifier.json` выглядит полностью валидным.
+
+Для внешнего разрешения `VERIFIED` одновременно нужны:
 
 - все обязательные criteria имеют `STATUS=PASS`;
 - evidence содержит фактический объект проверки, а не обещание или описание маршрута;
@@ -64,7 +66,7 @@ Auditor получает исходный запрос, `MAIN`, полный acc
 
 `DEFECT REGISTER → CONSOLIDATED FIX → INDEPENDENT RECHECK`.
 
-Внешние финальные статусы только: `VERIFIED`, `BLOCKED`, `OWNER DECISION REQUIRED`. `PARTIAL PASS` — лишь внутреннее состояние и означает продолжение работы.
+Внешние финальные статусы только: `VERIFIED`, `BLOCKED`, `OWNER DECISION REQUIRED`. `READY_FOR_INDEPENDENT_QA` — локальный handoff-статус после успешных material gates, а не финальный внешний verdict. `PARTIAL PASS` — лишь внутреннее состояние и означает продолжение работы.
 
 ## 5. Repo-local Skill decision
 
@@ -78,4 +80,4 @@ Auditor получает исходный запрос, `MAIN`, полный acc
 node scripts/verify-completion-gate.mjs acceptance.json verifier.json
 ```
 
-Команда завершается ошибкой при любом `FAIL`/`UNKNOWN`, отсутствующем mandatory ID/evidence, не независимом reviewer или verdict, не равном `PASS`. `--self-test` проверяет UNKNOWN, пропущенные push/readback, visual evidence, independent reviewer и полный valid fixture.
+При `independent_review_required=true` команда возвращает `READY_FOR_INDEPENDENT_QA` после прохождения material criteria; она не принимает executor-created reviewer/verdict за доказательство независимости. Команда завершается ошибкой при любом `FAIL`/`UNKNOWN`, отсутствующем mandatory ID/evidence. `--self-test` отдельно доказывает, что полностью заполненный executor-owned `verifier.json` не приводит к `VERIFIED`, а невалидные material gates остаются `BLOCKED`/`FAIL`.

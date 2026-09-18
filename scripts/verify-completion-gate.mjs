@@ -12,6 +12,7 @@ const REQUIRED_METADATA = [
   'visual_required',
   'independent_review_required',
 ];
+const READY_FOR_INDEPENDENT_QA = 'READY_FOR_INDEPENDENT_QA';
 
 function fail(message) {
   throw new Error(message);
@@ -109,33 +110,19 @@ function validateCriteria(matrix) {
   }
 }
 
-function validateVerifier(verifier) {
-  if (!verifier || verifier.independent !== true) {
-    fail('Independent completion auditor evidence is missing');
-  }
-  if (
-    typeof verifier.reviewer !== 'string'
-    || verifier.reviewer.trim() === ''
-    || verifier.reviewer === 'executor'
-  ) {
-    fail('Reviewer identity is not independent');
-  }
-  if (
-    verifier.acceptance_received_directly !== true
-    || verifier.original_request_received_directly !== true
-  ) {
-    fail('Auditor did not receive original request and acceptance directly');
-  }
-  if (verifier.verdict !== 'PASS') {
-    fail(`Auditor verdict is ${verifier.verdict || 'missing'}; VERIFIED is forbidden`);
-  }
-}
-
-export function verifyGate(matrix, verifier) {
+export function verifyGate(matrix) {
   if (!matrix || typeof matrix !== 'object') fail('Acceptance matrix is missing');
   validateMetadata(matrix);
   validateCriteria(matrix);
-  validateVerifier(verifier);
+
+  // A verifier.json supplied to this process is executor-owned input. Its
+  // fields cannot establish provenance for an independent review. Material
+  // gates therefore stop at an explicit handoff status whenever external QA
+  // is required; only an external Business OS process can later promote it.
+  if (matrix.independent_review_required === true) {
+    return READY_FOR_INDEPENDENT_QA;
+  }
+
   return 'VERIFIED';
 }
 
@@ -184,7 +171,7 @@ function validFixture() {
   };
 }
 
-function validVerifier() {
+function executorCreatedVerifierFixture() {
   return {
     independent: true,
     reviewer: 'DOKRUTI Completion Auditor',
@@ -194,7 +181,7 @@ function validVerifier() {
   };
 }
 
-function expectBlocked(label, matrix, verifier = validVerifier()) {
+function expectBlocked(label, matrix, verifier = executorCreatedVerifierFixture()) {
   let blocked = false;
   try {
     verifyGate(matrix, verifier);
@@ -204,9 +191,32 @@ function expectBlocked(label, matrix, verifier = validVerifier()) {
   if (!blocked) fail(`Negative test failed: ${label}`);
 }
 
+function expectStatus(label, actual, expected) {
+  if (actual !== expected) {
+    fail(`Status test failed: ${label}; expected ${expected}, received ${actual}`);
+  }
+}
+
 function selfTest() {
   const valid = validFixture();
-  verifyGate(valid, validVerifier());
+  const executorCreatedVerifier = executorCreatedVerifierFixture();
+  const localResult = verifyGate(valid, executorCreatedVerifier);
+  expectStatus(
+    'executor-created verifier cannot produce VERIFIED',
+    localResult,
+    READY_FOR_INDEPENDENT_QA,
+  );
+  expectStatus(
+    'independent review required has READY_FOR_INDEPENDENT_QA as its maximum local status',
+    verifyGate(valid, {
+      independent: true,
+      reviewer: 'another local label',
+      acceptance_received_directly: true,
+      original_request_received_directly: true,
+      verdict: 'PASS',
+    }),
+    READY_FOR_INDEPENDENT_QA,
+  );
 
   expectBlocked(
     'UNKNOWN criterion',
@@ -256,13 +266,14 @@ function selfTest() {
   );
 
   expectBlocked(
-    'independent reviewer missing',
-    valid,
-    { ...validVerifier(), independent: false },
+    'invalid material independent-auditor gate',
+    { ...valid, criteria: valid.criteria.map((criterion) => (
+      criterion.id === 'independent_auditor' ? { ...criterion, status: 'UNKNOWN' } : criterion
+    )) },
+    executorCreatedVerifier,
   );
 
-  verifyGate(valid, validVerifier());
-  return 'SELF_TEST_PASS: mandatory completion gates and negative tests enforced';
+  return 'SELF_TEST_PASS: material gates enforced; executor-created verifier is limited to READY_FOR_INDEPENDENT_QA';
 }
 
 if (process.argv[2] === '--self-test') {
