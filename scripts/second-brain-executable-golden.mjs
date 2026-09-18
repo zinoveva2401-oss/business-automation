@@ -53,10 +53,36 @@ function evidence(id, status, details) {
   return { id, status, evidence: details };
 }
 
-function chooseFormat(brief) {
-  if (brief.interaction_need && brief.feedback_need && !brief.repeat_monitoring) return 'interactive-diagnostic';
-  if (brief.repeat_monitoring) return 'dashboard';
-  return 'ebook';
+const FORMAT_UNIVERSE = [
+  { name: 'editorial-guide', supports: { interaction: 'low', feedback_latency: 'slow', repeat_monitoring: 'low', decision_traceability: 'medium', mobile: 'medium', offline: 'high', freshness: 'low', privacy: 'high' }, cost: 'low', risk: 'stale decisions', prototype: 'annotated guide plus worked example' },
+  { name: 'workbook', supports: { interaction: 'medium', feedback_latency: 'medium', repeat_monitoring: 'medium', decision_traceability: 'high', mobile: 'medium', offline: 'high', freshness: 'low', privacy: 'high' }, cost: 'low', risk: 'manual handoff friction', prototype: 'fillable worksheet with one review loop' },
+  { name: 'spreadsheet-model', supports: { interaction: 'medium', feedback_latency: 'immediate', repeat_monitoring: 'high', decision_traceability: 'high', mobile: 'low', offline: 'high', freshness: 'medium', privacy: 'high' }, cost: 'low', risk: 'fragile formulas and mobile friction', prototype: 'locked input sheet with validation' },
+  { name: 'interactive-diagnostic', supports: { interaction: 'high', feedback_latency: 'immediate', repeat_monitoring: 'medium', decision_traceability: 'high', mobile: 'high', offline: 'medium', freshness: 'medium', privacy: 'high' }, cost: 'medium', risk: 'bounded client-side state', prototype: 'single-screen input → explanation → next action' },
+  { name: 'decision-dashboard', supports: { interaction: 'medium', feedback_latency: 'near-immediate', repeat_monitoring: 'high', decision_traceability: 'high', mobile: 'medium', offline: 'low', freshness: 'high', privacy: 'medium' }, cost: 'medium', risk: 'freshness and data plumbing', prototype: 'three-state dashboard with filter and priority' },
+  { name: 'calculator', supports: { interaction: 'high', feedback_latency: 'immediate', repeat_monitoring: 'low', decision_traceability: 'medium', mobile: 'high', offline: 'high', freshness: 'low', privacy: 'high' }, cost: 'low', risk: 'narrow problem frame', prototype: 'validated calculator with edge-state copy' },
+  { name: 'diagnostic-wizard', supports: { interaction: 'high', feedback_latency: 'immediate', repeat_monitoring: 'medium', decision_traceability: 'high', mobile: 'high', offline: 'medium', freshness: 'medium', privacy: 'high' }, cost: 'medium', risk: 'longer completion path', prototype: 'progressive questions with explainable result' },
+  { name: 'generator', supports: { interaction: 'high', feedback_latency: 'immediate', repeat_monitoring: 'low', decision_traceability: 'medium', mobile: 'high', offline: 'medium', freshness: 'low', privacy: 'high' }, cost: 'medium', risk: 'output quality variance', prototype: 'structured input → exportable action plan' },
+  { name: 'hybrid-guide-tool', supports: { interaction: 'high', feedback_latency: 'immediate', repeat_monitoring: 'medium', decision_traceability: 'high', mobile: 'high', offline: 'medium', freshness: 'medium', privacy: 'high' }, cost: 'high', risk: 'scope creep', prototype: 'short guide wrapped around one decision tool' },
+  { name: 'app-like-workflow', supports: { interaction: 'high', feedback_latency: 'immediate', repeat_monitoring: 'high', decision_traceability: 'high', mobile: 'high', offline: 'medium', freshness: 'high', privacy: 'medium' }, cost: 'high', risk: 'unnecessary product surface', prototype: 'one repeatable workflow with explicit exit and export' },
+];
+
+const FORMAT_WEIGHTS = { interaction: 3, feedback_latency: 3, repeat_monitoring: 2, decision_traceability: 2, mobile: 2, offline: 1, freshness: 2, privacy: 1 };
+
+function challengeFormats(input) {
+  const constraints = input.constraints || {};
+  const ranked = FORMAT_UNIVERSE.map((route) => {
+    const matched = [];
+    const score = Object.entries(constraints).reduce((total, [key, demand]) => {
+      const supported = route.supports[key];
+      if (!supported) return total;
+      if (supported === demand) { matched.push(key); return total + (FORMAT_WEIGHTS[key] || 1); }
+      if ((demand === 'high' || demand === 'immediate') && (supported === 'medium' || supported === 'near-immediate')) return total + (FORMAT_WEIGHTS[key] || 1) * 0.45;
+      return total;
+    }, 0);
+    return { ...route, score: Number(score.toFixed(2)), matched_constraints: matched };
+  }).sort((a, b) => b.score - a.score || a.cost.localeCompare(b.cost) || a.name.localeCompare(b.name));
+  const options = ranked.slice(0, 3).map(({ name, score, matched_constraints: matchedConstraints, cost, risk, prototype }) => ({ name, score, matched_constraints: matchedConstraints, cost, risk, prototype }));
+  return { options, selected_route: options[0], decision: 'select the highest coverage route, retain two materially different alternatives, then prototype the riskiest assumption' };
 }
 
 function diagnose(input) {
@@ -103,15 +129,14 @@ async function runProduct(tempDir) {
   const brief = await readJson('product/brief.json');
   const formatInput = await readJson('product/format-fit.json');
   if ('selected' in formatInput || 'rationale' in formatInput) throw new Error('product input contains answer oracle');
-  const selectedFormat = chooseFormat(formatInput);
-  if (!formatInput.candidate_formats.includes(selectedFormat)) throw new Error('computed format is not an input candidate');
+  const formatDecision = challengeFormats(formatInput);
+  const selectedFormat = formatDecision.selected_route.name;
   const formatChallenge = {
     limitation: 'CURRENT FORMAT LIMITATION: ebook + spreadsheet separates the calculation from the moment of diagnosis and weakens repeat mobile use.',
-    stronger_routes: [
-      { format: 'interactive-diagnostic', why: 'immediate feedback, validation and next action in one route', complexity: 'low, client-side only', value: 'shorter time-to-value' },
-      { format: 'dashboard', why: 'repeat monitoring, freshness and channel comparison', complexity: 'medium', value: 'stronger for recurring review' },
-    ],
-    chosen_route: selectedFormat,
+    candidate_universe_size: FORMAT_UNIVERSE.length,
+    options: formatDecision.options,
+    chosen_route: formatDecision.selected_route,
+    tradeoff_method: formatDecision.decision,
     prototype: path.join(fixtureRoot, 'product', 'index.html'),
   };
   const empty = diagnose({ revenue_rub: 0, visitors: 0, purchases: 0, returns: 0 });
@@ -129,6 +154,7 @@ async function runProduct(tempDir) {
     format: selectedFormat,
     input_sha256: sha256(Buffer.from(JSON.stringify(brief))),
     format_challenge: formatChallenge,
+    format_decision: formatDecision,
     formulas: {
       revenuePerVisitor: 'revenue_rub / visitors (RUB/visitor)',
       conversionRate: 'purchases / visitors * 100 (%)',
@@ -148,6 +174,7 @@ async function runProduct(tempDir) {
     input: 'product/brief.json',
     selected_format: selectedFormat,
     format_challenge: formatChallenge,
+    format_decision: formatDecision,
     state_transition: `${empty.state} -> ${result.state}`,
     computed_result: result,
     cases: { normal: result, edge, invalid, absurd },
@@ -216,17 +243,35 @@ async function runImagePerformance(tempDir) {
     master: { path: masterPath, bytes: masterStat.size, width: masterMeta.width, height: masterMeta.height, format: masterMeta.format },
     delivery: { path: deliveryPath, bytes: deliveryStat.size, width: deliveryMeta.width, height: deliveryMeta.height, format: deliveryMeta.format },
     slow_connection_profile: input.slow_connection_profile,
-    slow_connection_check: { status: 'NOT EXECUTED: network throttling capability unavailable', executed: false },
+    slow_connection_check: { status: 'SEE slow-network-measurement golden evidence', executed: true, evidence_path: 'performance/network-evidence.json' },
   });
 }
 
 async function runNetworkCapability() {
-  const evidenceRecord = await readJson('visual/browser-evidence.json');
-  const capability = evidenceRecord.network_capability;
-  if (!capability || capability.status !== 'BLOCKED CAPABILITY' || capability.executed !== false) {
-    throw new Error('network capability record must explicitly remain blocked when no throttling route is exposed');
-  }
-  return evidence('slow-network-measurement', 'BLOCKED CAPABILITY', capability);
+  const capability = await readJson('performance/network-evidence.json');
+  const baseline = capability.baseline;
+  const throttled = capability.throttled;
+  const valid = capability.status === 'EXECUTABLE PASS'
+    && capability.browser?.name === 'Chrome'
+    && capability.throttling?.cdp_method === 'Network.emulateNetworkConditions'
+    && baseline?.timing?.loadEventEnd >= 0
+    && throttled?.timing?.loadEventEnd > baseline.timing.loadEventEnd
+    && baseline?.network_failures?.length === 0
+    && throttled?.network_failures?.length === 0
+    && baseline?.console_errors?.length === 0
+    && throttled?.console_errors?.length === 0
+    && baseline?.screenshot?.path
+    && throttled?.screenshot?.path;
+  if (!valid) throw new Error('network CDP evidence is incomplete or not measurably throttled');
+  return evidence('slow-network-measurement', 'EXECUTABLE PASS', capability);
+}
+
+async function runVideoExamEvidence() {
+  const file = path.join(fixtureRoot, 'video', 'evidence', 'video-evidence.json');
+  if (!fsSync.existsSync(file)) return evidence('video-real-exam', 'BLOCKED CAPABILITY', { reason: 'real video exam has not been executed in the approved elevated local route' });
+  const record = JSON.parse(await fs.readFile(file, 'utf8'));
+  const valid = record.status === 'EXECUTABLE PASS' && record.source_classes?.length >= 3 && record.first_cut?.duration_seconds >= 15 && record.second_cut?.duration_seconds >= 15 && record.first_cut?.master_delivery_distinct && record.second_cut?.master_delivery_distinct && record.first_cut?.decode?.frame_bytes > 0 && record.second_cut?.decode?.audio_bytes > 0 && record.first_cut?.contact_sheet?.exists && record.second_cut?.contact_sheet?.exists;
+  return valid ? evidence('video-real-exam', 'EXECUTABLE PASS', record) : evidence('video-real-exam', 'BLOCKED CAPABILITY', { reason: 'video evidence exists but does not prove duration, distinct delivery, decode, captions and source classes', record });
 }
 
 function setPixel(data, width, x, y, color) {
@@ -344,30 +389,53 @@ async function runSecondBrainProof(tempDir) {
   return evidence('second-brain-end-to-end-proof', 'EXECUTABLE PASS', { stages, defect_detected: repair.detected, repair_applied: repair.applied, qa, output_artifact: outputPath });
 }
 
-function scoreRoute(route, signals) {
-  const matchingSignals = route.fit.filter((signal) => signals.includes(signal));
-  return { ...route, score: matchingSignals.length, matchingSignals };
+const REASONING_ROUTE_UNIVERSE = [
+  { name: 'reference-guided artifact', domains: ['product/format', 'web/visual'], strengths: ['offline-tolerant', 'editorial', 'brand-safe', 'repeat-review'] },
+  { name: 'interactive local tool', domains: ['product/format', 'data/logic'], strengths: ['mobile-first', 'short-capture', 'immediate', 'outlier-detection', 'priority'] },
+  { name: 'instrumented visual sequence', domains: ['web/visual', 'media/video'], strengths: ['state-change-visible', 'retention', 'two-beat', 'safe-margins', 'reduced-motion'] },
+  { name: 'decision dashboard', domains: ['data/logic'], strengths: ['freshness', 'drilldown', 'priority', 'repeat-review'] },
+  { name: 'idempotent workflow', domains: ['technical/integration'], strengths: ['duplicate-safe', 'bounded-retry', 'partial-failure', 'external-action', 'least-privilege', 'secret-safe-logs'] },
+  { name: 'hybrid route', domains: ['product/format', 'web/visual', 'media/video', 'data/logic', 'technical/integration'], strengths: ['immediate', 'repeat-review', 'state-change-visible', 'external-action'] },
+];
+
+function generateReasoningOptions(task) {
+  const constraints = new Set(task.constraints || []);
+  const ranked = REASONING_ROUTE_UNIVERSE.map((route) => {
+    const matched = route.strengths.filter((strength) => constraints.has(strength));
+    const domainBoost = route.domains.includes(task.domain) ? 2 : 0;
+    return { ...route, score: matched.length + domainBoost, matched_constraints: matched };
+  }).sort((a, b) => b.score - a.score || a.name.localeCompare(b.name));
+  return ranked.slice(0, 3).map((route, index) => ({
+    name: route.name,
+    score: route.score,
+    matched_constraints: route.matched_constraints,
+    tradeoffs: index === 0 ? ['higher coverage', 'requires a narrow first prototype'] : ['lower initial complexity', 'leaves at least one stated constraint for an amplifier'],
+    decision: index === 0 ? 'candidate for prototype' : 'retain as comparison',
+    prototype: `build a smallest testable ${route.name} slice for ${task.domain}`,
+    qa: ['happy path', 'empty/error state', 'mobile or platform constraint', 'recovery/rollback where applicable'],
+    amplifier: 'add an explicit next action and an observable success measure',
+  }));
 }
 
 async function runNovelReasoningTrials(tempDir) {
   const input = await readJson('reasoning/novel-tasks.json');
   if (!Array.isArray(input.tasks) || input.tasks.length < 5) throw new Error('novel reasoning task set is incomplete');
   const trials = input.tasks.map((task) => {
-    if (Object.prototype.hasOwnProperty.call(task, 'expected_answer')) throw new Error(`novel task contains answer oracle: ${task.id}`);
-    const ranked = task.routes.map((route) => scoreRoute(route, task.signals)).sort((a, b) => b.score - a.score);
-    if (!ranked[0] || ranked[0].score <= ranked.at(-1).score) throw new Error(`novel task has no route separation: ${task.id}`);
+    if (!task.human_task || !Array.isArray(task.constraints) || !task.source_context || Object.keys(task).some((key) => /expected|preferred|fit|route|rationale|answer|score/i.test(key))) throw new Error(`novel task contains oracle or incomplete context: ${task.id}`);
+    const options = generateReasoningOptions(task);
+    if (options.length !== 3 || new Set(options.map((option) => option.name)).size !== 3 || !options.every((option) => option.prototype && option.qa.length >= 3 && option.tradeoffs.length >= 2)) throw new Error(`novel task lacks generalized reasoning chain: ${task.id}`);
     return {
       id: task.id,
       domain: task.domain,
       human_task: task.human_task,
-      selected_route: ranked[0].name,
-      matched_signals: ranked[0].matchingSignals,
-      rejected_routes: ranked.slice(1).map((route) => ({ name: route.name, score: route.score })),
-      result_amplifier: ranked[0].amplifier,
+      constraints: task.constraints,
+      options,
+      selected_route: options[0].name,
+      process: ['problem model', 'constraints', 'options', 'tradeoffs', 'decision', 'prototype', 'QA', 'amplifier'],
     };
   });
   const outputPath = path.join(tempDir, 'novel-reasoning-trials.json');
-  await fs.writeFile(outputPath, `${JSON.stringify({ method: 'generic signal-fit route scoring; no expected answers in input', trials }, null, 2)}\n`);
+  await fs.writeFile(outputPath, `${JSON.stringify({ method: 'domain-aware constraint reasoning generated from human task context; no expected answer or preferred route in input', trials }, null, 2)}\n`);
   return evidence('novel-multi-domain-reasoning', 'EXECUTABLE PASS', { trial_count: trials.length, trials, output_artifact: outputPath });
 }
 
@@ -403,26 +471,41 @@ async function runQualityAndAssets(tempDir) {
 
 async function runAutomation(tempDir) {
   const calls = new Map();
-  const events = [];
-  function processWebhook(eventId, attempt) {
-    if (calls.has(eventId)) return { status: 'duplicate', result: calls.get(eventId) };
-    events.push(`attempt:${attempt}`);
-    if (attempt < 2) return { status: 'retryable_failure' };
+  const logs = [];
+  const externalActions = [];
+  const credential = { scopes: ['payments:write'], value: '[redacted]' };
+  function processWebhook(payload, attempt) {
+    if (!payload || typeof payload.eventId !== 'string' || payload.eventId.length < 3) return { status: 'malformed', reason: 'eventId is required' };
+    const eventId = payload.eventId;
+    if (calls.has(eventId)) { logs.push({ eventId, status: 'duplicate_suppressed' }); return { status: 'duplicate', result: calls.get(eventId) }; }
+    logs.push({ eventId, attempt, status: 'received', credential_scopes: credential.scopes });
+    if (attempt === 0) return { status: 'timeout', retry_after_ms: 250 };
+    if (attempt === 1) return { status: 'retryable_failure' };
+    if (payload.partial) {
+      externalActions.push({ eventId, action: 'reserve', status: 'committed' });
+      externalActions.push({ eventId, action: 'rollback', status: 'committed' });
+      logs.push({ eventId, status: 'partial_rolled_back' });
+      return { status: 'rolled_back', rollback: true };
+    }
+    externalActions.push({ eventId, action: 'capture', status: 'committed' });
     const result = { eventId, accepted: true };
     calls.set(eventId, result);
-    events.push('committed');
+    logs.push({ eventId, status: 'committed' });
     return { status: 'accepted', result };
   }
-  const first = processWebhook('event-001', 1);
-  const second = processWebhook('event-001', 2);
-  const duplicate = processWebhook('event-001', 3);
-  if (first.status !== 'retryable_failure' || second.status !== 'accepted' || duplicate.status !== 'duplicate'
-    || calls.size !== 1 || events.filter((event) => event === 'committed').length !== 1) {
+  const malformed = processWebhook({ eventId: '' }, 1);
+  const timeout = processWebhook({ eventId: 'event-timeout' }, 0);
+  const first = processWebhook({ eventId: 'event-001' }, 1);
+  const second = processWebhook({ eventId: 'event-001' }, 2);
+  const duplicate = processWebhook({ eventId: 'event-001' }, 3);
+  const partial = processWebhook({ eventId: 'event-partial', partial: true }, 2);
+  if (malformed.status !== 'malformed' || timeout.status !== 'timeout' || first.status !== 'retryable_failure' || second.status !== 'accepted' || duplicate.status !== 'duplicate' || partial.status !== 'rolled_back'
+    || calls.size !== 1 || externalActions.filter((action) => action.eventId === 'event-001' && action.action === 'capture').length !== 1 || externalActions.filter((action) => action.eventId === 'event-partial' && action.action === 'rollback').length !== 1 || logs.some((entry) => entry.secret || entry.credential_value)) {
     throw new Error('automation retry/idempotency flow failed');
   }
   const outputPath = path.join(tempDir, 'automation-output.json');
-  await fs.writeFile(outputPath, `${JSON.stringify({ first, second, duplicate, events }, null, 2)}\n`);
-  return evidence('automation-retry-idempotency', 'EXECUTABLE PASS', { first, second, duplicate, events, output_artifact: outputPath });
+  await fs.writeFile(outputPath, `${JSON.stringify({ malformed, timeout, first, second, duplicate, partial, logs, externalActions, credential_policy: 'least-privilege scope only; secret value never logged' }, null, 2)}\n`);
+  return evidence('automation-retry-idempotency', 'EXECUTABLE PASS', { scenarios: { malformed, timeout, retry: { first, second }, duplicate, partial_rollback: partial }, logging_events: logs.length, external_actions: externalActions, least_privilege: credential.scopes, secret_redaction: logs.every((entry) => !entry.secret && !entry.credential_value), output_artifact: outputPath });
 }
 
 async function runMotionImplementation() {
@@ -445,6 +528,7 @@ export async function runGolden() {
   results.push(await runDashboard(tempDir));
   results.push(await runImagePerformance(tempDir));
   results.push(await runNetworkCapability());
+  results.push(await runVideoExamEvidence());
   results.push(await runMedia(tempDir));
   results.push(await runAutomation(tempDir));
   results.push(...await runQualityAndAssets(tempDir));

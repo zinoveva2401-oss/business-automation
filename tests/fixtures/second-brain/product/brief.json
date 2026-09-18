@@ -8,6 +8,5 @@
     "returns": "returned purchases"
   },
   "interaction": "submit form and receive a computed diagnostic",
-  "candidate_formats": ["ebook", "interactive-diagnostic", "dashboard"],
   "no_backend_required": true
 }

@@ -1,13 +1,20 @@
 {
   "user_job": "Понять, почему магазин теряет результат, по нескольким показателям и получить следующий шаг",
-  "interaction_need": true,
-  "feedback_need": true,
-  "repeat_monitoring": false,
   "current_format": "ebook + spreadsheet",
-  "candidate_formats": ["ebook + spreadsheet", "interactive-diagnostic", "dashboard"],
   "input_fields": ["revenue_rub", "visitors", "purchases", "returns"],
   "frequency": "weekly and repeat use",
   "mobile_use": true,
   "offline_need": false,
-  "success_condition": "после ввода данных пользователь видит вычисленные показатели, объяснение и действие"
+  "success_condition": "после ввода данных пользователь видит вычисленные показатели, объяснение и действие",
+  "constraints": {
+    "interaction": "high",
+    "feedback_latency": "immediate",
+    "repeat_monitoring": "medium",
+    "decision_traceability": "high",
+    "mobile": "high",
+    "offline": "low",
+    "freshness": "medium",
+    "implementation_budget": "bounded",
+    "privacy": "local-first"
+  }
 }

@@ -1,0 +1,134 @@
+{
+  "status": "EXECUTABLE PASS",
+  "generated_at": "2026-09-18",
+  "source_policy": "generated rights-safe SVG/image/data layers only; no private or external media inputs",
+  "source_classes": [
+    {
+      "class": "generated moving b-roll",
+      "evidence": "animated line, pulse and progress frames"
+    },
+    {
+      "class": "generated still image",
+      "evidence": "static comparison panel used as a visual beat"
+    },
+    {
+      "class": "generated graphic/data layer",
+      "evidence": "metric bars and signal→action→check overlay"
+    }
+  ],
+  "voice": {
+    "status": "EXECUTED",
+    "source": "Windows SAPI local voice",
+    "mix": "voice + generated 20s audio bed"
+  },
+  "first_cut": {
+    "duration_seconds": 20,
+    "shot_count": 3,
+    "master_delivery_distinct": true,
+    "master_path": "tests/fixtures/second-brain/video/evidence/first-cut-master.mp4",
+    "delivery_path": "tests/fixtures/second-brain/video/evidence/first-cut-delivery.mp4",
+    "metadata": {
+      "programs": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 720,
+          "height": 1280
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "22050"
+        }
+      ],
+      "format": {
+        "duration": "20.000000",
+        "size": "224955"
+      }
+    },
+    "decode": {
+      "frame_bytes": 86406,
+      "audio_bytes": 22128
+    },
+    "captions": "three timed SRT cues",
+    "contact_sheet": {
+      "path": "tests/fixtures/second-brain/video/evidence/first-cut-contact-sheet.png",
+      "bytes": 36904,
+      "sha256": "ac226ad42a412fe5973c282983f6e53c2be7487d31717980134f996197e1161a",
+      "exists": true
+    },
+    "master_sha256": "4fbe300aa8a53597122202a3506462a3dbeb2e2592154b45ac055f795390c3bd",
+    "delivery_sha256": "0e31bb8b70ce025daacd8825be30528b2cfb1b5ebba20a01cf3aba8a9074151f"
+  },
+  "second_cut": {
+    "duration_seconds": 20,
+    "shot_count": 8,
+    "master_delivery_distinct": true,
+    "master_path": "tests/fixtures/second-brain/video/evidence/second-cut-master.mp4",
+    "delivery_path": "tests/fixtures/second-brain/video/evidence/second-cut-delivery.mp4",
+    "metadata": {
+      "programs": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "codec_type": "video",
+          "width": 720,
+          "height": 1280
+        },
+        {
+          "codec_name": "aac",
+          "codec_type": "audio",
+          "sample_rate": "22050"
+        }
+      ],
+      "format": {
+        "duration": "20.000000",
+        "size": "300772"
+      }
+    },
+    "decode": {
+      "frame_bytes": 89277,
+      "audio_bytes": 22128
+    },
+    "captions": "eight timed SRT cues",
+    "contact_sheet": {
+      "path": "tests/fixtures/second-brain/video/evidence/second-cut-contact-sheet.png",
+      "bytes": 89542,
+      "sha256": "7eca2b1d924846ca433de40378129ac0e13e26da87d7c6375d5780a23e64cc18",
+      "exists": true
+    },
+    "master_sha256": "b1f5596ee14dc01e65e5ab3d18b217b059d18c1db0127178f477d37c1aa7f2d0",
+    "delivery_sha256": "a292faa7f8c8214a16656e8a2d1877848295c7b4d54d30aea213dc043ff640e5"
+  },
+  "consilium": {
+    "participants": [
+      "producer",
+      "director",
+      "editor",
+      "motion",
+      "sound",
+      "brand",
+      "retention",
+      "platform",
+      "accessibility",
+      "performance",
+      "rights",
+      "red-team"
+    ],
+    "before_after": [
+      "first cut: 3 long beats (max 7s) → second cut: 8 beats (max 2.5s) to improve retention cadence",
+      "first cut: action arrives after the first beat → second cut: problem is named at 0s and repeated as a visual anchor",
+      "first cut: one broad lower-third treatment → second cut: safe-margin title hierarchy plus data overlay and final payoff",
+      "first cut: basic SRT timing → second cut: eight short readable cues with the same real voice mix"
+    ],
+    "findings": [
+      "tighten hook",
+      "increase shot rhythm",
+      "preserve contrast and safe margins",
+      "keep reduced dependency on source rights"
+    ],
+    "repair": "second cut materialized with eight generated shots, motion/data layer, captions, mixed voice and delivery encode"
+  },
+  "ephemeral_artifacts_cleaned": true
+}

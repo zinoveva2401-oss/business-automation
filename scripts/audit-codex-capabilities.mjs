@@ -40,7 +40,7 @@ function packageStatus(packageName, base = root) {
 
 function main() {
   const matrix = {
-    generated_at: '2026-09-17',
+    generated_at: '2026-09-18',
     policy: 'AVAILABLE != VERIFIED; VERIFIED requires a real probe or golden test',
     local: {
       node: commandStatus(process.execPath, ['--version']),
@@ -58,7 +58,7 @@ function main() {
       ffprobe_on_path: commandStatus('ffprobe', ['-version']),
       playwright_cli: commandStatus('playwright', ['--version']),
       image_magick: commandStatus('magick', ['-version']),
-      speech_sapi: { status: 'PARTIAL', evidence: 'Windows SAPI voice was executed in an elevated local probe; normal sandbox invocation is denied' },
+      speech_sapi: { status: 'VERIFIED (ELEVATED ROUTE)', evidence: 'real 20s video exam materialized SAPI voice, mixed audio, encoded master/delivery and decoded audio; ordinary sandbox remains denied' },
     },
     project_libraries: {
       astro: packageStatus('astro'),
@@ -74,15 +74,14 @@ function main() {
       airtable: { status: 'NOT_PROBED', evidence: 'no Airtable connector call in this local run' },
       sites: { status: 'NOT_PROBED', evidence: 'no Sites connector call; deployment is out of scope' },
       browser_cua: { status: 'VERIFIED', evidence: 'real fixture render, desktop/mobile layout evidence and interaction check in CUA' },
-      browser_network_throttling: { status: 'BLOCKED CAPABILITY', evidence: 'CUA capabilities probe exposed visibility and viewport, but no network emulation/throttling control' },
+      browser_network_throttling: { status: 'VERIFIED', evidence: 'Chrome CDP local HTTP probe with Network.enable and Network.emulateNetworkConditions; baseline/throttled timings, bytes, screenshots, console and network failures recorded' },
       multi_agent: { status: 'VERIFIED', evidence: 'independent Completion Auditor pass/recheck workflow available' },
       codex_automation: { status: 'AVAILABLE', evidence: 'automation_update surface; no scheduling mutation performed' },
       security_review: { status: 'AVAILABLE', evidence: 'security-best-practices skill and JS frontend reference read' },
     },
     gaps: [
       ...(mediaTools.ffmpeg.status === 'VERIFIED' && mediaTools.ffprobe.status === 'VERIFIED' ? [] : ['Portable ffmpeg/ffprobe resolver has no usable binary']),
-      'Windows SAPI speech route is elevated-only in this local sandbox; golden media proof was executed in the approved elevated probe',
-      'Real slow-network measurement is blocked: no network throttling capability is exposed by the current CUA surface',
+      'Windows SAPI speech route is elevated-only in this local sandbox; real video proof was executed in the approved elevated probe',
       'Playwright CLI/package is not installed; browser QA uses CUA/manual evidence, capability is PARTIAL',
       'ImageMagick/magick is not available; image conversion relies on existing project pipeline',
       'No backend framework is installed; Node mock/API flow is sufficient for bounded automation golden tests',

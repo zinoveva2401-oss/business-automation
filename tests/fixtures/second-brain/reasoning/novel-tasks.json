@@ -4,56 +4,36 @@
       "id": "field-ops-product",
       "domain": "product/format",
       "human_task": "Полевой руководитель каждый день фиксирует короткие наблюдения с телефона и возвращается к ним на еженедельной планёрке, иногда без связи.",
-      "signals": ["daily", "mobile", "offline", "repeat"],
-      "routes": [
-        {"name": "ebook", "fit": ["offline"], "amplifier": "add a compact capture checklist"},
-        {"name": "mobile-first quick tool", "fit": ["daily", "mobile", "offline", "repeat"], "amplifier": "add an exportable weekly review"},
-        {"name": "desktop dashboard", "fit": ["repeat"], "amplifier": "add a freshness indicator"}
-      ]
+      "constraints": ["mobile-first", "offline-tolerant", "repeat-review", "short-capture"],
+      "source_context": "The output must reduce time from observation to a usable weekly decision."
     },
     {
       "id": "editorial-visual",
       "domain": "web/visual",
       "human_task": "Нужно объяснить новый принцип работы команды так, чтобы посетитель увидел изменение состояния, а не набор карточек.",
-      "signals": ["story", "visual-event", "no-cards", "brand"],
-      "routes": [
-        {"name": "card grid", "fit": ["brand"], "amplifier": "add a static hero"},
-        {"name": "editorial signal map", "fit": ["story", "visual-event", "no-cards", "brand"], "amplifier": "add a reduced-motion state"},
-        {"name": "dashboard", "fit": ["no-cards"], "amplifier": "add a filter"}
-      ]
+      "constraints": ["state-change-visible", "editorial", "no-card-grid", "brand-safe", "reduced-motion"],
+      "source_context": "The visitor must understand a before/after change and its cause, not merely scan inventory."
     },
     {
       "id": "short-form-video",
       "domain": "media/video",
       "human_task": "Сделай короткий вертикальный ролик: за первые секунды зритель должен понять проблему, затем увидеть действие, услышать ясную фразу и прочитать её.",
-      "signals": ["vertical", "two-beats", "voice", "captions", "retention"],
-      "routes": [
-        {"name": "single still", "fit": ["vertical"], "amplifier": "add a title card"},
-        {"name": "two-scene narrated cut", "fit": ["vertical", "two-beats", "voice", "captions", "retention"], "amplifier": "tighten the first-second hook"},
-        {"name": "long interview", "fit": ["voice"], "amplifier": "add chapter markers"}
-      ]
+      "constraints": ["vertical", "two-beat", "voice", "captions", "retention", "safe-margins"],
+      "source_context": "The first seconds must name the problem, then show an action and a legible payoff."
     },
     {
       "id": "decision-data",
       "domain": "data/logic",
       "human_task": "Руководитель каждую неделю сравнивает каналы, хочет видеть свежесть данных, выбросы и один приоритет для следующего разбора.",
-      "signals": ["freshness", "outlier", "drilldown", "priority", "repeat"],
-      "routes": [
-        {"name": "static report", "fit": ["repeat"], "amplifier": "add a data dictionary"},
-        {"name": "decision dashboard", "fit": ["freshness", "outlier", "drilldown", "priority", "repeat"], "amplifier": "add an explicit next action"},
-        {"name": "calculator", "fit": ["outlier"], "amplifier": "add saved scenarios"}
-      ]
+      "constraints": ["freshness", "outlier-detection", "drilldown", "priority", "repeat-review"],
+      "source_context": "The result must make one next investigation explicit while preserving the path back to source rows."
     },
     {
       "id": "webhook-recovery",
       "domain": "technical/integration",
       "human_task": "Платёжный webhook иногда повторяется и иногда отвечает с ошибкой; обработчик не должен дважды запускать внешнее действие.",
-      "signals": ["duplicate", "retry", "partial-failure", "external-action", "least-privilege"],
-      "routes": [
-        {"name": "fire-and-forget", "fit": ["external-action"], "amplifier": "add a log line"},
-        {"name": "idempotent retry handler", "fit": ["duplicate", "retry", "partial-failure", "external-action", "least-privilege"], "amplifier": "add a bounded dead-letter recovery"},
-        {"name": "manual spreadsheet", "fit": ["partial-failure"], "amplifier": "add a duplicate column"}
-      ]
+      "constraints": ["duplicate-safe", "bounded-retry", "partial-failure", "external-action", "least-privilege", "secret-safe-logs"],
+      "source_context": "A retry must not duplicate an external side effect, and operators need a recoverable audit trail."
     }
   ]
 }

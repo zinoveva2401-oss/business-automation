@@ -21,11 +21,21 @@
   },
   "network_capability": {
     "required": "real browser network throttling with measured transfer and load timings",
-    "status": "BLOCKED CAPABILITY",
-    "executed": false,
-    "available_cua_capabilities": ["visibility", "viewport"],
-    "reason": "the exposed CUA browser capability surface has no network emulation/throttling control",
-    "free_alternative": "Chrome DevTools Network throttling or Playwright/CDP route exposed by the owner"
+    "status": "EXECUTABLE PASS",
+    "executed": true,
+    "captured_by": "Chrome CDP via local network-throttling-probe.mjs",
+    "browser": "Chrome 153.0.8010.48",
+    "cdp_method": "Network.emulateNetworkConditions",
+    "artifact": "tests/fixtures/second-brain/performance/network-evidence.json",
+    "baseline_load_event_end_ms": 53.1,
+    "throttled_load_event_end_ms": 235.9,
+    "load_event_delta_ms": 182.8,
+    "network_failures": 0,
+    "console_errors": 0,
+    "screenshots": [
+      "tests/fixtures/second-brain/visual/evidence/network-baseline.png",
+      "tests/fixtures/second-brain/visual/evidence/network-throttled.png"
+    ]
   },
   "product_smoke": {"state_after_valid_input": "ready", "computed_conversion": "8.00%", "computed_return_rate": "9.4%", "average_revenue_per_visitor": "83.33 RUB/visitor", "edge_state": "edge", "invalid_state": "error", "absurd_state": "needs-review"},
   "dashboard_smoke": {"initial_ready_rows": 3, "filtered_messenger_rows": 1}

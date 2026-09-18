@@ -7,14 +7,15 @@
     "dev": "astro dev",
     "build": "node scripts/optimize-images.mjs && astro build && node scripts/rewrite-optimized-references.mjs",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "check:staged-media": "node scripts/guard-staged-media.mjs",
+    "test:video-exam": "node scripts/second-brain-video-exam.mjs"
   },
   "dependencies": {
     "@astrojs/check": "0.9.4",
     "@fontsource/inter": "^5.3.0",
     "@fontsource/playfair-display": "^5.3.0",
-    "@tabler/icons-webfont": "^3.46.0",
-    "astro": "5.13.5",
+    "astro": "7.3.3",
     "jszip": "^3.10.1",
     "typescript": "5.9.2"
   },

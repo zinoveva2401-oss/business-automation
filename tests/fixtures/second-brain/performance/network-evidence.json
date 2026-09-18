@@ -1,0 +1,74 @@
+{
+  "status": "EXECUTABLE PASS",
+  "browser": {
+    "name": "Chrome",
+    "executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+    "cdp_version": "Chrome/153.0.8010.48"
+  },
+  "fixture_url": "http://127.0.0.1:51434/fixture",
+  "fixture_transport": "local HTTP server; no filesystem transport",
+  "ephemeral_profile": {
+    "used": true,
+    "cleaned_after_run": true
+  },
+  "throttling": {
+    "cdp_method": "Network.emulateNetworkConditions",
+    "latency_ms": 150,
+    "download_bytes_per_second": 153600,
+    "upload_bytes_per_second": 51200
+  },
+  "baseline": {
+    "profile": "baseline",
+    "load": {
+      "timedOut": false
+    },
+    "timing": {
+      "readyState": "complete",
+      "domContentLoaded": 49.29999999993015,
+      "loadEventEnd": 53.09999999997672,
+      "responseEnd": 27.199999999953434,
+      "transferSize": 7810,
+      "htmlBytes": 6910,
+      "innerWidth": 390,
+      "innerHeight": 844
+    },
+    "transfer_bytes": 7811,
+    "network_failures": [],
+    "console_errors": [],
+    "screenshot": {
+      "path": "tests/fixtures/second-brain/visual/evidence/network-baseline.png",
+      "bytes": 38458,
+      "sha256": "cbd8a8735c8df7e7c247c2182f16219c8d4f511fb6e00fc6aeff4f7b4c2b9859"
+    }
+  },
+  "throttled": {
+    "profile": "throttled-3g",
+    "load": {
+      "timedOut": false
+    },
+    "timing": {
+      "readyState": "complete",
+      "domContentLoaded": 235,
+      "loadEventEnd": 235.90000000002328,
+      "responseEnd": 233.10000000009313,
+      "transferSize": 7810,
+      "htmlBytes": 6910,
+      "innerWidth": 390,
+      "innerHeight": 844
+    },
+    "transfer_bytes": 7700,
+    "network_failures": [],
+    "console_errors": [],
+    "screenshot": {
+      "path": "tests/fixtures/second-brain/visual/evidence/network-throttled.png",
+      "bytes": 38458,
+      "sha256": "cbd8a8735c8df7e7c247c2182f16219c8d4f511fb6e00fc6aeff4f7b4c2b9859"
+    }
+  },
+  "delta": {
+    "load_event_ms": 182.8,
+    "dom_content_loaded_ms": 185.7,
+    "transfer_bytes_delta": -111
+  },
+  "measurement": "real CDP navigation timing, encoded transfer bytes, screenshot, console and network failure collection"
+}

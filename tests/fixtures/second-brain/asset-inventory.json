@@ -3,8 +3,14 @@
     "tests/fixtures/second-brain/performance/source.svg",
     "tests/fixtures/second-brain/visual/index.html",
     "tests/fixtures/second-brain/media/multi-source.json",
+    "tests/fixtures/second-brain/performance/network-evidence.json",
+    "tests/fixtures/second-brain/video/evidence/first-cut-master.mp4",
+    "tests/fixtures/second-brain/video/evidence/first-cut-delivery.mp4",
+    "tests/fixtures/second-brain/video/evidence/second-cut-master.mp4",
+    "tests/fixtures/second-brain/video/evidence/second-cut-delivery.mp4",
     "tests/fixtures/second-brain/visual/evidence/desktop-1280.png",
-    "tests/fixtures/second-brain/visual/evidence/mobile-390.png"
+    "tests/fixtures/second-brain/visual/evidence/mobile-390.png",
+    "tests/fixtures/second-brain/visual/evidence/network-throttled.png"
   ],
   "required_checks": ["exists", "duplicate_hash", "dimensions", "format", "weight", "source_or_license"]
 }

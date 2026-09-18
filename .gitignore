@@ -8,6 +8,8 @@ site-static-preview/
 public/_optimized/
 .playwright-*/
 .tmp_*
+.codex-task-media/
+task-media/
 retail-site-audit-snapshot-*.zip
 .DS_Store
 *.log
