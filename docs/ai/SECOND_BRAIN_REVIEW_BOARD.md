@@ -59,6 +59,8 @@ Research Scout возвращает dated brief и разделяет `FACT / OB
 
 Mixed customer-facing artifact разделяется на technical, visual, product, media и content lanes. Technical PASS не перекрывает FAIL/UNKNOWN в другой применимой lane. `CAPABILITY != QUALITY`: наличие Skill, профильного файла, build или self-authored PASS не является artifact evidence.
 
+Для каждого material criterion до production создаётся requirement trace: `REQ-ID → EXPECTED OBSERVABLE DELTA → TARGET LOCATION/ROUTE/FILE/SCREEN → VERIFY METHOD → REQUIRED EVIDENCE`. Для redesign/rebuild добавляется transformation map `CURRENT → TARGET`. До `READY` review-chair строит final claim ledger и принимает только exact final artifact, соответствующий финальному SHA/URL/file. Report, changed-file list, commit/build/deploy log и self-authored PASS не закрывают material row.
+
 ## 4. Review profiles
 
 Главный агент выбирает только применимые профили и выполняет их последовательно как checklists в том же видимом чате. Файлы `.codex/agents/*.toml` сохраняют контракты ролей, но physical subagents выключены в `.codex/config.toml` и не являются обязательным способом review.
@@ -105,6 +107,8 @@ Reviewer read-only: сначала судит, потом producer исправ�
 8. После двух repair rounds с тем же классом дефекта → `CAPABILITY_GAP`: сменить route/tool/model/skill, а не повторять ту же микроправку.
 9. Owner не получает промежуточную работу для поиска дефектов, если owner decision не требуется.
 
+Review Chair не может вернуть `ACCEPT_INTERNAL`, если отсутствует actual artifact evidence по material REQ rows, неполна transformation map, не пройдена applicable reference fidelity, сохранена нарушающая target legacy composition/grammar или есть contradiction между report и artifact. При UNKNOWN material row — `BLOCKED`, не PASS.
+
 ## 7. Domain quality gates
 
 ### 7.1 Premium visual
@@ -121,10 +125,13 @@ Visual PASS запрещён, если результат только чист�
 - `TEMPLATE DETECTOR`: repeated cards/pills/boxes, generic SaaS/Canva/AI grammar, decorative filler, giant dead space;
 - `BRAND SPECIFICITY`: можно ли заменить логотип и получить сайт любой компании?;
 - `PREMIUM DELTA`: конкретно чем слабее сильного reference;
+- `BEFORE → APPROVED REFERENCE → AFTER` на том же breakpoint или equivalent inspectable surface; distinct artifact identities и final-after hash обязательны;
 - meaningful interaction/motion only;
 - first render → critic → structural repair → rerender.
 
 Если корень проблемы — слабая система композиции, micro-CSS patch не считается исправлением.
+
+Если target требует structural replacement, сохранение materially same legacy composition/grammar при смене только copy, CTA, spacing, colors или одного isolated component — automatic FAIL.
 
 ### 7.2 Product / marketing / sales / growth
 

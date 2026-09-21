@@ -74,6 +74,8 @@ Free-first обязателен: paid dependency, credentialed commercial servic
 
 До production выбрать domain route и доказать применимый pre-production gate: visual/site — current reference research и concept proof до кода; product — buyer/value blueprint, free-AI substitution и price-worthiness; media — transcript/paper edit/first cut до render; content/marketing — audience, pain, hook, format и payoff; SEO/AEO — current intent/SERP/source check без обещания ranking; technical/data — reproduction, scope, risk и test plan. Technical PASS не перекрывает FAIL визуального, продуктового, медийного или content lane.
 
+Для material delivery до `READY` обязателен completion-integrity trace: `REQ-ID → EXPECTED OBSERVABLE DELTA → TARGET LOCATION/ROUTE/FILE/SCREEN → VERIFY METHOD → REQUIRED EVIDENCE`, transformation map `CURRENT → TARGET`, immutable reference/blueprint при frozen direction и final claim ledger `CLAIM/REQ-ID → ACTUAL FINAL LOCATION → EVIDENCE/MEASUREMENT → PASS/FAIL/UNKNOWN`. Report, changed-file list, commit/deploy log, self-authored screenshot list и self-PASS — только navigation, не material evidence. Reviewer проверяет exact final artifact, соответствующий финальному SHA/URL/file; неизвестный material criterion блокирует `READY`.
+
 ### Source access map
 
 В ledger явно отметить доступ к `LOCAL REPO`, `GITHUB`, `LIVE DRIVE/SHEETS`, `BROWSER/WEB`, `OWNER/BUSINESS OS SNAPSHOT` как `YES/NO`, с датой и ограничением. Если canonical source недоступен, использовать только exact task snapshot с provenance либо вернуть `SOURCE SNAPSHOT REQUIRED`; capability не заменяет источник.

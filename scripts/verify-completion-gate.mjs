@@ -15,6 +15,96 @@ const REQUIRED_METADATA = [
 const ACCEPTANCE_LANES = new Set(['technical', 'visual', 'product', 'media', 'content']);
 const READY_FOR_INDEPENDENT_QA = 'READY_FOR_INDEPENDENT_QA';
 
+function completionIntegrityFail(message) {
+  throw new Error(`COMPLETION_INTEGRITY_FAIL + STOPPED_INCOMPLETE: ${message}`);
+}
+
+function normalizeArtifactIdentity(artifactPath, artifactSha256) {
+  const resolved = path.isAbsolute(artifactPath) ? artifactPath : path.resolve(process.cwd(), artifactPath);
+  return `${path.normalize(resolved).toLowerCase()}|${artifactSha256.toLowerCase()}`;
+}
+
+function verifyMaterialArtifact(artifactPath, artifactSha256, label) {
+  if (typeof artifactPath !== 'string' || artifactPath.trim() === '' || !/^[a-f0-9]{64}$/i.test(artifactSha256 || '')) {
+    completionIntegrityFail(`${label} requires a path and SHA256`);
+  }
+
+  const normalizedPath = artifactPath.trim();
+  const normalizedSha = artifactSha256.trim().toLowerCase();
+  const resolvedArtifact = path.isAbsolute(normalizedPath) ? normalizedPath : path.resolve(process.cwd(), normalizedPath);
+  try {
+    const stat = fs.statSync(resolvedArtifact);
+    if (!stat.isFile() || stat.size === 0) completionIntegrityFail(`${label} artifact is missing or empty: ${normalizedPath}`);
+    const actualSha256 = createHash('sha256').update(fs.readFileSync(resolvedArtifact)).digest('hex');
+    if (actualSha256 !== normalizedSha) completionIntegrityFail(`${label} artifact hash mismatch: ${normalizedPath}`);
+  } catch (error) {
+    if (error.message.includes(`${label} `)) throw error;
+    completionIntegrityFail(`${label} artifact is unreadable: ${normalizedPath}`);
+  }
+
+  return normalizeArtifactIdentity(normalizedPath, normalizedSha);
+}
+
+function requireNonEmptyEvidenceFields(evidence, fields, criterionId) {
+  for (const field of fields) {
+    if (typeof evidence[field] !== 'string' || evidence[field].trim() === '') {
+      completionIntegrityFail(`Criterion ${criterionId} evidence is missing ${field}`);
+    }
+  }
+}
+
+function validateArtifactTruthEvidence(evidence, criterionId, genericIdentity) {
+  requireNonEmptyEvidenceFields(evidence, [
+    'expected_observable_delta',
+    'actual_final_location',
+    'final_artifact_path',
+    'final_artifact_sha256',
+    'reviewed_artifact_path',
+    'reviewed_artifact_sha256',
+    'actual_inspection',
+  ], criterionId);
+
+  const finalIdentity = verifyMaterialArtifact(evidence.final_artifact_path, evidence.final_artifact_sha256, `${criterionId} final`);
+  const reviewedIdentity = verifyMaterialArtifact(evidence.reviewed_artifact_path, evidence.reviewed_artifact_sha256, `${criterionId} reviewed`);
+  if (finalIdentity !== reviewedIdentity) {
+    completionIntegrityFail(`Criterion ${criterionId} reviewed artifact is not the final artifact`);
+  }
+  if (genericIdentity !== finalIdentity) {
+    completionIntegrityFail(`Criterion ${criterionId} generic evidence artifact is not the final artifact`);
+  }
+}
+
+function validateReferenceFidelityEvidence(evidence, criterionId, genericIdentity) {
+  requireNonEmptyEvidenceFields(evidence, [
+    'before_artifact_path',
+    'before_artifact_sha256',
+    'reference_artifact_path',
+    'reference_artifact_sha256',
+    'after_artifact_path',
+    'after_artifact_sha256',
+    'final_artifact_path',
+    'final_artifact_sha256',
+    'actual_inspection',
+  ], criterionId);
+
+  const identities = [
+    verifyMaterialArtifact(evidence.before_artifact_path, evidence.before_artifact_sha256, `${criterionId} before`),
+    verifyMaterialArtifact(evidence.reference_artifact_path, evidence.reference_artifact_sha256, `${criterionId} reference`),
+    verifyMaterialArtifact(evidence.after_artifact_path, evidence.after_artifact_sha256, `${criterionId} after`),
+  ];
+  if (new Set(identities).size !== identities.length) {
+    completionIntegrityFail(`Criterion ${criterionId} before/reference/after artifacts must be distinct`);
+  }
+
+  const finalIdentity = verifyMaterialArtifact(evidence.final_artifact_path, evidence.final_artifact_sha256, `${criterionId} final`);
+  if (finalIdentity !== identities[2]) {
+    completionIntegrityFail(`Criterion ${criterionId} final artifact is not the reviewed after artifact`);
+  }
+  if (genericIdentity !== finalIdentity) {
+    completionIntegrityFail(`Criterion ${criterionId} generic evidence artifact is not the final after artifact`);
+  }
+}
+
 function fail(message) {
   throw new Error(message);
 }
@@ -37,14 +127,14 @@ function validateMetadata(matrix) {
 
 function mandatoryCriterionIds(matrix) {
   const required = PRODUCTION_TASK_CLASSES.has(matrix.task_class)
-    ? ['source_restore', 'scope_integrity', 'profile_checks', 'spec_lint_preflight', 'internal_review_board']
+    ? ['source_restore', 'scope_integrity', 'profile_checks', 'spec_lint_preflight', 'internal_review_board', 'artifact_truth']
     : [];
 
   if (matrix.delivery_required) {
     required.push('git_diff_review', 'commit', 'push', 'remote_readback');
   }
   if (matrix.visual_required) {
-    required.push('browser_render', 'desktop_evidence', 'mobile_evidence', 'visual_review');
+    required.push('browser_render', 'desktop_evidence', 'mobile_evidence', 'visual_review', 'reference_fidelity');
   }
   if (matrix.independent_review_required) {
     required.push('independent_review', 'independent_auditor');
@@ -103,6 +193,12 @@ function validateCriteria(matrix) {
     } catch {
       fail(`Criterion ${index + 1} artifact is unreadable: ${artifactPath}`);
     }
+    if (criterion.id === 'artifact_truth') {
+      validateArtifactTruthEvidence(evidence, criterion.id, artifactIdentity);
+    }
+    if (criterion.id === 'reference_fidelity') {
+      validateReferenceFidelityEvidence(evidence, criterion.id, artifactIdentity);
+    }
     if (!/^[a-z0-9_]+$/.test(criterion.id)) {
       fail(`Criterion ${index + 1} has invalid id ${criterion.id}`);
     }
@@ -155,6 +251,7 @@ function validFixture() {
     'profile_checks',
     'spec_lint_preflight',
     'internal_review_board',
+    'artifact_truth',
     'independent_review',
     'git_diff_review',
     'commit',
@@ -168,6 +265,7 @@ function validFixture() {
     profile_checks: 'docs/ai/COMPLETION_GATE.md',
     spec_lint_preflight: 'docs/ai/SPEC_LINT_V2.md',
     internal_review_board: 'docs/ai/SECOND_BRAIN_REVIEW_BOARD.md',
+    artifact_truth: '.codex/config.toml',
     independent_review: 'docs/ai/SECOND_BRAIN_GOLDEN_TESTS_2026-09-17.md',
     git_diff_review: 'scripts/verify-completion-gate.mjs',
     commit: 'scripts/skill-regression-harness.mjs',
@@ -181,6 +279,7 @@ function validFixture() {
     profile_checks: 'content',
     spec_lint_preflight: 'media',
     internal_review_board: 'product',
+    artifact_truth: 'technical',
     independent_review: 'product',
     git_diff_review: 'technical',
     commit: 'technical',
@@ -195,15 +294,38 @@ function validFixture() {
     independent_review_required: true,
     mixed_customer_facing_artifact: true,
     required_lanes: ['technical', 'visual', 'product', 'media', 'content'],
-    criteria: ids.map((id) => ({
-      id,
-      lane: laneById[id],
-      criterion: id,
-      expected: 'PASS evidence',
-      how_to_verify: 'read actual fixture evidence',
-      evidence: { criterion_id: id, artifact_path: artifactByCriterion[id], artifact_sha256: createHash('sha256').update(fs.readFileSync(artifactByCriterion[id])).digest('hex'), claim: `criterion-specific evidence for ${id}`, measurement: `verified output for ${id}`, inspection: `independent check for ${id}` },
-      status: 'PASS',
-    })),
+    criteria: ids.map((id) => {
+      const artifactPath = artifactByCriterion[id];
+      const artifactSha256 = createHash('sha256').update(fs.readFileSync(artifactPath)).digest('hex');
+      const evidence = {
+        criterion_id: id,
+        artifact_path: artifactPath,
+        artifact_sha256: artifactSha256,
+        claim: `criterion-specific evidence for ${id}`,
+        measurement: `verified output for ${id}`,
+        inspection: `independent check for ${id}`,
+      };
+      if (id === 'artifact_truth') {
+        Object.assign(evidence, {
+          expected_observable_delta: 'runtime gate contains material final-artifact truth checks',
+          actual_final_location: '.codex/config.toml',
+          final_artifact_path: artifactPath,
+          final_artifact_sha256: artifactSha256,
+          reviewed_artifact_path: artifactPath,
+          reviewed_artifact_sha256: artifactSha256,
+          actual_inspection: 'hash and content inspection for artifact_truth',
+        });
+      }
+      return {
+        id,
+        lane: laneById[id],
+        criterion: id,
+        expected: 'PASS evidence',
+        how_to_verify: 'read actual fixture evidence',
+        evidence,
+        status: 'PASS',
+      };
+    }),
   };
 }
 
@@ -217,6 +339,56 @@ function executorCreatedVerifierFixture() {
   };
 }
 
+function materialCriterion(id, lane, artifactPath, evidenceOverrides = {}) {
+  const artifactSha256 = createHash('sha256').update(fs.readFileSync(artifactPath)).digest('hex');
+  return {
+    id,
+    lane,
+    criterion: id,
+    expected: 'PASS evidence',
+    how_to_verify: 'read actual fixture evidence',
+    evidence: {
+      criterion_id: id,
+      artifact_path: artifactPath,
+      artifact_sha256: artifactSha256,
+      claim: `criterion-specific evidence for ${id}`,
+      measurement: `verified output for ${id}`,
+      inspection: `independent check for ${id}`,
+      ...evidenceOverrides,
+    },
+    status: 'PASS',
+  };
+}
+
+function visualFixture() {
+  const matrix = validFixture();
+  const beforePath = 'tests/fixtures/second-brain/visual/index.html';
+  const referencePath = 'tests/fixtures/second-brain/asset-inventory.json';
+  const afterPath = 'tests/fixtures/second-brain/visual/browser-evidence.json';
+  const beforeSha = createHash('sha256').update(fs.readFileSync(beforePath)).digest('hex');
+  const referenceSha = createHash('sha256').update(fs.readFileSync(referencePath)).digest('hex');
+  const afterSha = createHash('sha256').update(fs.readFileSync(afterPath)).digest('hex');
+  matrix.visual_required = true;
+  matrix.criteria.push(
+    materialCriterion('browser_render', 'visual', 'tests/fixtures/second-brain/visual/evidence/desktop-1280.png'),
+    materialCriterion('desktop_evidence', 'visual', 'tests/fixtures/second-brain/visual/evidence/mobile-390.png'),
+    materialCriterion('mobile_evidence', 'visual', 'tests/fixtures/second-brain/visual/evidence/network-baseline.png'),
+    materialCriterion('visual_review', 'visual', 'tests/fixtures/second-brain/visual/visual-evidence.json'),
+    materialCriterion('reference_fidelity', 'visual', afterPath, {
+      before_artifact_path: beforePath,
+      before_artifact_sha256: beforeSha,
+      reference_artifact_path: referencePath,
+      reference_artifact_sha256: referenceSha,
+      after_artifact_path: afterPath,
+      after_artifact_sha256: afterSha,
+      final_artifact_path: afterPath,
+      final_artifact_sha256: afterSha,
+      actual_inspection: 'before/reference/after identity and final hash inspection for reference_fidelity',
+    }),
+  );
+  return matrix;
+}
+
 function expectBlocked(label, matrix, verifier = executorCreatedVerifierFixture()) {
   let blocked = false;
   try {
@@ -225,6 +397,18 @@ function expectBlocked(label, matrix, verifier = executorCreatedVerifierFixture(
     blocked = true;
   }
   if (!blocked) fail(`Negative test failed: ${label}`);
+}
+
+function expectIntegrityBlocked(label, matrix) {
+  try {
+    verifyGate(matrix, executorCreatedVerifierFixture());
+  } catch (error) {
+    if (!error.message.includes('COMPLETION_INTEGRITY_FAIL + STOPPED_INCOMPLETE')) {
+      fail(`Integrity status missing: ${label}`);
+    }
+    return;
+  }
+  fail(`Negative integrity test failed: ${label}`);
 }
 
 function expectStatus(label, actual, expected) {
@@ -252,6 +436,91 @@ function selfTest() {
       verdict: 'PASS',
     }),
     READY_FOR_INDEPENDENT_QA,
+  );
+
+  expectBlocked(
+    'producer PASS report without artifact_truth',
+    { ...valid, criteria: valid.criteria.filter((criterion) => criterion.id !== 'artifact_truth') },
+  );
+
+  const visual = visualFixture();
+  expectStatus(
+    'valid visual artifact/reference evidence reaches only READY_FOR_INDEPENDENT_QA',
+    verifyGate(visual, executorCreatedVerifier),
+    READY_FOR_INDEPENDENT_QA,
+  );
+
+  expectBlocked(
+    'visual task missing reference_fidelity',
+    { ...visual, criteria: visual.criteria.filter((criterion) => criterion.id !== 'reference_fidelity') },
+  );
+
+  expectBlocked(
+    'before and after are the same artifact/hash',
+    {
+      ...visual,
+      criteria: visual.criteria.map((criterion) => {
+        if (criterion.id !== 'reference_fidelity') return criterion;
+        return {
+          ...criterion,
+          evidence: {
+            ...criterion.evidence,
+            after_artifact_path: criterion.evidence.before_artifact_path,
+            after_artifact_sha256: criterion.evidence['before_artifact_sha256'],
+            final_artifact_path: criterion.evidence.before_artifact_path,
+            final_artifact_sha256: criterion.evidence['before_artifact_sha256'],
+            artifact_path: criterion.evidence.before_artifact_path,
+            artifact_sha256: criterion.evidence['before_artifact_sha256'],
+          },
+        };
+      }),
+    },
+  );
+
+  expectIntegrityBlocked(
+    'final artifact path/hash does not match evidence',
+    {
+      ...valid,
+      criteria: valid.criteria.map((criterion) => (
+        criterion.id === 'artifact_truth'
+          ? { ...criterion, evidence: { ...criterion.evidence, final_artifact_sha256: '0'.repeat(64) } }
+          : criterion
+      )),
+    },
+  );
+
+  expectBlocked(
+    'self-authored build/commit-only evidence',
+    {
+      ...valid,
+      criteria: valid.criteria.map((criterion) => (
+        criterion.id === 'artifact_truth'
+          ? { ...criterion, evidence: { criterion_id: 'artifact_truth', artifact_path: 'scripts/skill-regression-harness.mjs', artifact_sha256: createHash('sha256').update(fs.readFileSync('scripts/skill-regression-harness.mjs')).digest('hex'), claim: 'build PASS and commit PASS', measurement: 'build log says PASS', inspection: 'commit log says PASS' } }
+          : criterion
+      )),
+    },
+  );
+
+  expectBlocked(
+    'reviewed candidate is not the final artifact',
+    {
+      ...valid,
+      criteria: valid.criteria.map((criterion) => (
+        criterion.id === 'artifact_truth'
+          ? { ...criterion, evidence: { ...criterion.evidence, reviewed_artifact_path: 'AGENTS.md', reviewed_artifact_sha256: createHash('sha256').update(fs.readFileSync('AGENTS.md')).digest('hex') } }
+          : criterion
+      )),
+    },
+  );
+
+  expectBlocked(
+    'technical lane PASS cannot override visual fidelity FAIL',
+    {
+      ...visual,
+      criteria: visual.criteria.map((criterion) => (
+        criterion.id === 'reference_fidelity' ? { ...criterion, status: 'FAIL' } : criterion
+      )),
+    },
   );
 
   expectBlocked(

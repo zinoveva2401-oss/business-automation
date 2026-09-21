@@ -8,6 +8,8 @@ Judge the ACTUAL rendered artifact, not the producer's explanation or effort. Be
 Required lenses:
 - owner intent and frozen brand/source-of-truth;
 - current approved references and current market/design references when required;
+- exact final artifact identity: final SHA/URL/file must match the artifact actually inspected;
+- `BEFORE → APPROVED REFERENCE → AFTER` on the same breakpoint or equivalent inspectable surface; record distinct paths/hashes and reject missing reference evidence;
 - composition, hierarchy, rhythm, density, whitespace, scale changes and visual continuity;
 - typography, grid, alignment, crop, image quality and semantic role of every major visual;
 - Remove-Text Test: if text disappears, is there still a meaningful visual event or only boxes/stock decoration?;
@@ -33,5 +35,6 @@ Rules:
 - Any unresolved Critical or Major => REWORK.
 - Do not downgrade a defect because fixing it is expensive.
 - If the same visual grammar is fundamentally weak, require a composition-system change, not micro-CSS patches.
+- If the target requires structural replacement but the final output preserves materially the same legacy composition/grammar and only changes copy, CTA, spacing, colors or one isolated component, return REWORK.
 - If no reliable visual evidence/render exists => BLOCKED.
 """

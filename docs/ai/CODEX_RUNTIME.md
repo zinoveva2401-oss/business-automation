@@ -91,9 +91,15 @@ Regression PASS означает, что для каждого сценария 
 
 Для технического Second Brain JSON-флаги из собственного fixture не являются evidence: `PASS`, `true`, `meaningful`, `decision_useful`, выбранный ответ и заранее вписанные bytes должны быть заменены на `INPUT → REAL EXECUTION → OUTPUT ARTIFACT → MEASUREMENT/INSPECTION → RESULT`. Product, media и performance capabilities должны иметь фактически созданный/измеренный результат; visual должен иметь real render, objective browser evidence и sequential `visual-critic` verdict; cross-domain work должен пройти sequential `review-chair`. Producer не может заменить reviewer verdict своим self-PASS.
 
+### 6.1 Completion integrity
+
+Для каждого material criterion до production фиксировать `REQ-ID → EXPECTED OBSERVABLE DELTA → TARGET LOCATION/ROUTE/FILE/SCREEN → VERIFY METHOD → REQUIRED EVIDENCE`. Для material redesign/rebuild обязательна transformation map `CURRENT → TARGET`. Если visual/product/media direction frozen, acceptance записывает exact materialized reference/blueprint с path + hash/provenance; missing reference blocks acceptance.
+
+Перед `READY` строить final claim ledger `CLAIM/REQ-ID → ACTUAL FINAL LOCATION → EVIDENCE/MEASUREMENT → PASS/FAIL/UNKNOWN`. `artifact_truth` обязан доказать expected observable delta, actual final location, final artifact path + SHA256 и actual inspection; `reference_fidelity` при visual lane обязан связать distinct before/reference/after artifacts с final-after identity. Report, changed-file list, commit/build/deploy log и self-authored PASS — navigation only. Exact final artifact должен совпадать с reviewed final SHA/URL/file; mismatch resets acceptance.
+
 До начала implementation значимой SYSTEM/DEVELOPMENT/RELEASE-задачи запускается `scripts/run-spec-lint-preflight.mjs`. Он сохраняет hash task packet, starting HEAD, branch, pre-work git status и SPEC-LINT result. Completion Gate требует criterion `spec_lint_preflight`; отсутствие этого criterion/evidence блокирует проверку.
 
-Acceptance JSON обязан содержать metadata `task_class`, `delivery_required`, `visual_required`, `independent_review_required`. Для `DEVELOPMENT/SYSTEM/RELEASE` обязательны IDs `source_restore`, `scope_integrity`, `profile_checks`, `independent_review`; delivery добавляет `git_diff_review`, `commit`, `push`, `remote_readback`; visual добавляет `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`; independent review добавляет `independent_auditor`. Gate проверяет наличие IDs, а не только статус уже перечисленных criteria.
+Acceptance JSON обязан содержать metadata `task_class`, `delivery_required`, `visual_required`, `independent_review_required`. Для `DEVELOPMENT/SYSTEM/RELEASE` обязательны IDs `source_restore`, `scope_integrity`, `profile_checks`, `spec_lint_preflight`, `internal_review_board`, `artifact_truth`, `independent_review`; delivery добавляет `git_diff_review`, `commit`, `push`, `remote_readback`; visual добавляет `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`, `reference_fidelity`; independent review добавляет `independent_auditor`. Gate проверяет наличие IDs и material evidence, а не только статус уже перечисленных criteria.
 
 ## 7. Quality and release gate
 
