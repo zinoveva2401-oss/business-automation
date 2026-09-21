@@ -8,4 +8,6 @@ const products=await getVisibleProducts();
 </BaseLayout>
 <style>
   .tools-hero__image{position:relative;margin:0}.tools-hero__image figcaption{position:absolute;right:1rem;bottom:1rem;padding:.35rem .5rem;background:#17130fcc;color:#fff;font-size:.7rem}
+  @media(min-width:901px){.tools-hero{min-height:420px}.tools-hero__copy{padding-block:52px}.tools-hero__copy>p:not(.eyebrow){max-width:460px}.tools-hero__image{margin:24px 0 24px 24px;border-left:3px solid var(--c-orange)}.tools-hero__image img{object-position:center}.tool-band__grid{align-items:center}.tool-band__grid>div:first-child{position:relative;padding-left:26px}.tool-band__grid>div:first-child:before{position:absolute;top:0;bottom:0;left:0;border-left:2px solid var(--c-orange);content:''}}
+  @media(max-width:700px){.tools-hero__image{border-top:2px solid var(--c-orange)}}
 </style>
