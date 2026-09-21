@@ -12,9 +12,9 @@ Business OS остаётся владельцем бизнес-приорите�
 
 Главный принцип:
 
-`OWNER INTENT → CURRENT SOURCE → CURRENT INTELLIGENCE (если нужна) → OPTIONS → PRODUCER → REAL ARTIFACT → SPECIALIST REVIEWERS → REVIEW CHAIR → REWORK LOOP → INTERNAL ACCEPTANCE → DELIVERY/OWNER GATE`
+`OWNER INTENT → CURRENT SOURCE → CURRENT INTELLIGENCE (если нужна) → OPTIONS → PRE-PRODUCTION PROOF → PRODUCER → REAL ARTIFACT → EVIDENCE FREEZE → SEQUENTIAL SPECIALIST PASSES IN SAME CHAT → REVIEW CHAIR → ONE CONSOLIDATED REPAIR → ONE RE-REVIEW → INTERNAL ACCEPTANCE → DELIVERY/OWNER GATE`
 
-`PRODUCER != REVIEWER`.
+`PRODUCER != REVIEWER`. Разделение обеспечивается evidence firewall и последовательным read-only pass в том же чате; по умолчанию не создаются новые chats, forks, delegated tasks или reviewer threads.
 
 ## 2. Когда Review Board обязателен
 
@@ -28,7 +28,7 @@ Business OS остаётся владельцем бизнес-приорите�
 
 ## 3. Current Intelligence Gate
 
-Если решение зависит от меняющейся внешней реальности, до production обязательный `research-scout`.
+Если решение зависит от меняющейся внешней реальности, до production обязателен research pass по checklist `research-scout` в том же чате.
 
 Триггеры:
 - «сейчас», «тренд», «алгоритм», «что работает», platform capability/policy/pricing;
@@ -46,9 +46,22 @@ Research Scout возвращает dated brief и разделяет `FACT / OB
 - копировать чужой дизайн/креатив;
 - использовать старый trend-bank как вечную истину.
 
+## 3.1 Pre-production proof and lane firewall
+
+До производства выбрать route и зафиксировать доказательство:
+
+- visual/site: current reference research и concept proof до кода;
+- product/offer: buyer/value blueprint, free-AI substitution и price-worthiness;
+- media: transcript, paper edit и first cut до финального render;
+- content/marketing: audience, pain, hook, format и payoff;
+- SEO/AEO: current intent/SERP/source check без обещания ranking;
+- technical/data: reproduction, scope, risk и test plan.
+
+Mixed customer-facing artifact разделяется на technical, visual, product, media и content lanes. Technical PASS не перекрывает FAIL/UNKNOWN в другой применимой lane. `CAPABILITY != QUALITY`: наличие Skill, профильного файла, build или self-authored PASS не является artifact evidence.
+
 ## 4. Review profiles
 
-Главный агент выбирает только применимые профили.
+Главный агент выбирает только применимые профили и выполняет их последовательно как checklists в том же видимом чате. Файлы `.codex/agents/*.toml` сохраняют контракты ролей, но physical subagents выключены в `.codex/config.toml` и не являются обязательным способом review.
 
 | Профиль | Агент | Когда обязателен |
 |---|---|---|
@@ -59,7 +72,7 @@ Research Scout возвращает dated brief и разделяет `FACT / OB
 | Technical/data/automation | `technical-auditor` | код, парсинг, data, automation, integration, deploy, security/performance |
 | Final internal decision | `review-chair` | все существенные задачи Review Board |
 
-Для multi-domain результата запускать 2–4 профильных критика, а не всех подряд.
+Для multi-domain результата последовательно пройти 2–4 применимых профильных checklists, а не всех подряд; затем выполнить `review-chair` pass.
 
 ## 5. Information firewall
 
@@ -84,14 +97,13 @@ Reviewer read-only: сначала судит, потом producer исправ�
 
 1. Producer создаёт реальный результат.
 2. Main agent материализует evidence.
-3. Запускает применимых specialist reviewers отдельными subagent threads.
-4. Ждёт все результаты.
-5. Запускает `review-chair` с исходным intent, acceptance, artifact/evidence и reviewer reports.
-6. `REWORK` → один consolidated defect register → producer исправляет всё крупным осмысленным pass.
-7. После fix reviewer-ы перечитывают новый artifact; старый verdict не переносится.
-8. `ACCEPT_INTERNAL` возможен только при `Critical=0`, `Major=0`.
-9. После двух repair rounds с тем же классом дефекта → `CAPABILITY_GAP`: сменить route/tool/model/skill/agent, а не повторять ту же микроправку.
-10. Owner не получает промежуточную работу для поиска дефектов, если owner decision не требуется.
+3. Выполняет применимые specialist checklists последовательно в том же чате через evidence firewall.
+4. Выполняет `review-chair` pass с исходным intent, acceptance, artifact/evidence и reviewer notes.
+5. `REWORK` → один consolidated defect register → producer исправляет всё крупным осмысленным pass.
+6. После fix применимые checklists перечитывают новый artifact; старый verdict не переносится.
+7. `ACCEPT_INTERNAL` возможен только при `Critical=0`, `Major=0`.
+8. После двух repair rounds с тем же классом дефекта → `CAPABILITY_GAP`: сменить route/tool/model/skill, а не повторять ту же микроправку.
+9. Owner не получает промежуточную работу для поиска дефектов, если owner decision не требуется.
 
 ## 7. Domain quality gates
 

@@ -8,7 +8,7 @@
 
 ## 1. Главный принцип
 
-`UNDERSTAND → CLASSIFY → CURRENT SOURCE CHECK → CURRENT INTELLIGENCE WHEN NEEDED → PLAN → PRODUCE → SPECIALIST REVIEW → REVIEW CHAIR → FIX → REGRESSION → HANDOFF`
+`UNDERSTAND → CLASSIFY → CURRENT SOURCE CHECK → CURRENT INTELLIGENCE WHEN NEEDED → PRE-PRODUCTION PROOF → PLAN → PRODUCE → REAL ARTIFACT → SEQUENTIAL SPECIALIST PASSES → REVIEW CHAIR → ONE CONSOLIDATED FIX → ONE RE-REVIEW → REGRESSION → HANDOFF`
 
 Codex отвечает за проверенный результат, а не только за написание кода. Для сложной задачи он сам определяет нужные роли, инструменты, проверки и следующий шаг. Не запрашивать у владельца технические микрорешения, если их можно профессионально принять в рамках действующей системы.
 
@@ -51,26 +51,32 @@ Codex отвечает за проверенный результат, а не �
 
 ### Runtime guardrails
 
-- `ONE RUN → ONE PERSISTENT CHAT → ONE CANONICAL WORKING BRANCH`. Новый chat, branch, worktree или PR создавать только при техническом повреждении, исчерпанном контексте либо реально необходимой независимости; при смене production-chat фиксировать checkpoint/handoff.
+- `ONE OWNER TASK → ONE VISIBLE CHAT → ONE CANONICAL WORKING BRANCH`. Не создавать `spawn_agent`, новый chat, fork, delegated task, parallel review thread, новый worktree или автоматическую clean-session без явного owner-разрешения. Если для чистого контекста действительно нужен restart: сначала сохранить checkpoint, вернуть `RESTART REQUIRED` и остановиться; автоматически не перезапускаться.
 - До существенной задачи выполнить `CAPABILITY PREFLIGHT`: определить Skills/MCP/tools, missing inputs и QA route. Если capability отсутствует, сначала проверить доступный бесплатный маршрут. Reversible technical install известной бесплатной зависимости допустим без отдельного owner gate только при нулевой стоимости, приемлемой лицензии/безопасности, минимальном dependency footprint и обновлении проверяемого manifest/lock; paid, credentialed commercial, material spend, risky/irreversible install или неясная license/security требуют OWNER GATE.
 - При противоречивом или слабом ТЗ сначала зафиксировать `OWNER INTENT`, ошибочный method, frozen constraints и более сильный technical route. Frozen business/product/brand/commercial/legal решения самостоятельно не менять.
 - Для длинной задачи вести checkpoint: `CURRENT STAGE`, `DONE`, `EVIDENCE`, `NEXT EXACT ACTION`.
 
 ### Production Second Brain
 
-Codex — production Second Brain `Докрути`, а не Business OS. Он отвечает не только за код: внутри конкретной задачи обязан учитывать применимые product, marketing, sales, visual, media, SEO/AEO, data/automation и technical контуры. Business OS сохраняет бизнес-приоритеты и frozen-решения; Codex сам ведёт профессиональное исполнение и внутреннюю приёмку. Owner-facing output и финальный отчёт — по-русски. Frozen business/product/commercial/brand/legal decisions не меняются автономно; текущие тренды, платформенные факты и референсы требуют актуального source/research, а не памяти модели.
+Codex — production Second Brain `Докрути`, а не Business OS. Он отвечает не только за код: внутри конкретной задачи обязан учитывать применимые product, marketing, sales, visual, media, SEO/AEO, data/automation и technical контуры. Business OS сохраняет бизнес-приоритеты и frozen-решения; Codex сам ведёт профессиональное исполнение и внутреннюю приёмку последовательными role-checklists в том же видимом чате. Физические subagents по умолчанию выключены; профиль `.codex/agents/*.toml` — это checklist, а не требование создать отдельный runtime context. Owner-facing output и финальный отчёт — по-русски. Frozen business/product/commercial/brand/legal decisions не меняются автономно; текущие тренды, платформенные факты и референсы требуют актуального source/research, а не памяти модели.
 
 Для значимой `SYSTEM`/`DEVELOPMENT`/`RELEASE` работы до implementation обязателен executable SPEC-LINT preflight с hash task packet, starting HEAD, branch и pre-work status. Реальный результат важнее схемы: self-authored JSON-поля `PASS`, `true`, `meaningful`, `decision_useful`, выбранный ответ или заявленный размер не являются capability evidence. Product/media/performance/visual evidence должна быть получена из реального execution, output artifact и measurement; subjective visual/product judgement требует independent review. Слабый input сначала оспаривается с 1–3 более сильными маршрутами.
 
-Free-first обязателен: paid dependency, credentialed commercial service, material spend, risky/irreversible install или неясная license/security требуют OWNER GATE; известная бесплатная reversible technical dependency допускается только при проверенном нулевом cost, license/security, минимальном footprint и tracked manifest/lock. Не создавать paid dependency ради теста. Главный producer не имеет права сам поставить quality PASS существенному результату: обязательный автономный контур — [`docs/ai/SECOND_BRAIN_REVIEW_BOARD.md`](docs/ai/SECOND_BRAIN_REVIEW_BOARD.md). Формальный внешний Business OS review нужен не постоянно, а только когда `independent_review_required=true` по high-risk/irreversible/runtime правилам.
+Free-first обязателен: paid dependency, credentialed commercial service, material spend, risky/irreversible install или неясная license/security требуют OWNER GATE; известная бесплатная reversible technical dependency допускается только при проверенном нулевом cost, license/security, минимальном footprint и tracked manifest/lock. Не создавать paid dependency ради теста. Capability не равен quality: наличие Skill, reviewer-профиля, команды, build или self-authored PASS не доказывает результат. Главный producer не имеет права сам поставить quality PASS существенному результату: обязательный автономный контур — последовательные specialist passes и review-chair в [`docs/ai/SECOND_BRAIN_REVIEW_BOARD.md`](docs/ai/SECOND_BRAIN_REVIEW_BOARD.md). Формальный внешний Business OS review нужен не постоянно, а только когда `independent_review_required=true` по high-risk/irreversible/runtime правилам.
 
 ## 5. Профессиональные контуры
 
-Подключай существующие Skills, subagents, MCP и tools по задаче. Для существенного multi-domain результата применять физически отдельные read-only subagents по [`docs/ai/SECOND_BRAIN_REVIEW_BOARD.md`](docs/ai/SECOND_BRAIN_REVIEW_BOARD.md): `research-scout` при динамической внешней реальности, применимые `visual-critic` / `product-growth-critic` / `media-critic` / `technical-auditor`, затем отдельный `review-chair`. Producer и reviewer не должны быть одним и тем же контекстом. Для маленького proportional PATCH не раздувать процесс.
+Подключай существующие Skills, MCP и tools по задаче. Для существенного multi-domain результата последовательно применяй в этом же чате только релевантные read-only checklists из [`docs/ai/SECOND_BRAIN_REVIEW_BOARD.md`](docs/ai/SECOND_BRAIN_REVIEW_BOARD.md): `research-scout`, `visual-critic`, `product-growth-critic`, `media-critic`, `technical-auditor`, затем `review-chair`. Не создавай физические reviewer contexts по умолчанию: evidence firewall отделяет producer self-report от sequential review. Для маленького proportional PATCH не раздувать процесс.
 
 Для значимого digital/public результата:
 
 `BUSINESS GOAL → CURRENT SOURCE CHECK → TASK RESEARCH → REFERENCES → OPTIONS → INTERNAL CHOICE → PRODUCTION → FUNCTIONAL/UX/VISUAL/RESPONSIVE/A11Y/SEO/PERFORMANCE/SECURITY/CONTENT/ROUTE QA → RED TEAM → CONSOLIDATED FIX → REGRESSION → HANDOFF`.
+
+До production выбрать domain route и доказать применимый pre-production gate: visual/site — current reference research и concept proof до кода; product — buyer/value blueprint, free-AI substitution и price-worthiness; media — transcript/paper edit/first cut до render; content/marketing — audience, pain, hook, format и payoff; SEO/AEO — current intent/SERP/source check без обещания ranking; technical/data — reproduction, scope, risk и test plan. Technical PASS не перекрывает FAIL визуального, продуктового, медийного или content lane.
+
+### Source access map
+
+В ledger явно отметить доступ к `LOCAL REPO`, `GITHUB`, `LIVE DRIVE/SHEETS`, `BROWSER/WEB`, `OWNER/BUSINESS OS SNAPSHOT` как `YES/NO`, с датой и ограничением. Если canonical source недоступен, использовать только exact task snapshot с provenance либо вернуть `SOURCE SNAPSHOT REQUIRED`; capability не заменяет источник.
 
 Для сложного coded-продукта дополнительно проверить пользовательский маршрут `ВХОД → ДЕЙСТВИЕ → ОБРАБОТКА → РЕЗУЛЬТАТ → ПОНИМАНИЕ → РЕКОМЕНДАЦИЯ → СЛЕДУЮЩЕЕ ДЕЙСТВИЕ`, крайние данные, ошибки, сохранение/экспорт, приватность и измеримые события. Не превращать каждый продукт в SaaS, backend или личный кабинет без доказанной необходимости.
 
@@ -102,6 +108,6 @@ Free-first обязателен: paid dependency, credentialed commercial servic
 
 Handoff создаётся только для реально незавершённой, заблокированной или передаваемой работы и оформляется по `docs/ai/HANDOFF_PROTOCOL.md`. Завершённая короткая задача handoff не создаёт.
 
-Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива перед финальным отчётом обязателен Internal Review Board и [`docs/ai/COMPLETION_GATE.md`](docs/ai/COMPLETION_GATE.md). Immutable acceptance matrix и evidence обязательны. Если `independent_review_required=false`, внутренний Board может закрыть reversible routine work без повторного Business OS-аудита. Если `independent_review_required=true`, локальный runtime останавливается на `READY_FOR_INDEPENDENT_QA`; внешняя независимость обязательна.
+Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива перед финальным отчётом обязателен sequential Internal Review Board в том же чате и [`docs/ai/COMPLETION_GATE.md`](docs/ai/COMPLETION_GATE.md). Immutable acceptance matrix и evidence обязательны. Если `independent_review_required=false`, внутренний Board может закрыть reversible routine work без повторного Business OS-аудита. Если `independent_review_required=true`, локальный runtime останавливается на `READY_FOR_INDEPENDENT_QA`; внешняя независимость обязательна.
 
 Owner-facing статусы: `READY`, `BLOCKED`, `OWNER DECISION REQUIRED`; для формального high-risk/release gate использовать статусы из `COMPLETION_GATE.md`. Финальный отчёт содержит только фактически изменённое, evidence, реальный результат и blockers. Не писать «готово» без Review Board/regression evidence и не выдавать гарантий поискового ranking/продаж.

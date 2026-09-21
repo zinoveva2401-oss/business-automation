@@ -10,13 +10,13 @@
 
 Обычная reversible работа:
 
-`PRODUCER → SPECIALIST REVIEWERS → REVIEW CHAIR → ACCEPT_INTERNAL → MATERIAL COMPLETION GATE → READY`
+`PRODUCER → EVIDENCE FREEZE → SEQUENTIAL SPECIALIST PASSES IN SAME CHAT → REVIEW CHAIR → ACCEPT_INTERNAL → MATERIAL COMPLETION GATE → READY`
 
 High-risk/irreversible/runtime работа при `independent_review_required=true`:
 
 `INTERNAL REVIEW BOARD → MATERIAL COMPLETION GATE → READY_FOR_INDEPENDENT_QA → EXTERNAL/OWNER INDEPENDENT QA → VERIFIED`
 
-Локальный executor не может доказать внешнюю независимость внутри собственного runtime. Поля `independent`, `reviewer`, `verdict`, имя subagent, secret или nonce в executor-owned JSON не создают доверенного происхождения внешней проверки. Но отдельные read-only subagents являются обязательным внутренним quality loop и должны блокировать owner-facing handoff при `REWORK`.
+Локальный executor не может доказать внешнюю независимость внутри собственного runtime. Поля `independent`, `reviewer`, `verdict`, имя subagent, secret или nonce в executor-owned JSON не создают доверенного происхождения внешней проверки. Внутренний quality loop выполняется последовательными read-only role-checklists в том же чате; физические subagent threads не обязательны. Их evidence и verdict должны блокировать owner-facing handoff при `REWORK`.
 
 ## 2. Immutable acceptance matrix
 
@@ -44,6 +44,8 @@ Acceptance JSON обязан содержать metadata:
   "independent_review_required": true
 }
 ```
+
+Task packet / execution packet до implementation обязан зафиксировать: `OWNER INTENT`, `METHOD CHALLENGE`, `SOURCE ACCESS MAP`, `CURRENT INTELLIGENCE` при необходимости, `DOMAIN PRODUCTION ROUTE`, `PRE-PRODUCTION PROOF`, применимый quality contract, `SEQUENTIAL REVIEW PASSES`, `TASK BUDGET` и `STOP CONDITION`. Для mixed customer-facing artifact acceptance matrix разделяет technical, visual, product, media и content lanes; technical PASS не может перекрыть FAIL/UNKNOWN другой применимой lane.
 
 Для `DEVELOPMENT`, `SYSTEM` и `RELEASE` gate требует IDs: `source_restore`, `scope_integrity`, `profile_checks`, `spec_lint_preflight`, `internal_review_board`. При `delivery_required=true` обязательны также `git_diff_review`, `commit`, `push`, `remote_readback`. При `visual_required=true` обязательны `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`. При `independent_review_required=true` дополнительно обязательны `independent_review` и `independent_auditor`. Отсутствующий ID или evidence — `BLOCKED`, даже если все присутствующие criteria имеют `STATUS=PASS`.
 
@@ -76,7 +78,7 @@ Self-report исполнителя, список changed files, написанн
 
 ## 5. Repo-local Skill decision
 
-Внутренняя независимость реализуется не декоративным Skill-флагом, а отдельными project subagents в `.codex/agents/`, контрактом [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md), `AGENTS.md`, `CODEX_RUNTIME.md`, multi-agent runtime и deterministic material gate. Reviewer-агенты read-only и не должны быть producer-ом проверяемого artifact.
+Внутренняя независимость реализуется не декоративным Skill-флагом и не созданием новых threads, а evidence firewall, последовательными project role-checklists из `.codex/agents/`, контрактами [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md), `AGENTS.md`, `CODEX_RUNTIME.md` и deterministic material gate. Профили read-only и не должны быть producer-ом проверяемого artifact; `.codex/config.toml` держит физические agents disabled по умолчанию.
 
 ## 6. Проверка
 

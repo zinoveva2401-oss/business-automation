@@ -6,15 +6,15 @@
 
 ## 1. Runtime objective
 
-Codex — самостоятельная production Second Brain среда проекта. Он получает актуальный контекст, сам формирует маршрут, делает профессиональные решения, подключает доступные Skills/subagents/tools, производит реальный artifact и прогоняет его через внутренний независимый от producer контур качества. Сайт в SYSTEM-задаче не редизайнится автоматически.
+Codex — самостоятельная production Second Brain среда проекта. Он получает актуальный контекст, сам формирует маршрут, делает профессиональные решения, подключает доступные Skills/tools, производит реальный artifact и прогоняет его через последовательный, независимый от producer контур качества в одном видимом чате. Профили `.codex/agents/*.toml` используются как read-only checklists; физические subagents по умолчанию выключены. Сайт в SYSTEM-задаче не редизайнится автоматически.
 
 Основной автономный quality loop описан в [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md). Для high-risk/irreversible/runtime задач дополнительно действует [`COMPLETION_GATE.md`](COMPLETION_GATE.md). Главный producer не может сам принять существенный результат.
 
 ## 1.1 Executable lifecycle
 
-`INTAKE → SOURCE RESTORE → CAPABILITY PREFLIGHT → CURRENT INTELLIGENCE WHEN NEEDED → WEAK-SPEC REVIEW → PLAN/OPTIONS → IMPLEMENT/PRODUCE → REAL RESULT → OBJECTIVE EVIDENCE → SPECIALIST REVIEWERS → REVIEW CHAIR → REWORK LOOP UNTIL ACCEPT_INTERNAL → REGRESSION → DELIVERY IF TRACKED DELTA AND NOT READ-ONLY (COMMIT → PUSH → REMOTE READBACK → SHA MATCH) → EXTERNAL COMPLETION GATE ONLY WHEN REQUIRED`
+`INTAKE → SOURCE RESTORE → CAPABILITY PREFLIGHT → CURRENT INTELLIGENCE WHEN NEEDED → WEAK-SPEC REVIEW → PRE-PRODUCTION PROOF → PLAN/OPTIONS → IMPLEMENT/PRODUCE → REAL RESULT → OBJECTIVE EVIDENCE → SEQUENTIAL SPECIALIST PASSES IN SAME CHAT → REVIEW CHAIR → ONE CONSOLIDATED REPAIR → ONE RE-REVIEW → REGRESSION → DELIVERY IF TRACKED DELTA AND NOT READ-ONLY (COMMIT → PUSH → REMOTE READBACK → SHA MATCH) → EXTERNAL COMPLETION GATE ONLY WHEN REQUIRED`
 
-`ONE RUN → ONE PERSISTENT CHAT → ONE CANONICAL WORKING BRANCH`. Новый chat/branch/worktree/PR допускается только при технической необходимости, исчерпанном контексте или требуемой независимости; смена chat требует checkpoint/handoff. `PUSH != merge`: merge/deploy/publication остаются отдельным разрешённым этапом.
+`ONE OWNER TASK → ONE VISIBLE CHAT → ONE CANONICAL WORKING BRANCH`. Не создавать `spawn_agent`, новый chat, fork, delegated task, parallel review thread или новый worktree без явного owner-разрешения. Если нужен restart для чистого контекста: checkpoint → `RESTART REQUIRED` → STOP; автоматически не перезапускаться. `PUSH != merge`: merge/deploy/publication остаются отдельным разрешённым этапом.
 
 ## 2. Task ledger
 
@@ -34,17 +34,23 @@ Ledger может быть внутренним; в handoff переноситс
 - SEO/AEO, structured data, accessibility, performance, analytics;
 - security/privacy, browser/visual/content QA and independent Red Team.
 
-Для существенного результата subagent/reviewer — не опция, а обязательная часть [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md). Выбирать только применимые профили: `research-scout`, `visual-critic`, `product-growth-critic`, `media-critic`, `technical-auditor`; финальный внутренний verdict выдаёт отдельный `review-chair`. До производства зафиксировать capability preflight, missing inputs, требуемые review profiles и QA route. Для browser/UI-задач invariant: `REAL BROWSER RENDER + OBJECTIVE EVIDENCE REQUIRED`; маршрут выбирается из реально доступных CUA, browser automation, Playwright или другого capability. Если нужного capability нет, сначала проверить бесплатный доступный маршрут; reversible technical install известной бесплатной зависимости допустим без отдельного owner gate только при zero cost, проверенных license/security, минимальном footprint и обновлённом tracked manifest/lock. OWNER GATE остаётся обязательным для paid, credentialed commercial, material spend, risky/irreversible install или неясного license/security риска; слабую замену нельзя выдавать за эквивалент.
+Для существенного результата обязательна применимая последовательность role-checklists из [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md), но не отдельные threads: `research-scout`, `visual-critic`, `product-growth-critic`, `media-critic`, `technical-auditor`, затем `review-chair`. До производства зафиксировать capability preflight, source access, missing inputs, required lanes и QA route. Capability не равен quality: наличие Skill, профильного файла, команды, build или self-authored PASS не доказывает результат. Для browser/UI-задач invariant: `REAL BROWSER RENDER + OBJECTIVE EVIDENCE REQUIRED`; маршрут выбирается из реально доступных CUA, browser automation, Playwright или другого capability. Если нужного capability нет, сначала проверить бесплатный доступный маршрут; reversible technical install известной бесплатной зависимости допустим без отдельного owner gate только при zero cost, проверенных license/security, минимальном footprint и обновлённом tracked manifest/lock. OWNER GATE остаётся обязательным для paid, credentialed commercial, material spend, risky/irreversible install или неясного license/security риска; слабую замену нельзя выдавать за эквивалент.
 
 ## 3.1 Weak-spec review
 
 До реализации проверить противоречия ТЗ, отделить `OWNER INTENT` от ошибочного method, зафиксировать frozen constraints и выбрать более сильный technical route. Frozen business/product/brand/commercial/legal решения не менять самостоятельно.
 
+### 3.2 Source access map
+
+В task packet явно отмечать `LOCAL REPO`, `GITHUB`, `LIVE DRIVE/SHEETS`, `BROWSER/WEB`, `OWNER/BUSINESS OS SNAPSHOT` как `YES/NO`, с датой, способом доступа и ограничением. Если canonical source недоступен, использовать только exact task snapshot с provenance либо вернуть `SOURCE SNAPSHOT REQUIRED`; не подменять источник capability или памятью.
+
 ## 4. Production loops
 
 ### Digital/public result
 
-`BUSINESS GOAL → CURRENT SOURCE CHECK → CURRENT INTELLIGENCE WHEN DYNAMIC → CURRENT REFERENCES → DISTINCT INTERNAL OPTIONS → INTERNAL CHOICE → PRODUCTION → REAL ARTIFACT → OBJECTIVE QA → SPECIALIST REVIEWERS → REVIEW CHAIR → ONE DEFECT LIST → ONE CONSOLIDATED FIX → FRESH RE-REVIEW → REGRESSION → HANDOFF`.
+`BUSINESS GOAL → CURRENT SOURCE CHECK → CURRENT INTELLIGENCE WHEN DYNAMIC → CURRENT REFERENCES → DISTINCT INTERNAL OPTIONS → PRE-PRODUCTION PROOF → INTERNAL CHOICE → PRODUCTION → REAL ARTIFACT → OBJECTIVE QA → SEQUENTIAL SPECIALIST PASSES IN SAME CHAT → REVIEW CHAIR → ONE DEFECT LIST → ONE CONSOLIDATED FIX → FRESH RE-REVIEW → REGRESSION → HANDOFF`.
+
+До implementation выбрать domain route и material pre-production proof: visual/site — current reference research и concept proof до кода; product — buyer/value blueprint, free-AI substitution и price-worthiness; media — transcript, paper edit и first cut до render; content/marketing — audience, pain, hook, format и payoff; SEO/AEO — current intent/SERP/source check без обещания ranking; technical/data — reproduction, scope, risk и test plan. Mixed customer-facing work разделяется на technical, visual, product, media и content lanes. Technical PASS не перекрывает FAIL в другой применимой lane.
 
 Для motion проверять смысл изменения/маршрута/причинности/раскрытия и `prefers-reduced-motion`. Не считать build, отсутствие console errors или первый render доказательством профессиональной готовности.
 
@@ -77,13 +83,13 @@ Regression PASS означает, что для каждого сценария 
 
 ## 6. Internal Review Board + Final completion gate
 
-Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива создать immutable acceptance matrix до production. Внутренний Review Board обязателен и должен материализовать criterion `internal_review_board` с artifact/evidence. Матрица неизменна до конца задачи и содержит `CRITERION`, `EXPECTED`, `HOW TO VERIFY`, `EVIDENCE`, `STATUS`.
+Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива создать immutable acceptance matrix до production. Внутренний Review Board обязателен и должен материализовать criterion `internal_review_board` с artifact/evidence. Board выполняется как sequential artifact в том же чате; физические subagent threads не обязательны. Матрица неизменна до конца задачи и содержит `CRITERION`, `EXPECTED`, `HOW TO VERIFY`, `EVIDENCE`, `STATUS`.
 
 `independent_review_required=false` допустим для reversible routine work после `ACCEPT_INTERNAL`. `independent_review_required=true` обязателен для изменений самого Codex/Review Board/runtime, irreversible/public high-risk release, security/legal/privacy-sensitive release, destructive/migration действий, explicit owner external audit или `CAPABILITY_GAP`. В этом случае локальный runtime не может сам выдать внешний `VERIFIED`.
 
 Не считать evidence self-report, dry-run, предполагаемый workflow, существование Skill/инструкции, локальный HEAD, staging-only readback или build вместо требуемой проверки. При любом `FAIL`/`UNKNOWN` исполнитель получает единый defect register, делает consolidated fix и вызывает independent recheck. Внешний `PASS`, `DONE`, `VERIFIED` или `RELEASE CANDIDATE` запрещён до полного evidence-backed PASS. Deterministic check: `node scripts/verify-completion-gate.mjs acceptance.json verifier.json`.
 
-Для технического Second Brain JSON-флаги из собственного fixture не являются evidence: `PASS`, `true`, `meaningful`, `decision_useful`, выбранный ответ и заранее вписанные bytes должны быть заменены на `INPUT → REAL EXECUTION → OUTPUT ARTIFACT → MEASUREMENT/INSPECTION → RESULT`. Product, media и performance capabilities должны иметь фактически созданный/измеренный результат; visual должен иметь real render, objective browser evidence и отдельный `visual-critic` verdict; cross-domain work должен пройти `review-chair`. Producer не может заменить reviewer verdict своим self-PASS.
+Для технического Second Brain JSON-флаги из собственного fixture не являются evidence: `PASS`, `true`, `meaningful`, `decision_useful`, выбранный ответ и заранее вписанные bytes должны быть заменены на `INPUT → REAL EXECUTION → OUTPUT ARTIFACT → MEASUREMENT/INSPECTION → RESULT`. Product, media и performance capabilities должны иметь фактически созданный/измеренный результат; visual должен иметь real render, objective browser evidence и sequential `visual-critic` verdict; cross-domain work должен пройти sequential `review-chair`. Producer не может заменить reviewer verdict своим self-PASS.
 
 До начала implementation значимой SYSTEM/DEVELOPMENT/RELEASE-задачи запускается `scripts/run-spec-lint-preflight.mjs`. Он сохраняет hash task packet, starting HEAD, branch, pre-work git status и SPEC-LINT result. Completion Gate требует criterion `spec_lint_preflight`; отсутствие этого criterion/evidence блокирует проверку.
 

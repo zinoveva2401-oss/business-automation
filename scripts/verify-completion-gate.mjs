@@ -12,6 +12,7 @@ const REQUIRED_METADATA = [
   'visual_required',
   'independent_review_required',
 ];
+const ACCEPTANCE_LANES = new Set(['technical', 'visual', 'product', 'media', 'content']);
 const READY_FOR_INDEPENDENT_QA = 'READY_FOR_INDEPENDENT_QA';
 
 function fail(message) {
@@ -59,11 +60,18 @@ function validateCriteria(matrix) {
 
   const ids = new Set();
   const artifactIdentities = new Set();
+  const observedLanes = new Set();
   for (const [index, criterion] of matrix.criteria.entries()) {
     for (const field of ['id', 'criterion', 'expected', 'how_to_verify', 'status']) {
       if (typeof criterion?.[field] !== 'string' || criterion[field].trim() === '') {
         fail(`Criterion ${index + 1} is missing ${field}`);
       }
+    }
+    if (criterion.lane !== undefined) {
+      if (typeof criterion.lane !== 'string' || !ACCEPTANCE_LANES.has(criterion.lane)) {
+        fail(`Criterion ${index + 1} has invalid lane ${criterion.lane || 'missing'}`);
+      }
+      observedLanes.add(criterion.lane);
     }
     const evidence = criterion?.evidence;
     if (!evidence || typeof evidence !== 'object' || Array.isArray(evidence)) {
@@ -107,6 +115,16 @@ function validateCriteria(matrix) {
 
   for (const id of mandatoryCriterionIds(matrix)) {
     if (!ids.has(id)) fail(`Mandatory criterion is missing: ${id}`);
+  }
+
+  if (matrix.mixed_customer_facing_artifact === true) {
+    const requiredLanes = Array.isArray(matrix.required_lanes) && matrix.required_lanes.length > 0
+      ? matrix.required_lanes
+      : [...ACCEPTANCE_LANES];
+    for (const lane of requiredLanes) {
+      if (!ACCEPTANCE_LANES.has(lane)) fail(`Unsupported required lane: ${lane}`);
+      if (!observedLanes.has(lane)) fail(`Mixed artifact lane is missing: ${lane}`);
+    }
   }
 }
 
@@ -157,13 +175,29 @@ function validFixture() {
     remote_readback: 'tests/fixtures/second-brain/product/brief.json',
     independent_auditor: 'tests/fixtures/second-brain/proof/human-task.json',
   };
+  const laneById = {
+    source_restore: 'technical',
+    scope_integrity: 'visual',
+    profile_checks: 'content',
+    spec_lint_preflight: 'media',
+    internal_review_board: 'product',
+    independent_review: 'product',
+    git_diff_review: 'technical',
+    commit: 'technical',
+    push: 'technical',
+    remote_readback: 'technical',
+    independent_auditor: 'content',
+  };
   return {
     task_class: 'SYSTEM',
     delivery_required: true,
     visual_required: false,
     independent_review_required: true,
+    mixed_customer_facing_artifact: true,
+    required_lanes: ['technical', 'visual', 'product', 'media', 'content'],
     criteria: ids.map((id) => ({
       id,
+      lane: laneById[id],
       criterion: id,
       expected: 'PASS evidence',
       how_to_verify: 'read actual fixture evidence',
@@ -226,6 +260,16 @@ function selfTest() {
       ...valid,
       criteria: valid.criteria.map((criterion) => (
         criterion.id === 'push' ? { ...criterion, status: 'UNKNOWN' } : criterion
+      )),
+    },
+  );
+
+  expectBlocked(
+    'visual lane failure cannot be overridden by technical PASS',
+    {
+      ...valid,
+      criteria: valid.criteria.map((criterion) => (
+        criterion.id === 'scope_integrity' ? { ...criterion, status: 'FAIL' } : criterion
       )),
     },
   );
