@@ -1,0 +1,12 @@
+---
+const { number, label, dark = false } = Astro.props as { number: string; label: string; dark?: boolean };
+---
+<div class:list={['editorial-folio', { 'editorial-folio--dark': dark }]} aria-label={label}>
+  <span>{number}</span><small>/ 07</small><b>{label}</b>
+</div>
+<style>
+  .editorial-folio{display:flex;align-items:baseline;gap:.38rem;width:max-content;color:var(--c-graphite);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+  .editorial-folio span{color:var(--c-orange);font:600 1.2rem/.9 var(--font-editorial)}
+  .editorial-folio small{color:var(--c-muted);font-size:.62rem}.editorial-folio b{margin-left:.45rem;font-size:.62rem;font-weight:800}
+  .editorial-folio--dark{color:#fff}.editorial-folio--dark small{color:#c7d0d9}
+</style>

@@ -1,0 +1,20 @@
+---
+import { categories, topicDescriptions } from '../lib/site';
+const { dark = false, currentSlug = '' } = Astro.props as { dark?: boolean; currentSlug?: string };
+---
+<nav class:list={['editorial-problem-map', { 'editorial-problem-map--dark': dark }]} aria-label="Карта рабочих проблем" data-problem-map>
+  <div class="editorial-problem-map__heading"><p class="eyebrow">Карта проблем</p><h2>Выберите маршрут</h2></div>
+  <div class="editorial-problem-map__rows">
+    {categories.map((topic, index) => (
+      <a class:list={['editorial-problem-map__row', { 'is-current': topic.slug === currentSlug }]} href={'/topics/' + topic.slug + '/'} data-analytics-event="click_topic" data-analytics-category={topic.slug} data-analytics-placement="editorial_problem_map">
+        <span class="editorial-problem-map__number">0{index + 1}</span>
+        <span class="editorial-problem-map__body"><strong>{topic.name}</strong><small>{topicDescriptions[topic.slug]}</small></span><b aria-hidden="true">↗</b>
+      </a>
+    ))}
+  </div>
+</nav>
+<style>
+  .editorial-problem-map{color:var(--c-graphite)}.editorial-problem-map__heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:.8rem}.editorial-problem-map__heading .eyebrow{margin:0;color:var(--c-orange)}.editorial-problem-map h2{margin:0;font-size:clamp(1.35rem,2vw,2rem);line-height:1}.editorial-problem-map__rows{border-top:1px solid currentColor}
+  .editorial-problem-map__row{display:grid;grid-template-columns:36px minmax(0,1fr) 24px;gap:.9rem;align-items:start;padding:.85rem 0;border-bottom:1px solid color-mix(in srgb,currentColor 34%,transparent);color:inherit;text-decoration:none}.editorial-problem-map__row:hover,.editorial-problem-map__row.is-current{background:color-mix(in srgb,var(--c-orange) 9%,transparent)}.editorial-problem-map__number{color:var(--c-orange);font:600 1rem/.9 var(--font-editorial)}.editorial-problem-map__body{display:grid;gap:.22rem;min-width:0}.editorial-problem-map__body strong{font-size:.83rem}.editorial-problem-map__body small{color:var(--c-muted);font-size:.7rem;line-height:1.35}.editorial-problem-map__row>b{color:var(--c-orange);font-size:1rem;text-align:right}.editorial-problem-map--dark{color:#fff}.editorial-problem-map--dark .editorial-problem-map__body small{color:#c8d0d6}
+  @media(max-width:700px){.editorial-problem-map__heading{display:block}.editorial-problem-map h2{margin-top:.3rem}.editorial-problem-map__row{grid-template-columns:30px minmax(0,1fr) 20px;padding:.72rem 0}.editorial-problem-map__body strong{font-size:.78rem}.editorial-problem-map__body small{font-size:.68rem}}
+</style>
