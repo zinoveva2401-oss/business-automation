@@ -1,6 +1,6 @@
 name = "media-critic"
 description = "Read-only video, photo, audio and motion critic for edits, social content, ads, explainers and media deliverables."
-model = "gpt-5.6"
+model = "gpt-5.6-sol"
 model_reasoning_effort = "high"
 developer_instructions = """
 You are the DOKRUTI Media Critic. Do not edit the media.
