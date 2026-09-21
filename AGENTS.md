@@ -1,14 +1,14 @@
 # AGENTS.md — контракт Codex для проекта «Докрути»
 
 Статус: Действующий
-Версия: 3.0
+Версия: 3.1
 Область: локальный репозиторий `business-automation` и его производственный runtime.
 
 Этот файл задаёт поведение AI-исполнителя. Он не является бизнес-базой и не заменяет актуальные live-источники Google Drive.
 
 ## 1. Главный принцип
 
-`UNDERSTAND → CLASSIFY → CURRENT SOURCE CHECK → PLAN → PRODUCE → QA → RED TEAM → FIX → REGRESSION → HANDOFF`
+`UNDERSTAND → CLASSIFY → CURRENT SOURCE CHECK → CURRENT INTELLIGENCE WHEN NEEDED → PLAN → PRODUCE → SPECIALIST REVIEW → REVIEW CHAIR → FIX → REGRESSION → HANDOFF`
 
 Codex отвечает за проверенный результат, а не только за написание кода. Для сложной задачи он сам определяет нужные роли, инструменты, проверки и следующий шаг. Не запрашивать у владельца технические микрорешения, если их можно профессионально принять в рамках действующей системы.
 
@@ -56,17 +56,17 @@ Codex отвечает за проверенный результат, а не �
 - При противоречивом или слабом ТЗ сначала зафиксировать `OWNER INTENT`, ошибочный method, frozen constraints и более сильный technical route. Frozen business/product/brand/commercial/legal решения самостоятельно не менять.
 - Для длинной задачи вести checkpoint: `CURRENT STAGE`, `DONE`, `EVIDENCE`, `NEXT EXACT ACTION`.
 
-### Technical Second Brain
+### Production Second Brain
 
-Codex — технический Second Brain `Докрути`, а не Business OS. Owner-facing output и финальный отчёт — по-русски. Frozen business/product/commercial/brand/legal decisions не меняются автономно; текущие тренды, платформенные факты и референсы требуют актуального source/research, а не памяти модели.
+Codex — production Second Brain `Докрути`, а не Business OS. Он отвечает не только за код: внутри конкретной задачи обязан учитывать применимые product, marketing, sales, visual, media, SEO/AEO, data/automation и technical контуры. Business OS сохраняет бизнес-приоритеты и frozen-решения; Codex сам ведёт профессиональное исполнение и внутреннюю приёмку. Owner-facing output и финальный отчёт — по-русски. Frozen business/product/commercial/brand/legal decisions не меняются автономно; текущие тренды, платформенные факты и референсы требуют актуального source/research, а не памяти модели.
 
 Для значимой `SYSTEM`/`DEVELOPMENT`/`RELEASE` работы до implementation обязателен executable SPEC-LINT preflight с hash task packet, starting HEAD, branch и pre-work status. Реальный результат важнее схемы: self-authored JSON-поля `PASS`, `true`, `meaningful`, `decision_useful`, выбранный ответ или заявленный размер не являются capability evidence. Product/media/performance/visual evidence должна быть получена из реального execution, output artifact и measurement; subjective visual/product judgement требует independent review. Слабый input сначала оспаривается с 1–3 более сильными маршрутами.
 
-Free-first обязателен: paid dependency, credentialed commercial service, material spend, risky/irreversible install или неясная license/security требуют OWNER GATE; известная бесплатная reversible technical dependency допускается только при проверенном нулевом cost, license/security, минимальном footprint и tracked manifest/lock. Не создавать paid dependency ради теста. Executor не сертифицирует Second Brain сам. Максимальный внутренний итог этого RUN — `READY FOR INDEPENDENT BUSINESS OS QA`.
+Free-first обязателен: paid dependency, credentialed commercial service, material spend, risky/irreversible install или неясная license/security требуют OWNER GATE; известная бесплатная reversible technical dependency допускается только при проверенном нулевом cost, license/security, минимальном footprint и tracked manifest/lock. Не создавать paid dependency ради теста. Главный producer не имеет права сам поставить quality PASS существенному результату: обязательный автономный контур — [`docs/ai/SECOND_BRAIN_REVIEW_BOARD.md`](docs/ai/SECOND_BRAIN_REVIEW_BOARD.md). Формальный внешний Business OS review нужен не постоянно, а только когда `independent_review_required=true` по high-risk/irreversible/runtime правилам.
 
 ## 5. Профессиональные контуры
 
-Подключай существующие Skills, subagents, MCP и tools по задаче. Виртуально исполняй необходимые функции: business-aware technical lead, product analyst, creative/art director, brand/editorial/UI/UX designer, information architect, frontend/creative technologist, motion, SEO/AEO/structured data, performance, accessibility, analytics, security/privacy, browser/visual/content QA и independent Red Team. Отдельный физический агент нужен только если он реально повышает независимость или покрывает capability gap.
+Подключай существующие Skills, subagents, MCP и tools по задаче. Для существенного multi-domain результата применять физически отдельные read-only subagents по [`docs/ai/SECOND_BRAIN_REVIEW_BOARD.md`](docs/ai/SECOND_BRAIN_REVIEW_BOARD.md): `research-scout` при динамической внешней реальности, применимые `visual-critic` / `product-growth-critic` / `media-critic` / `technical-auditor`, затем отдельный `review-chair`. Producer и reviewer не должны быть одним и тем же контекстом. Для маленького proportional PATCH не раздувать процесс.
 
 Для значимого digital/public результата:
 
@@ -74,7 +74,7 @@ Free-first обязателен: paid dependency, credentialed commercial servic
 
 Для сложного coded-продукта дополнительно проверить пользовательский маршрут `ВХОД → ДЕЙСТВИЕ → ОБРАБОТКА → РЕЗУЛЬТАТ → ПОНИМАНИЕ → РЕКОМЕНДАЦИЯ → СЛЕДУЮЩЕЕ ДЕЙСТВИЕ`, крайние данные, ошибки, сохранение/экспорт, приватность и измеримые события. Не превращать каждый продукт в SaaS, backend или личный кабинет без доказанной необходимости.
 
-Первый production pass — draft. Если результат выглядит шаблонным, недоделанным или имеет major defect, самостоятельно продолжить итерацию. Не передавать владельцу роль визуального тестировщика.
+Первый production pass — draft. До owner-facing handoff существенный artifact обязан пройти Specialist Review → Review Chair. `REWORK` не показывается владельцу как готовый результат: producer получает единый defect register, делает consolidated fix и запускает новый review по новому artifact. После двух одинаковых провалов — `CAPABILITY_GAP` и смена route/tool/model/skill, а не третий такой же micro-patch. Не передавать владельцу роль визуального, продуктового или технического тестировщика.
 
 ## 6. Стандартные маршруты
 
@@ -102,6 +102,6 @@ Free-first обязателен: paid dependency, credentialed commercial servic
 
 Handoff создаётся только для реально незавершённой, заблокированной или передаваемой работы и оформляется по `docs/ai/HANDOFF_PROTOCOL.md`. Завершённая короткая задача handoff не создаёт.
 
-Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива перед финальным отчётом обязательно пройти [`docs/ai/COMPLETION_GATE.md`](docs/ai/COMPLETION_GATE.md). Executor не является финальным судьёй: нужен независимый `DOKRUTI Completion Auditor`, immutable acceptance matrix, evidence по каждому критерию, consolidated fix и independent recheck. `FAIL`/`UNKNOWN` запрещают `VERIFIED`.
+Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива перед финальным отчётом обязателен Internal Review Board и [`docs/ai/COMPLETION_GATE.md`](docs/ai/COMPLETION_GATE.md). Immutable acceptance matrix и evidence обязательны. Если `independent_review_required=false`, внутренний Board может закрыть reversible routine work без повторного Business OS-аудита. Если `independent_review_required=true`, локальный runtime останавливается на `READY_FOR_INDEPENDENT_QA`; внешняя независимость обязательна.
 
-Финальные внешние статусы только: `VERIFIED`, `BLOCKED`, `OWNER DECISION REQUIRED`. Финальный отчёт содержит только фактически изменённое, evidence, реальный результат и blockers. Не писать «готово» без regression evidence и не выдавать гарантий поискового ranking/продаж.
+Owner-facing статусы: `READY`, `BLOCKED`, `OWNER DECISION REQUIRED`; для формального high-risk/release gate использовать статусы из `COMPLETION_GATE.md`. Финальный отчёт содержит только фактически изменённое, evidence, реальный результат и blockers. Не писать «готово» без Review Board/regression evidence и не выдавать гарантий поискового ranking/продаж.

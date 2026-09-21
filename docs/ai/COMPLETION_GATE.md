@@ -1,16 +1,22 @@
 # COMPLETION_GATE — Final Completion Gate / Release Verifier
 
 Статус: Действующий обязательный runtime-контракт
-Версия: 1.0
+Версия: 1.1
 Проект: `Докрути`
 
 ## 1. Обязательность
 
-Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива исполнитель не имеет права сам поставить внешний финальный статус. Обязательная схема:
+Для `DEVELOPMENT`, `SYSTEM`, `RELEASE`, значимой `INTEGRATION`, source cleanup, deployment и коммерческого digital-актива producer не имеет права сам поставить quality PASS. Сначала обязателен внутренний [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md).
 
-`EXECUTOR LOCAL GATES → READY_FOR_INDEPENDENT_QA → EXTERNAL BUSINESS OS QA → VERIFIED`
+Обычная reversible работа:
 
-Локальный executor не может доказать независимость проверяющего внутри собственного runtime. Поля `independent`, `reviewer`, `acceptance_received_directly`, `original_request_received_directly`, `verdict`, имя subagent, secret или nonce в executor-owned JSON не создают доверенного происхождения проверки. Внешний Business OS получает исходный запрос, acceptance matrix, scope и фактическое post-work состояние отдельно от executor и только после своей blind/independent проверки может присвоить внешний `VERIFIED`.
+`PRODUCER → SPECIALIST REVIEWERS → REVIEW CHAIR → ACCEPT_INTERNAL → MATERIAL COMPLETION GATE → READY`
+
+High-risk/irreversible/runtime работа при `independent_review_required=true`:
+
+`INTERNAL REVIEW BOARD → MATERIAL COMPLETION GATE → READY_FOR_INDEPENDENT_QA → EXTERNAL/OWNER INDEPENDENT QA → VERIFIED`
+
+Локальный executor не может доказать внешнюю независимость внутри собственного runtime. Поля `independent`, `reviewer`, `verdict`, имя subagent, secret или nonce в executor-owned JSON не создают доверенного происхождения внешней проверки. Но отдельные read-only subagents являются обязательным внутренним quality loop и должны блокировать owner-facing handoff при `REWORK`.
 
 ## 2. Immutable acceptance matrix
 
@@ -39,13 +45,13 @@ Acceptance JSON обязан содержать metadata:
 }
 ```
 
-Для `DEVELOPMENT`, `SYSTEM` и `RELEASE` gate требует IDs: `source_restore`, `scope_integrity`, `profile_checks`, `spec_lint_preflight`, `independent_review`. При `delivery_required=true` обязательны также `git_diff_review`, `commit`, `push`, `remote_readback`. При `visual_required=true` обязательны `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`. При `independent_review_required=true` обязателен `independent_auditor`. Отсутствующий ID или evidence — `BLOCKED`, даже если все присутствующие criteria имеют `STATUS=PASS`.
+Для `DEVELOPMENT`, `SYSTEM` и `RELEASE` gate требует IDs: `source_restore`, `scope_integrity`, `profile_checks`, `spec_lint_preflight`, `internal_review_board`. При `delivery_required=true` обязательны также `git_diff_review`, `commit`, `push`, `remote_readback`. При `visual_required=true` обязательны `browser_render`, `desktop_evidence`, `mobile_evidence`, `visual_review`. При `independent_review_required=true` дополнительно обязательны `independent_review` и `independent_auditor`. Отсутствующий ID или evidence — `BLOCKED`, даже если все присутствующие criteria имеют `STATUS=PASS`.
 
 Если после работы остаётся tracked-file delta и задача не `READ-ONLY`/`NO-DELIVERY`, delivery обязателен по умолчанию: отсутствующее поле `delivery_required` трактуется как `true`, а явное `false` блокируется и не может отменить commit → PUSH → remote readback → SHA match. `PUSH != MERGE`: merge, deploy, hosting, publication и production access остаются отдельным scope/approval.
 
-Локальный deterministic gate проверяет material acceptance criteria, но при `independent_review_required=true` возвращает только `READY_FOR_INDEPENDENT_QA`. Он не может вернуть `VERIFIED`, даже если локальный `verifier.json` выглядит полностью валидным.
+Локальный deterministic gate проверяет material acceptance criteria, включая artifact внутреннего Review Board. При `independent_review_required=true` он возвращает только `READY_FOR_INDEPENDENT_QA`. При `independent_review_required=false` он может закрыть material gate локально после `ACCEPT_INTERNAL`; это не отменяет owner gate для необратимых действий.
 
-Для внешнего разрешения `VERIFIED` одновременно нужны:
+Если `independent_review_required=true`, для внешнего разрешения `VERIFIED` одновременно нужны:
 
 - все обязательные criteria имеют `STATUS=PASS`;
 - evidence содержит фактический объект проверки, а не обещание или описание маршрута;
@@ -60,17 +66,17 @@ Self-report исполнителя, список changed files, написанн
 
 ## 4. Fix loop и статусы
 
-Auditor получает исходный запрос, `MAIN`, полный acceptance, разрешённый scope и фактическое post-work состояние. Он обязан искать незавершённость: stale default branch, неправильную ветку, remote mismatch, scope leakage, неподтверждённые внешние состояния, пропущенные QA и ложный PASS.
+Внутренний Review Chair получает исходный запрос, `MAIN`, acceptance, фактический artifact/evidence и specialist reports. Он обязан искать незавершённость и не учитывать producer self-PASS. Если есть `REWORK`, `FAIL` или `UNKNOWN` и исправление входит в scope, владельцу не передаётся промежуточный результат:
 
-Если есть `FAIL` или `UNKNOWN` и исправление входит в scope, владельцу не передаётся промежуточный результат:
+`DEFECT REGISTER → CONSOLIDATED FIX → FRESH SPECIALIST RECHECK → REVIEW CHAIR`.
 
-`DEFECT REGISTER → CONSOLIDATED FIX → INDEPENDENT RECHECK`.
+При formal external gate внешний auditor дополнительно проверяет stale branch, remote mismatch, scope leakage, неподтверждённые внешние состояния и ложный local PASS.
 
-Внешние финальные статусы только: `VERIFIED`, `BLOCKED`, `OWNER DECISION REQUIRED`. `READY_FOR_INDEPENDENT_QA` — локальный handoff-статус после успешных material gates, а не финальный внешний verdict. `PARTIAL PASS` — лишь внутреннее состояние и означает продолжение работы.
+Для routine work owner-facing статусы: `READY`, `BLOCKED`, `OWNER DECISION REQUIRED`. `READY_FOR_INDEPENDENT_QA` используется только когда `independent_review_required=true`. Внешний formal verdict при таком gate: `VERIFIED`, `BLOCKED`, `OWNER DECISION REQUIRED`. `PARTIAL PASS` и `REWORK` — внутренние состояния и означают продолжение работы.
 
 ## 5. Repo-local Skill decision
 
-В текущем Codex runtime обнаружен repo-local Qwen adapter `.qwen/skills/karpathy-guidelines/`, но native автоматически вызываемый Codex Skill из репозитория фактически не предоставлен в текущей session surface. Поэтому декоративный `dokruti-release-verifier` Skill не создаётся. Обязательность реализуется через этот контракт, `AGENTS.md`, `CODEX_RUNTIME.md`, `multi_agent_v1` и deterministic script.
+Внутренняя независимость реализуется не декоративным Skill-флагом, а отдельными project subagents в `.codex/agents/`, контрактом [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md), `AGENTS.md`, `CODEX_RUNTIME.md`, multi-agent runtime и deterministic material gate. Reviewer-агенты read-only и не должны быть producer-ом проверяемого artifact.
 
 ## 6. Проверка
 

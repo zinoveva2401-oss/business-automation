@@ -36,7 +36,7 @@ function validateMetadata(matrix) {
 
 function mandatoryCriterionIds(matrix) {
   const required = PRODUCTION_TASK_CLASSES.has(matrix.task_class)
-    ? ['source_restore', 'scope_integrity', 'profile_checks', 'spec_lint_preflight', 'independent_review']
+    ? ['source_restore', 'scope_integrity', 'profile_checks', 'spec_lint_preflight', 'internal_review_board']
     : [];
 
   if (matrix.delivery_required) {
@@ -46,7 +46,7 @@ function mandatoryCriterionIds(matrix) {
     required.push('browser_render', 'desktop_evidence', 'mobile_evidence', 'visual_review');
   }
   if (matrix.independent_review_required) {
-    required.push('independent_auditor');
+    required.push('independent_review', 'independent_auditor');
   }
 
   return required;
@@ -136,6 +136,7 @@ function validFixture() {
     'scope_integrity',
     'profile_checks',
     'spec_lint_preflight',
+    'internal_review_board',
     'independent_review',
     'git_diff_review',
     'commit',
@@ -148,6 +149,7 @@ function validFixture() {
     scope_integrity: 'docs/ai/CODEX_RUNTIME.md',
     profile_checks: 'docs/ai/COMPLETION_GATE.md',
     spec_lint_preflight: 'docs/ai/SPEC_LINT_V2.md',
+    internal_review_board: 'docs/ai/SECOND_BRAIN_REVIEW_BOARD.md',
     independent_review: 'docs/ai/SECOND_BRAIN_GOLDEN_TESTS_2026-09-17.md',
     git_diff_review: 'scripts/verify-completion-gate.mjs',
     commit: 'scripts/skill-regression-harness.mjs',
@@ -253,6 +255,11 @@ function selfTest() {
   expectBlocked(
     'missing SPEC-LINT preflight',
     { ...valid, criteria: valid.criteria.filter((criterion) => criterion.id !== 'spec_lint_preflight') },
+  );
+
+  expectBlocked(
+    'missing internal Review Board',
+    { ...valid, criteria: valid.criteria.filter((criterion) => criterion.id !== 'internal_review_board') },
   );
 
   expectBlocked(
