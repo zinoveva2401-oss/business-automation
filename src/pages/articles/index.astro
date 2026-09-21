@@ -10,7 +10,7 @@ const supportingArticles = featuredArticle ? articles.filter((article) => articl
 const clusters = [...new Set(articles.map(({ data }) => data.cluster))];
 const selectedCategory = Astro.url.searchParams.get('category') ?? '';
 ---
-<BaseLayout title="Библиотека «Докрути» — статьи и разборы" description="Практические материалы о продажах, клиентах, команде, управлении, маркетинге и автоматизации.">
+<BaseLayout title="Библиотека «Докрути» — статьи и разборы" description="Практические материалы о продажах, клиентах, команде, управлении, маркетинге и автоматизации." image={featuredArticle?.data.cover ?? '/images/home-hero-editorial.png'}>
   <section class="catalog">
     <div class="container">
       <Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: 'Библиотека' }]} />
