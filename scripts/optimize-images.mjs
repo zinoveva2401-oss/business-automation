@@ -20,8 +20,7 @@ await fs.mkdir(outputDir, { recursive: true });
 for (const source of (await filesIn(publicDir)).filter((file) => raster.test(file) && !file.includes(`${path.sep}_optimized${path.sep}`))) {
   const relative = path.relative(publicDir, source);
   const relativeBase = relative.replace(raster, '');
-  const metadata = await sharp(source).metadata();
-  for (const width of widths.filter((value) => value < (metadata.width ?? value))) {
+  for (const width of widths) {
     const targetBase = path.join(outputDir, relativeBase);
     await fs.mkdir(path.dirname(targetBase), { recursive: true });
     await sharp(source).resize({ width, withoutEnlargement: true }).webp({ quality: 86 }).toFile(`${targetBase}.w${width}.webp`);
