@@ -5,7 +5,7 @@ import ResponsiveImage from '../../components/ResponsiveImage.astro';
 import { getCollection } from 'astro:content';
 import { formatPrice } from '../../lib/site';
 
-export async function getStaticPaths(){return(await getCollection('tools')).filter(({data})=>data.status!=='draft').map((entry)=>({params:{slug:entry.data.slug},props:{entry}}))}
+export async function getStaticPaths(){return(await getCollection('tools')).filter(({data})=>data.status!=='draft'&&data.slug!=='store-team-management').map((entry)=>({params:{slug:entry.data.slug},props:{entry}}))}
 const {entry}=Astro.props;
 const purchasable=entry.data.status==='published'&&entry.data.purchaseStatus==='active'&&Boolean(entry.data.purchaseUrl);
 const schema=purchasable?{'@context':'https://schema.org','@type':'Product',name:entry.data.title,description:entry.data.description,image:[entry.data.cover,...entry.data.screenshots.map(({src})=>src)].map((src)=>new URL(src,Astro.url).href),offers:{'@type':'Offer',price:entry.data.price,priceCurrency:'RUB',availability:'https://schema.org/InStock',url:entry.data.purchaseUrl}}:undefined;
