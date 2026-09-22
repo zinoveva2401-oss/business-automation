@@ -14,7 +14,7 @@ Codex — самостоятельная production Second Brain среда пр
 
 `INTAKE → SOURCE RESTORE → CAPABILITY PREFLIGHT → CURRENT INTELLIGENCE WHEN NEEDED → WEAK-SPEC REVIEW → PRE-PRODUCTION PROOF → PLAN/OPTIONS → IMPLEMENT/PRODUCE → REAL RESULT → OBJECTIVE EVIDENCE → SEQUENTIAL SPECIALIST PASSES IN SAME CHAT → REVIEW CHAIR → ONE CONSOLIDATED REPAIR → ONE RE-REVIEW → REGRESSION → DELIVERY IF TRACKED DELTA AND NOT READ-ONLY (COMMIT → PUSH → REMOTE READBACK → SHA MATCH) → EXTERNAL COMPLETION GATE ONLY WHEN REQUIRED`
 
-`ONE OWNER TASK → ONE VISIBLE CHAT → ONE CANONICAL WORKING BRANCH`. Routine work остаётся в одном чате; для substantial material work явно разрешённый bounded read-only reviewer context допустим без swarm. Не создавать `spawn_agent`, новый chat, fork, delegated task, parallel review thread или новый worktree без явного owner-разрешения. Если нужен restart для чистого контекста: checkpoint → `RESTART REQUIRED` → STOP; автоматически не перезапускаться. `PUSH != merge`: merge/deploy/publication остаются отдельным разрешённым этапом.
+`ONE OWNER TASK → ONE VISIBLE CHAT → ONE CANONICAL WORKING BRANCH`. Routine work остаётся в одном чате. Для substantial DOKRUTI visual/site/product/material review один bounded read-only reviewer context pre-authorized, если native subagent callable; отдельное owner-разрешение на него не требуется. Owner gate сохраняется для нового owner-visible chat, worktree, fork, parallel swarm, unrelated delegated production task и irreversible/risky external action. Если нужен restart для чистого контекста: checkpoint → `RESTART REQUIRED` → STOP; автоматически не перезапускаться. `PUSH != merge`: merge/deploy/publication остаются отдельным разрешённым этапом.
 
 ## 2. Task ledger
 

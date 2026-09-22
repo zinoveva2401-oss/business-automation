@@ -4,7 +4,7 @@ Status: current operational contract, 2026-09-22.
 
 This document is derived from the latest explicit owner decision in the current task and is intended for implementation routing. It does not override newer Business System decisions, current Brand/Site Matrix values, or later Visual SOT. Refresh it whenever those sources change. Live Drive/Sheets verification remains a required source-access gate before relying on dynamic business facts.
 
-Verified source set for this revision: live `Бизнес-система` tabs `00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, `12_САЙТ_МАТРИЦА`; active decisions `DEC-140`–`DEC-147`; `02_Бренд-система` v8.2; `00_Ядро_проекта` v7.1; `01_Обо_мне` v4.1. DEC-147 is the current completion-integrity/runtime gate: deliver the repair and prove bounded reviewer capability before any Home proof. These sources remain authoritative over this contract.
+Verified source set for this revision: live `Бизнес-система` tabs `00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, `12_САЙТ_МАТРИЦА`; active decisions `DEC-140`–`DEC-149`; `02_Бренд-система` v8.2; `00_Ядро_проекта` v7.1; `01_Обо_мне` v4.1. DEC-148/149 define a capability-adaptive review route: native subagent callable → optional bounded physical reviewer; native unavailable → same-chat sequential checklist plus mandatory external Business OS QA. Native absence is not itself a Home-proof gate after runtime/Git gates pass. Home proof remains frozen in this task until canonical repository recovery is separately proven. These sources remain authoritative over this contract.
 
 ## Visual authority
 

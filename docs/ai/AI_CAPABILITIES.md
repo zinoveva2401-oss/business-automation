@@ -24,11 +24,11 @@
 - CLI `codex-cli 0.155.0-alpha.9.2`; configured Desktop app version hint `26.915.31945`.
 - `multi_agent` — stable/enabled in `codex features list`; `multi_agent_v2` — stable/false.
 - Native subagent: `ENVIRONMENT-BLOCKED`. Fresh CLI probe в `-s read-only` не дошла до delegation: `failed to initialize in-process app-server client: Отказано в доступе (os error 5)` при открытии `C:\Users\user\.codex\state_5.sqlite`; current Desktop surface также не содержит spawn tool. Это не заменено через `create_thread`.
-- Google Drive/Sheets — authenticated read-only profile, spreadsheet metadata/ranges, live `Бизнес-система`, DEC-147 readback;
+- Google Drive/Sheets — authenticated read-only profile, spreadsheet metadata/ranges, live `Бизнес-система`, DEC-148/149 readback;
 - Figma MCP — authenticated account, seat `View`; write capability не доказана и не является обязательной;
 - Browser/CUA, ImageGen, local shell and workspace file operations; official Product Design/Build Web Apps/Playwright/Screenshot skill files доступны.
 
-Различать `CONFIGURED` и `CALLABLE`: `.codex/config.toml` содержит `agents.enabled=true`, но это не является доказательством callable native subagent. При `NATIVE_SUBAGENT = UNAVAILABLE` применяется sequential internal checklist и обязательный внешний Business OS QA.
+Различать `CONFIGURED` и `CALLABLE`: `.codex/config.toml` содержит `agents.enabled=true` (`CONFIGURED`), но native subagent сейчас `ENVIRONMENT-BLOCKED` (`CALLABLE = NO`). External Business OS review `AVAILABLE` и обязателен для independent review. При `NATIVE_SUBAGENT = UNAVAILABLE` применяется sequential internal checklist без снижения acceptance bar.
 
 Остальные приложения/плагины не считаются доступными для этой задачи без live call. Изменяемые external writes, OAuth, публикация, удаление и платные actions требуют отдельного owner gate. Production/site visual work в этой проверке не выполнялся.
 

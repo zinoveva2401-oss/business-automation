@@ -16,7 +16,7 @@ High-risk/irreversible/runtime работа при `independent_review_required=
 
 `INTERNAL REVIEW BOARD → MATERIAL COMPLETION GATE → READY_FOR_INDEPENDENT_QA → EXTERNAL/OWNER INDEPENDENT QA → VERIFIED`
 
-Локальный executor не может доказать внешнюю независимость внутри собственного runtime. Поля `independent`, `reviewer`, `verdict`, имя subagent, secret или nonce в executor-owned JSON не создают доверенного происхождения внешней проверки. Внутренний quality loop выполняется последовательными read-only role-checklists в том же чате; физические subagent threads не обязательны. Их evidence и verdict должны блокировать owner-facing handoff при `REWORK`.
+Локальный executor не может доказать внешнюю независимость внутри собственного runtime. Поля `independent`, `reviewer`, `verdict`, имя subagent, secret или nonce в executor-owned JSON не создают доверенного происхождения внешней проверки. `.codex/config.toml` фактически содержит `[agents] enabled = true`, но configured != callable: native subagent capability в текущем Windows/Desktop/CLI environment `ENVIRONMENT-BLOCKED`. Физический subagent не обязателен для completion: при недоступности выполняются sequential internal role-checklists, а при `independent_review_required=true` обязательна внешняя Business OS QA. Их evidence и verdict должны блокировать owner-facing handoff при `REWORK`.
 
 ## 2. Immutable acceptance matrix
 
@@ -82,7 +82,7 @@ Self-report исполнителя, список changed files, написанн
 
 ## 5. Repo-local Skill decision
 
-Внутренняя независимость реализуется не декоративным Skill-флагом и не созданием новых threads, а evidence firewall, последовательными project role-checklists из `.codex/agents/`, контрактами [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md), `AGENTS.md`, `CODEX_RUNTIME.md` и deterministic material gate. Профили read-only и не должны быть producer-ом проверяемого artifact; `.codex/config.toml` держит физические agents disabled по умолчанию.
+Внутренняя независимость реализуется не декоративным Skill-флагом и не созданием новых threads, а evidence firewall, последовательными project role-checklists из `.codex/agents/`, контрактами [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md), `AGENTS.md`, `CODEX_RUNTIME.md` и deterministic material gate. Профили read-only и не должны быть producer-ом проверяемого artifact; `.codex/config.toml` держит agents configured enabled, а callable capability проверяется отдельно.
 
 ## 6. Проверка
 

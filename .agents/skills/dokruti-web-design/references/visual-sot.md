@@ -2,7 +2,7 @@
 
 Status: operational routing snapshot verified against the live Business System on 2026-09-22. It is not a substitute for newer Business System decisions and must be refreshed when those sources change.
 
-Verified source set: `Бизнес-система` tabs `00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, and `12_САЙТ_МАТРИЦА`; active decisions `DEC-140` through `DEC-147`; master sources `02_Бренд-система` v8.2, `00_Ядро_проекта` v7.1, and `01_Обо_мне` v4.1. DEC-147 is the current completion-integrity/runtime gate before Home proof.
+Verified source set: `Бизнес-система` tabs `00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, and `12_САЙТ_МАТРИЦА`; active decisions `DEC-140` through `DEC-149`; master sources `02_Бренд-система` v8.2, `00_Ядро_проекта` v7.1, and `01_Обо_мне` v4.1. DEC-148/149 define the capability-adaptive route: native subagent callable → optional bounded physical reviewer; native unavailable → same-chat sequential checklist plus mandatory external Business OS visual QA. Native absence is not itself a Home-proof gate after runtime/Git gates pass; current Home proof remains frozen until canonical repository recovery is proven.
 
 ## Current direction
 
