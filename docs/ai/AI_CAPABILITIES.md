@@ -1,6 +1,6 @@
 # AI_CAPABILITIES
 
-Статус: действующий time-stamped snapshot, проверен 13.09.2026.
+Статус: действующий time-stamped snapshot, проверен 22.09.2026.
 Проект: `Докрути`.
 
 Этот файл не заменяет live discovery конкретной сессии. Фактически доступный runtime имеет приоритет.
@@ -8,12 +8,12 @@
 ## 1. Подтверждённые repository capabilities
 
 - Astro/TypeScript workspace: `npm run dev`, `npm run build`, `npm run preview`, `npm run check` из `package.json`.
-- Repo-local adapter: `.qwen/skills/karpathy-guidelines/SKILL.md`.
-- Active contracts: `AGENTS.md`, `docs/ai/`, `docs/ARTICLE_IMPORT.md`, `docs/PRODUCT_EXECUTION.md`.
+- Active contracts: `AGENTS.md`, `docs/ai/`, `docs/ARTICLE_IMPORT.md`, `docs/PRODUCT_EXECUTION.md`, `docs/design/DESIGN.md`.
+- Repo Skill: `.agents/skills/dokruti-web-design/SKILL.md`; frontmatter and manual structure checks pass. The official validator remains blocked by missing `PyYAML`; PyYAML was not installed.
 
 ## 2. Подтверждённые Codex skills
 
-В текущем runtime обнаружены и пригодны по применимости: `astro-seo`, `design-review`, `frontend-design`, `kill-ai-slop`, `playwright`, `playwright-interactive`, `security-best-practices`, `screenshot`, `find-skills`, `ai-business-os`, `define-goal`, а также системные `openai-docs`, `imagegen`, `documents`, `pdf`, `presentations`, `spreadsheets`.
+В текущем runtime обнаружены и пригодны по применимости: repo `dokruti-web-design`; official Product Design `0.1.55`; Build Web Apps `0.1.2` / `frontend-app-builder`; `imagegen`; `playwright`; `playwright-interactive`; `screenshot`; in-app Browser/CUA; а также системные `openai-docs`, `documents`, `pdf`, `presentations`, `spreadsheets`.
 
 Наличие не означает обязательность чтения. Skill выбирается по классу и риску задачи; сайт в этой SYSTEM-задаче не переделывается.
 
@@ -21,17 +21,16 @@
 
 Фактической проверкой текущей среды подтверждены:
 
-- `multi_agent_v1` — spawn/wait/send/close subagents;
-- Google Drive — authenticated profile, file metadata, native Google Docs text, Google Sheets metadata/ranges;
-- GitHub — authenticated profile, repository metadata и repo permissions;
-- Playwright MCP — browser navigation, snapshot, screenshot, console/network and interaction;
-- Context7 — documentation resolution/query;
-- Figma MCP — tool surface обнаружен; authentication/use нужно проверять при конкретной задаче;
-- Codex app tools, `image_gen`, local shell and workspace file operations.
+- CLI `codex-cli 0.155.0-alpha.9.2`; configured Desktop app version hint `26.915.31945`.
+- `multi_agent` — stable/enabled in `codex features list`; `multi_agent_v2` — stable/false.
+- Native subagent: `ENVIRONMENT-BLOCKED`. Fresh CLI probe в `-s read-only` не дошла до delegation: `failed to initialize in-process app-server client: Отказано в доступе (os error 5)` при открытии `C:\Users\user\.codex\state_5.sqlite`; current Desktop surface также не содержит spawn tool. Это не заменено через `create_thread`.
+- Google Drive/Sheets — authenticated read-only profile, spreadsheet metadata/ranges, live `Бизнес-система`, DEC-147 readback;
+- Figma MCP — authenticated account, seat `View`; write capability не доказана и не является обязательной;
+- Browser/CUA, ImageGen, local shell and workspace file operations; official Product Design/Build Web Apps/Playwright/Screenshot skill files доступны.
 
-Native automatically invoked Codex Skills from a repository-local folder are not exposed in the current session surface. `.qwen/skills/` is a Qwen adapter and does not by itself prove Codex Skill invocation. Do not create a decorative repo-local verifier Skill; use `COMPLETION_GATE.md`, `multi_agent_v1` and the deterministic script.
+Различать `CONFIGURED` и `CALLABLE`: `.codex/config.toml` содержит `agents.enabled=true`, но это не является доказательством callable native subagent. При `NATIVE_SUBAGENT = UNAVAILABLE` применяется sequential internal checklist и обязательный внешний Business OS QA.
 
-Остальные приложения/плагины не считаются доступными для этой задачи без live call. Изменяемые external writes, OAuth, публикация, удаление и платные actions требуют отдельного owner gate.
+Остальные приложения/плагины не считаются доступными для этой задачи без live call. Изменяемые external writes, OAuth, публикация, удаление и платные actions требуют отдельного owner gate. Production/site visual work в этой проверке не выполнялся.
 
 ## 4. Google Drive readiness
 

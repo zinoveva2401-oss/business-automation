@@ -1,0 +1,7 @@
+interface:
+  display_name: "DOKRUTI Web Design"
+  short_description: "Model-neutral DOKRUTI visual workflow"
+  default_prompt: "Use $dokruti-web-design to route this substantial DOKRUTI visual task through current sources and browser QA."
+
+policy:
+  allow_implicit_invocation: true

@@ -14,7 +14,7 @@ Business OS остаётся владельцем бизнес-приорите�
 
 `OWNER INTENT → CURRENT SOURCE → CURRENT INTELLIGENCE (если нужна) → OPTIONS → PRE-PRODUCTION PROOF → PRODUCER → REAL ARTIFACT → EVIDENCE FREEZE → SEQUENTIAL SPECIALIST PASSES IN SAME CHAT → REVIEW CHAIR → ONE CONSOLIDATED REPAIR → ONE RE-REVIEW → INTERNAL ACCEPTANCE → DELIVERY/OWNER GATE`
 
-`PRODUCER != REVIEWER`. Разделение обеспечивается evidence firewall и последовательным read-only pass в том же чате; по умолчанию не создаются новые chats, forks, delegated tasks или reviewer threads.
+`PRODUCER != REVIEWER`. Разделение обеспечивается evidence firewall и последовательным read-only pass в том же чате; runtime допускает отдельные reviewer contexts для существенной независимой проверки, но новые chats, forks, delegated tasks или reviewer threads не создаются автоматически.
 
 ## 2. Когда Review Board обязателен
 
@@ -63,7 +63,7 @@ Mixed customer-facing artifact разделяется на technical, visual, pr
 
 ## 4. Review profiles
 
-Главный агент выбирает только применимые профили и выполняет их последовательно как checklists в том же видимом чате. Файлы `.codex/agents/*.toml` сохраняют контракты ролей, но physical subagents выключены в `.codex/config.toml` и не являются обязательным способом review.
+Главный агент выбирает только применимые профили и выполняет их последовательно как checklists в том же видимом чате по умолчанию. Если native subagent workflow callable, для substantial material work явно разрешённый bounded read-only reviewer context допустим и должен оставаться без swarm; если недоступен, checklist выполняется в текущем чате с `NATIVE_SUBAGENT = UNAVAILABLE` и обязательным внешним Business OS QA. Файлы `.codex/agents/*.toml` сохраняют контракты ролей, а `.codex/config.toml` должен разрешать их только при подтверждённой runtime capability. `sandbox_mode = "read-only"` в TOML — default: effective parent permission имеет приоритет; review turn должен быть read-only, `--yolo` запрещён.
 
 | Профиль | Агент | Когда обязателен |
 |---|---|---|

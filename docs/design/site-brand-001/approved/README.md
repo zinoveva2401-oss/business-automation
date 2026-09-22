@@ -1,18 +1,22 @@
-# SITE-BRAND-001 — Approved visual SOT
+# SITE-BRAND-001 — Historical visual baseline
 
-Status: immutable approved direction for Stage 3B-R implementation.
+> REJECTED / NEGATIVE BASELINE / HISTORICAL ONLY
+>
+> This package is retained for provenance and BEFORE comparison. It is no longer the current visual authority and must not be selected as an approved, immutable, or governing SOT.
+
+Status: rejected historical direction; retained for provenance only.
 Provenance: derived only from the existing Stage 3A concept artifacts under `output/site-brand-001-stage-3a/`; no new visual concept or research was introduced.
 
-## Owner decision
+## Historical Stage 3A decision
 
-- **B — «Редакционный маршрут»** is the governing visual and navigation system.
-- **A — «Рабочий стол причин»** supplies the evidence, materiality, and `cause → check → action` mechanics.
+- **B — «Редакционный маршрут»** was the historical governing visual and navigation system.
+- **A — «Рабочий стол причин»** supplied the historical evidence, materiality, and `cause → check → action` mechanics.
 
-## Governing design statement
+## Historical design statement
 
 Build «Докрути» as an adult editorial route through real business problems: a folio/broadsheet navigation system makes seven pain directions, reading surfaces, tools, and three services legible; tactile work artifacts, evidence marks, and visible cause → check → action traces keep the system specific to investigation rather than a generic magazine or card catalogue.
 
-The governing constraints are:
+The historical constraints were:
 
 - B owns composition, hierarchy, navigation, editorial rhythm, density, whitespace, discovery, and mobile recomposition.
 - A appears as semantic evidence: working documents, annotated artifacts, material surfaces, trace lines, and explicit next checks.
@@ -21,7 +25,7 @@ The governing constraints are:
 
 ## Frozen references
 
-### B governing reference
+### B historical reference
 
 - Source: `source/concept-b.html`
 - Desktop render: `screenshots/concept-b-1440.png`
@@ -35,7 +39,7 @@ The governing constraints are:
 - Mobile render: `screenshots/concept-a-390.png`
 - Direction board: `boards/direction-worktable.png`
 
-The source snapshots and generated renders are retained together so the approved target is inspectable without relying on memory or a later live site.
+The source snapshots and generated renders are retained together so the historical target is inspectable without relying on memory or a later live site.
 
 ## Render evidence
 
@@ -43,4 +47,4 @@ The four screenshots were generated from the existing concept HTML/CSS with the 
 
 ## Integrity rule
 
-Do not rewrite these files during implementation. Any approved target change requires a new explicit owner decision and a new SOT snapshot; implementation code must be compared against these artifacts, not used to redefine them.
+Do not rewrite these files during implementation. Any future visual direction requires a new explicit owner decision and a new SOT snapshot; implementation code must not use this historical package to redefine current authority.

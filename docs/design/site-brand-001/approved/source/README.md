@@ -1,7 +1,9 @@
-# MAIN SITE-BRAND-001 — STAGE 3A
+# MAIN SITE-BRAND-001 — STAGE 3A / HISTORICAL ONLY
+
+> REJECTED / NEGATIVE BASELINE / HISTORICAL ONLY. The B+A direction below is not current visual authority.
 
 Дата: 2026-09-21
-Статус: `OWNER DECISION REQUIRED`
+Статус: `HISTORICAL ONLY / REJECTED BASELINE`
 Scope: concept stage only; production/staging site was not changed.
 
 ## Source Access Map
@@ -14,7 +16,7 @@ Scope: concept stage only; production/staging site was not changed.
 | BROWSER/WEB | YES | Read-only research plus real browser render of the concept previews. |
 | OWNER/BUSINESS OS SNAPSHOT | NO | The task packet is direct owner intent, not a live canonical snapshot. |
 
-## Current intelligence
+## Historical research/context
 
 - Yandex mobile/usability guidance: adaptive content, no horizontal scroll, readable text, complete structured content and logical headings.
 - Google page experience guidance: mobile display and Core Web Vitals are baseline constraints, not a ranking promise.
@@ -71,7 +73,7 @@ Static previews were rendered in a real browser at 1440×1000 and 390×844.
 
 ### 1. Visual Critic
 
-All three are materially different and pass the Remove-Text Test better than the current staging baseline: A reads as a causal worktable, B as an editorial route, C as a signal system. Current staging is not classified as premium; its repeated template/card grammar remains a material defect, so the requested “premium current site = smoke FAIL” condition is **not triggered**.
+All three were materially different historical concepts compared with the then-current staging baseline. This statement is retained only as historical Stage 3A evidence and is not a current visual judgment.
 
 Visual findings: A has the strongest diagnosis image-language; B has the cleanest hierarchy and content rhythm; C has the most ownable signature but the highest risk of ornamental signal treatment.
 
@@ -85,7 +87,7 @@ All concepts are feasible as Astro routes/components with shared content data an
 
 ### 4. Review Chair
 
-Recommendation: **B — «Редакционный маршрут»**.
+Historical recommendation: **B — «Редакционный маршрут»**.
 
 Reason: it best balances premium editorial quality, the frozen multi-industry scope, seven-pain discovery, real article growth, Tools and the three services. A is the strongest alternative if the owner wants a darker, more tactile and emotionally charged portfolio position. C is the most distinctive campaign-like option, but it has the highest risk of turning the core mechanic into decoration.
 
@@ -93,6 +95,6 @@ No implementation authorization is inferred from this recommendation. Stage 3B m
 
 ## Decision gate
 
-`OWNER DECISION REQUIRED: выбрать A / B / C`
+`HISTORICAL OWNER GATE: выбрать A / B / C`
 
 Stop after the decision. No site repair or Stage 3B implementation was performed in this run.

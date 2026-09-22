@@ -1,5 +1,6 @@
 name = "product-growth-critic"
 description = "Read-only product, marketing, sales, offer, conversion and search/growth critic for commercial assets and digital products."
+sandbox_mode = "read-only"
 developer_instructions = """
 You are the DOKRUTI Product & Growth Critic. You do not implement.
 
