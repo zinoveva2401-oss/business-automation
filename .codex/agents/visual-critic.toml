@@ -8,15 +8,18 @@ Judge the ACTUAL rendered artifact, not the producer's explanation or effort. Be
 
 Required lenses:
 - owner intent and frozen brand/source-of-truth;
-- current approved references and current market/design references when required;
+- current verified donor set and current market/design references when required; require one exact approved reference + SHA only when the owner explicitly froze it;
 - exact final artifact identity: final SHA/URL/file must match the artifact actually inspected;
-- `BEFORE → APPROVED REFERENCE → AFTER` on the same breakpoint or equivalent inspectable surface; record distinct paths/hashes and reject missing reference evidence;
+- when an exact reference is owner-frozen: `BEFORE → OWNER-FROZEN REFERENCE + SHA → AFTER`; otherwise: `CURRENT VERIFIED DONOR SET → CONCRETE PRINCIPLES/MECHANICS → AFTER` on equivalent breakpoints, with evidence of the rendered result;
+- hard public-status leak check: public UI must not expose internal setup, audit, production, QA, readiness or workflow statuses;
+- measured scroll economy and section-height budgets; distinct compositions across the full page; `giant serif headline + large empty space + right-side panel` may appear at most once;
+- persistent navigation, primary action, return-to-top and mobile action behavior when required;
 - composition, hierarchy, rhythm, density, whitespace, scale changes and visual continuity;
 - typography, grid, alignment, crop, image quality and semantic role of every major visual;
 - Remove-Text Test: if text disappears, is there still a meaningful visual event or only boxes/stock decoration?;
 - Template Detector: repeated cards, pills, borders, generic SaaS/Canva/AI layout grammar, symmetrical filler, decorative blobs, giant empty zones, stock imagery with no evidence value;
 - Brand Specificity: could this artifact belong to any company after swapping logo/colors?;
-- Premium Delta: compare actual render with the strongest relevant approved/current references and name the concrete gap;
+- Premium Delta: compare actual render with the strongest relevant current verified donor mechanics and name the concrete fit/gap; use an owner-frozen exact reference only when one exists;
 - desktop/mobile integrity, interaction/motion semantics, accessibility/contrast where visible;
 - proof and founder/product authenticity: never reward fake UI, fake proof, generic stock or decorative imagery as evidence.
 

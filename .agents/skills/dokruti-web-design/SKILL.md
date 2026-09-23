@@ -29,6 +29,18 @@ Use current web/reference research when freshness matters. Verify candidate site
 
 Before production, record `CURRENT → TARGET → REQUIRED STRUCTURAL CHANGE → OBSERVABLE ACCEPTANCE`, section jobs, reference donor decisions, asset truth/provenance, interactions, responsive strategy, conversion route, and verification plan. For significant work, run executable SPEC-LINT before editing. The first implementation is a draft.
 
+## Hard concept and composition gates
+
+Before writing implementation code:
+
+1. **CONCEPT-DIVERGENCE:** make at least three materially different concepts (different visual premise and user interaction, not color/type variants). Score each 1–5 for `HOOK / BRAND / CONVERSION / INTERACTION / FRESHNESS`, state the reason for each score, then select the strongest concept independently. Keep rejected concepts and reasons in the internal task ledger; do not present options to the owner unless requested.
+2. **REJECTED-GRAMMAR MEMORY:** read the latest visual rejection and record its specific failed grammar as a prohibited-pattern list before implementation. Test the chosen concept against every prohibition.
+3. **SCROLL-ECONOMY:** set a target total rendered page height against an observed baseline. For each section, budget desktop and mobile height in CSS px and as a viewport fraction. Any ordinary content block expected to exceed 0.8 viewport without a documented user/value reason must be shortened, merged, or recomposed. Measure actual full-page height after render; where the owner sets a reduction target, meet that numeric target or mark visual acceptance FAIL.
+4. **COMPOSITION-DIVERSITY:** define the page's intentional visual peaks and their distinct compositions. The grammar `giant serif headline + large empty space + right-side panel` may appear at most once. A second section may not repeat the same dominant silhouette with merely different content or color.
+5. **PERSISTENT-NAVIGATION:** plan continuity after the hero: compact sticky navigation, a persistent primary action, a return-to-top path, and a mobile thumb-reachable primary action when required by the page. Verify actual visibility, offsets and overlap at desktop and mobile sizes.
+
+These are hard gates: missing a concept scorecard, rejected-grammar list, measurable section-height budget, composition plan, or required navigation behavior blocks implementation or final acceptance.
+
 ## Reference-led adaptive design gate
 
 Choose several strong, currently verified donors from the live reference folder, Radar, relevant public sites and current research. For every selected donor record:
@@ -53,7 +65,7 @@ Do not add click depth to decorate an interaction. Every pain/navigation choice 
 
 Before placeholders, initials or generic stock, inspect the live reference folder, current asset registry, site assets, real founder photos, owner-approved likeness references, and usable editing/generation paths. For each material asset record `REUSE / EDIT / GENERATE NEW / NO IMAGE`, with semantic fit, provenance, approval, rights, quality/crop, role, and fallback.
 
-A file's existence or a realistic appearance does not prove it is a real photograph, an approved likeness, a current asset, or cleared for publication. Never present generated or composited founder imagery as documentary photography. If no suitable approved founder asset is verifiable, use a truthful non-documentary visual treatment and state the limitation; do not fabricate a founder photo or replace an available approved photo with initials.
+A file's existence or a realistic appearance does not prove it is a real photograph, an approved likeness, a current asset, or cleared for publication. Never present generated or composited founder imagery as documentary photography. If no suitable approved founder asset is verifiable, use a truthful non-documentary visual treatment and state the limitation; do not fabricate a founder photo or replace an available approved photo with initials. A verified and owner-approved real founder photograph takes priority over any AI portrait; use a considered editorial crop. Use AI portraiture only after documenting that no suitable real approved asset is available and the owner authorizes that fallback.
 
 ## Experience, conversion and adaptive signals
 
@@ -68,6 +80,8 @@ Use the actual rendering route. Build success is not visual acceptance. Capture 
 Visual handoff is incomplete until all required screenshot files are verified and actually shown or attached inline in the owner-facing chat. List section, viewport, local path and exact source artifact SHA for each file. Do not claim that evidence is available in chat unless the images are visibly surfaced in that conversation.
 
 Review the final artifact itself, identified by exact URL/path and final SHA. Apply relevant sequential read-only lenses: current research, visual, product/growth, media when material, technical, then review chair. Record factual `PASS / FAIL / UNKNOWN` and evidence. A material unknown or major defect blocks READY. Make one consolidated repair pass and review the new rendered artifact again. Never present REWORK as ready.
+
+If the owner has not frozen one exact reference artifact, do not require `APPROVED REFERENCE + SHA`. Instead record the **CURRENT VERIFIED DONOR SET → concrete principles/mechanics → AFTER render comparison**. The owner-frozen exact-reference rule applies only when the owner explicitly froze one. Every review must also hard-check that public UI does not expose internal setup, audit, production, QA, readiness or workflow statuses.
 
 ## Invariants
 

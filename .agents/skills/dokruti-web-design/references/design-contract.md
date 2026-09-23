@@ -9,6 +9,10 @@ This is a production contract. It does not replace live Brand System, Business S
 - Resolve source truth and current page/routes/content/assets; record the whole-page inventory, current → target transformation, measurable user jobs, asset provenance, interactions, conversion path and QA plan.
 - Evaluate current interaction/editorial/motion/photography/story/navigation/founder/AI signals using `ATTENTION → USER VALUE → BRAND FIT → CONVERSION → PERFORMANCE → ACCESSIBILITY`.
 - Produce and challenge a visual concept before implementation. Significant DEVELOPMENT work requires executable SPEC-LINT preflight.
+- Before implementation, produce at least three materially different internal concepts, score each 1–5 on hook, brand fit, conversion, interaction and freshness, and choose one independently. Keep rejected concepts and specific reasons in the internal ledger; do not present owner-facing variants unless asked.
+- Read the latest rejected Home/page grammar and write the exact patterns to avoid before coding. Enforce a measurable desktop/mobile section-height budget and whole-page scroll target. Ordinary blocks above 0.8 viewport require a documented user/value reason or must be recomposed.
+- Name distinct visual peaks and compositions. `giant serif headline + large empty space + right-side panel` is allowed at most once across the page.
+- Plan persistent navigation after the first screen, persistent primary action, return-to-top, and mobile thumb-reachable action when required.
 
 ## Adaptive system
 
@@ -28,9 +32,13 @@ Before handoff ask whether the actual page catches attention, remains recognizab
 
 Navigation has direct useful destinations. A pain choice always reaches its correct useful route in one click; preview is optional and never gates navigation. Interactions must enable discovery, reveal, comparison, transformation, response, causality or navigation. A color hover, fade-in or decorative parallax alone is not meaningful interaction. Use several distinct interaction moments only when supported by the concept; each must work by keyboard and respect reduced motion.
 
+## Reference comparison and public truth
+
+When the owner has not frozen one exact reference, do not invent an `APPROVED REFERENCE + SHA` gate. Verify a relevant donor set, extract concrete design principles/mechanics, then compare the actual AFTER render against those stated mechanics. Hard-check rendered public UI for internal setup, audit, production, QA, readiness and workflow statuses; any leakage is a release-blocking defect.
+
 ## Assets, founder and factual presentation
 
-Search current Drive references, approved founder references, the asset registry, current website assets and appropriate edit/generation options before placeholders or generic stock. Choose and document `REUSE / EDIT / GENERATE NEW / NO IMAGE` for each material visual, with meaning, provenance, approval, rights, crop/quality, role and fallback. Realistic-looking or existing images are not automatically documentary or approved. Never present AI-generated/composited founder imagery as real photography. When no appropriate approved portrait is verifiable, show the founder truthfully without inventing photographic evidence.
+Search current Drive references, approved founder references, the asset registry, current website assets and appropriate edit/generation options before placeholders or generic stock. Choose and document `REUSE / EDIT / GENERATE NEW / NO IMAGE` for each material visual, with meaning, provenance, approval, rights, crop/quality, role and fallback. Realistic-looking or existing images are not automatically documentary or approved. Never present AI-generated/composited founder imagery as real photography. A verified, owner-approved real founder photo takes priority over an AI portrait and should receive an editorial crop. Use AI portraiture only after documenting that no suitable real approved photo is available and the owner has authorized that fallback. When no appropriate approved portrait is verifiable, show the founder truthfully without inventing photographic evidence.
 
 Tools, products, channels and services are factual objects with current readiness, use and destination. No fake store, fake readiness, active-looking empty channel, unverifiable metric/case or unsupported claim.
 

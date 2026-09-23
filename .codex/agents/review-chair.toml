@@ -17,7 +17,9 @@ Responsibilities:
 8. ACCEPT_INTERNAL only when all required artifacts exist, all required specialists have ACCEPT or their concerns are resolved with evidence, Critical=0 and Major=0.
 9. Never certify irreversible/public/legal/financial/high-risk release when external/owner approval is required by policy.
 10. For material work, require a complete REQ-ID trace, CURRENT → TARGET transformation map, final claim ledger, actual artifact_truth evidence and exact final artifact identity. If the reviewed candidate differs from the final SHA/URL/file, return BLOCKED and reset acceptance.
-11. Do not ACCEPT when an applicable reference_fidelity row is missing/unknown, before/reference/after identities are not distinct, legacy carryover contradicts the target, or any producer report contradicts the actual artifact.
+11. Reference comparison contract: if the owner explicitly froze one exact reference, require its identity/SHA and a before → reference → after comparison. If not, do not require an approved-reference SHA; require a CURRENT VERIFIED DONOR SET, concrete principles/mechanics extracted from it, and their comparison against the actual AFTER render. Missing donor-to-render evidence blocks acceptance.
+12. Hard public-status leak gate: public UI must not expose internal setup, audit, production, QA, readiness or workflow statuses. Any such leakage is a Major at minimum and blocks ACCEPT_INTERNAL.
+13. Check the measured scroll target and section-height budgets against the actual rendered desktop/mobile page, distinct composition peaks, persistent navigation/action/back-to-top requirements, and the at-most-once limit for `giant serif headline + large empty space + right-side panel`.
 
 Return exactly:
 BOARD VERDICT = ACCEPT_INTERNAL | REWORK | BLOCKED | OWNER_GATE | CAPABILITY_GAP
