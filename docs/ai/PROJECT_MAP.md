@@ -28,6 +28,10 @@ business-automation/
 │   └── HANDOFF_PROTOCOL.md            handoff contract
 ├── docs/ARTICLE_IMPORT.md             SOURCE / active article pipeline
 ├── docs/PRODUCT_EXECUTION.md          SOURCE / active product pipeline
+├── .agents/skills/                     SOURCE / scoped execution skills
+│   ├── dokruti-web-design/             substantial web/design production
+│   ├── dokruti-product-production/     substantial product/service production
+│   └── dokruti-content-production/     substantial content/channel production
 ├── docs/project-knowledge/            HISTORICAL SAFE / non-canonical snapshots
 ├── docs/site/                         HISTORICAL SAFE / legacy site references
 ├── dist/, .astro/, node_modules/      GENERATED
@@ -44,6 +48,9 @@ business-automation/
 | Готовый цифровой продукт | `docs/PRODUCT_EXECUTION.md` → product passport/target |
 | Новый сложный продукт | `docs/PRODUCT_EXECUTION.md` → live Product/Design source → product files |
 | Сайт | live `10_САЙТ_ТЕХКОНТУР` + target implementation; legacy `docs/site/` only as reference |
+| Существенный web/design | `.agents/skills/dokruti-web-design/SKILL.md` → live Site Matrix → browser QA → review |
+| Существенный product/service | `.agents/skills/dokruti-product-production/SKILL.md` → live COMM-ARCH/Product sources → product QA |
+| Существенный content/channel | `.agents/skills/dokruti-content-production/SKILL.md` → live Content System → editorial/channel QA |
 | Бизнес/бренд/продукты | live Drive source manifest; no historical repo copy as override |
 
 ## 4. Правила чтения

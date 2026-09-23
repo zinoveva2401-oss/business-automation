@@ -3,7 +3,7 @@
 Статус: Действующий runtime-контракт
 Версия: 1.0
 Проект: `Докрути`
-Последняя live-проверка этого manifest: 13.09.2026 (Europe/Moscow)
+Последняя live-проверка этого manifest: 23.09.2026 (Europe/Moscow)
 
 Этот файл хранит маршрутизацию, а не копию бизнес-логики. Google Drive/Sheets — canonical. GitHub и локальный репозиторий не имеют права отменять более новое подтверждённое live-состояние.
 
@@ -13,10 +13,13 @@
 2. `Бизнес-система` → `00_ШТАБ` для цели, этапа, blocker, приоритетов и `NEXT ACTION`.
 3. `Бизнес-система` → релевантные открытые/непроверенные строки `02_РАБОТА`.
 4. `Бизнес-система` → последние применимые решения `06_РЕШЕНИЯ`.
-5. Для сайта — применимые строки `10_САЙТ_ТЕХКОНТУР`.
-6. Для исследования/дизайна — при необходимости `11_КОНКУРЕНТЫ_И_РЕФЕРЕНСЫ`.
-7. Долговременный источник по точному названию через авторизованный Google Drive connector.
-8. Реализация в репозитории.
+5. Для сайта — применимые строки `10_САЙТ_ТЕХКОНТУР` и `12_САЙТ_МАТРИЦА`.
+6. Для стратегии/денег — применимые строки `08_СТРАТЕГИЯ`.
+7. Для исследования/дизайна — при необходимости `11_КОНКУРЕНТЫ_И_РЕФЕРЕНСЫ`.
+8. Для коммерческого маршрута — `COMM-ARCH-001 | Коммерческая архитектура | MASTER`.
+9. Для контента — `Контент-система | DOKRUTI | 2026`.
+10. Долговременный источник по точному названию через авторизованный Google Drive connector.
+11. Реализация в репозитории.
 
 Не читать всю таблицу или все документы автоматически. Выбирать только нужные вкладки/диапазоны/документы.
 
@@ -28,7 +31,7 @@
 - Role: current state, work queue, decisions, site technical contour, references.
 - Access: read-only for Codex unless a separate owner-authorized write is explicitly required.
 - Lookup: use the authorized Google Drive/Sheets connector and the exact source name `Бизнес-система`.
-- Verified: the authorized connector exposes tabs `00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, `10_САЙТ_ТЕХКОНТУР`, `11_КОНКУРЕНТЫ_И_РЕФЕРЕНСЫ`.
+- Verified 23.09.2026: the authorized connector exposes tabs `00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, `08_СТРАТЕГИЯ`, `10_САЙТ_ТЕХКОНТУР`, and `12_САЙТ_МАТРИЦА`. `00_ШТАБ` identifies the active system task as AI-PRODUCTION-SKILLS-001 and says the commercial architecture is frozen; `10_САЙТ_ТЕХКОНТУР` remains the publication/runtime contract.
 
 ### Long-lived sources
 
@@ -42,6 +45,8 @@
 | `04_Продуктовая_карта` | durable product direction, not current SKU/pricing | exact name via authorized Google Drive connector |
 | `06_Архитектура_ИИ_и_автоматизации` | AI routing, automation, QA and handoff principles | exact name via authorized Google Drive connector |
 | `08_Дизайн-система_продуктов` | product UX/visual system after product-format choice | exact name via authorized Google Drive connector |
+| `COMM-ARCH-001 | Коммерческая архитектура | MASTER` | frozen commercial architecture, eight money routes, pain-first and NPD/legal gates | exact name via authorized Google Drive connector; recheck dynamic terms before activation |
+| `Контент-система | DOKRUTI | 2026` | content matrix, master-first production, channels, rights and measurable next step | exact name via authorized Google Drive connector; read only relevant tabs/ranges |
 
 ## 3. Freshness gate
 

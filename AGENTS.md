@@ -67,6 +67,13 @@ Free-first обязателен: paid dependency, credentialed commercial servic
 ## 5. Профессиональные контуры
 
 Подключай существующие Skills, MCP и tools по задаче. Для существенного multi-domain результата последовательно применяй в этом же чате только релевантные read-only checklists из [`docs/ai/SECOND_BRAIN_REVIEW_BOARD.md`](docs/ai/SECOND_BRAIN_REVIEW_BOARD.md): `research-scout`, `visual-critic`, `product-growth-critic`, `media-critic`, `technical-auditor`, затем `review-chair`. Если native subagent workflow callable, для material visual/site/product work допустим bounded physical reviewer; иначе выполняется тот же sequential checklist в текущем чате, фиксируется `NATIVE_SUBAGENT = UNAVAILABLE`, и внешний Business OS QA становится обязательным. Не создавай физические reviewer contexts по умолчанию: evidence firewall отделяет producer self-report от sequential review. Для substantial DOKRUTI site/page/hero/redesign/visual-system задач обязательно загружать repo Skill [`.agents/skills/dokruti-web-design/SKILL.md`](.agents/skills/dokruti-web-design/SKILL.md); routine copy/CSS/implementation patches исключаются. Для маленького proportional PATCH не раздувать процесс.
+
+### Skill routing
+
+- Существенный site/page/hero/redesign/visual-system результат: `dokruti-web-design` → current Site Matrix → visual target/assets → real browser QA → review.
+- Существенный product/service/productization результат: `dokruti-product-production` → live `COMM-ARCH-001` and current Product/Design sources → buyer/value blueprint → product review.
+- Существенный article/content/channel/media результат: `dokruti-content-production` → live `Контент-система | DOKRUTI | 2026` → master-first package → editorial/channel review.
+- Mixed task: choose one primary skill by the dominant deliverable and one secondary skill for the material dependency; do not silently skip a required domain review.
 - Reviewer TOML хранит `sandbox_mode = "read-only"`, но effective parent permission может его переопределить. Production turn использует workspace-write, review turn — parent read-only перед spawn с проверкой effective sandbox, repair turn возвращает рабочее разрешение; `--yolo` не использовать.
 
 Для значимого digital/public результата:

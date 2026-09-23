@@ -1,0 +1,7 @@
+interface:
+  display_name: "DOKRUTI Product Production"
+  short_description: "Buyer-valid product and service execution"
+  default_prompt: "Use $dokruti-product-production to route a substantial DOKRUTI product or service through live commercial sources, value blueprint, free-substitution test, and sequential review."
+
+policy:
+  allow_implicit_invocation: true

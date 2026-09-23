@@ -1,0 +1,7 @@
+interface:
+  display_name: "DOKRUTI Content Production"
+  short_description: "Master-first editorial and channel production"
+  default_prompt: "Use $dokruti-content-production to route substantial DOKRUTI content through live Content System sources, master-first production, rights/AI-data QA, channel adaptation, and sequential review."
+
+policy:
+  allow_implicit_invocation: true
