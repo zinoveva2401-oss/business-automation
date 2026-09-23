@@ -33,6 +33,12 @@ Before pricing or build, test whether a free AI tool, spreadsheet, existing temp
 
 The value blueprint must state buyer, pain/JTBD, promised outcome, inputs, steps, output/delivery, first-value moment, risks, proof, price-worthiness hypothesis, measurement, support/refund boundary, legal/data/rights assumptions, and next action. For coded/digital work use `docs/PRODUCT_EXECUTION.md` and then the current product design source; for services use a bounded service passport; for content, partner, B2B, media, HOLD, or NO-BUILD routes do not force a code artifact.
 
+For every substantial non-trivial product, coded or non-coded as relevant, the product-content gate is mandatory before format/build:
+
+`PRODUCT CONTENT BLUEPRINT → WHOLE LIVE METHODOLOGY / CONTENT / TEXT → CONTENT + METHODOLOGY FREEZE → FORMAT CHALLENGE → UX / VISUAL SPECIFICATION → PRODUCTION / PACKAGE / BUILD → BUYER + COMMERCIAL + DELIVERY QA → SPECIALIST REVIEW → CONSOLIDATED REPAIR → RELEASE CANDIDATE`
+
+Do not jump from the blueprint directly to a selected format or build. The whole live methodology/content/text must be restored, challenged, frozen, and translated into the chosen format before production begins.
+
 Check the user route `ВХОД → ДЕЙСТВИЕ → ОБРАБОТКА → РЕЗУЛЬТАТ → ПОНИМАНИЕ → РЕКОМЕНДАЦИЯ → СЛЕДУЮЩЕЕ ДЕЙСТВИЕ`, edge data, errors, privacy, export/save, delivery continuity, refund/support, and measurable events where applicable.
 
 ## Review and handoff

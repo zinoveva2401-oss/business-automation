@@ -23,16 +23,10 @@ The former B — `Редакционный маршрут` plus A — `Рабо�
 
 ## Home proof contract
 
-The live Site Matrix describes Home as a compact header/hero, factual evidence, one seven-topic diagnostic strip, article access, tools, current material, founder/about, how-DOKRUTI-works, compact services, active channels, and footer. The first bounded proof is only header context, hero, seven-pain navigation, and the evidence/how-DOKRUTI-works block. Desktop uses one diagnostic strip across the content width without seven heavy cards; mobile uses a vertical list or accordion and a shorter hero crop/layout. No unsupported counters, fake proof, autoplay carousel, or equal icon wall.
+Current rule: complete Home production means the full current `12_САЙТ_МАТРИЦА` page — header/navigation, compact hero, seven problem directions, factual evidence/how it works, articles/library, tools/product access, active services, founder/About/trust, active channel reasons, footer/next step, SEO/schema/navigation and conversion. A bounded component proof is allowed only when the current owner task explicitly asks for a bounded component; it is never full Home acceptance. No unsupported counters, fake cases/testimonials, autoplay carousel, equal icon wall, or decorative Trace. Mobile must be intentionally recomposed at the requested viewport.
 
 ## Required proof
 
-Any selected direction must be inspectable at 1440 and 390, preserve exact approved copy, show a materially different composition rather than recolor/padding changes, and survive browser render comparison. The Home proof scope is header context, hero, seven-pain diagnostic navigation, and the evidence/how-DOKRUTI-works block.
-
-## Current superseding route contract
-
-The previous bounded-proof wording above is historical scope language. Current Home production is a complete page, not only a hero proof: header/navigation, compact hero, seven problem directions, factual evidence/how it works, articles/library, tools/product access, active services, founder/About/trust, active channel reasons, footer/next step, SEO/schema/navigation and conversion. Other routes follow the current `12_САЙТ_МАТРИЦА` inventory.
-
-Any bounded Home proof must state its exact in-scope sections and cannot be treated as full Home acceptance. No unsupported counters, fake cases/testimonials, autoplay carousel, equal icon wall, or decorative Trace. Mobile must be intentionally recomposed at the requested viewport.
+Any selected direction must be inspectable at 1440 and 390, preserve exact approved copy, show a materially different composition rather than recolor/padding changes, and survive browser render comparison. For a full Home task, evidence covers the complete Site Matrix page; for an explicitly bounded component task, evidence covers only that named component and its responsive behavior.
 
 For every material route/section provide `CURRENT → APPROVED TARGET → ACTUAL AFTER`, with distinct inspectable artifacts and hashes at the same 1440/390 or equivalent requested breakpoints. A recolor, copy change, padding tweak, or single added block is not a structural implementation.
