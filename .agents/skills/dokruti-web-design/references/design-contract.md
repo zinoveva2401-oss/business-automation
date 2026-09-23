@@ -1,39 +1,43 @@
-# DOKRUTI operational design contract
+# DOKRUTI adaptive design contract
 
-This reference is an implementation contract, not a replacement for the Brand System or Business System. It is model-neutral and must be refreshed when the current Visual SOT or owner decision changes.
+This is a production contract. It does not replace live Brand System, Business System, Site Matrix or latest owner decisions.
 
-## Current visual authority
+## Before concept and code
 
-- Primary composition authority: SYPartners — hierarchy, density, rhythm, editorial composition, and controlled asymmetry.
-- Bounded secondary principle: NOBL — own semantic visual identity only; do not copy its visual language.
-- Bounded motion principle: 11point2 — motion must communicate `START → ACTION → CHANGE → PAYOFF`.
-- The superseded B+A package under `docs/design/site-brand-001/approved/` is historical negative baseline only.
+- Read and verify current `Референсы`, `11_КОНКУРЕНТЫ_И_РЕФЕРЕНСЫ`, `02_Бренд-система`, `03_Активы_проекта`, `12_САЙТ_МАТРИЦА`, and relevant current channels/technical sources.
+- View relevant reference files and inspect selected live web references at their real URLs; record why selected donors fit this page and what must not be copied.
+- Resolve source truth and current page/routes/content/assets; record the whole-page inventory, current → target transformation, measurable user jobs, asset provenance, interactions, conversion path and QA plan.
+- Evaluate current interaction/editorial/motion/photography/story/navigation/founder/AI signals using `ATTENTION → USER VALUE → BRAND FIT → CONVERSION → PERFORMANCE → ACCESSIBILITY`.
+- Produce and challenge a visual concept before implementation. Significant DEVELOPMENT work requires executable SPEC-LINT preflight.
 
-## Visual behavior
+## Adaptive system
 
-- Adult editorial and business-intelligence tone.
-- Material evidence, working context, causal Trace, and result dot must carry meaning.
-- Visual event first; information is placed inside or adjacent to the event.
-- Controlled asymmetry and varied editorial rhythm are preferred over repeated equal cards.
-- Mobile is recomposed, not merely scaled down.
-- Typography creates hierarchy through scale, measure, weight, and rhythm; it must not be used as spectacle over dead space.
+Stable DOKRUTI DNA comes from the current owner and live Brand System: master brand; meaningful orange След and result point; practical cause/check/action; authentic human trust; truthful asset use. All other visual mechanics are adaptive. SYPartners, NOBL, 11point2 and any other named reference are current candidates only; none is permanently mandated.
 
-## Palette
+Choose composition, scale, density, rhythm, typography, image treatment, navigation and motion for the page's users, source assets and current evidence. Don't confuse visual consistency with repeating a site template. Don't make a web page look like a social poster, a generic AI interface, a generic consultant site, or a card catalog unless current evidence and the user job specifically justify that form.
 
-- `#17130F` and `#262626` for dark text and grounded surfaces.
-- `#F4F5F6` and white for paper/light surfaces.
-- `#D9562F` for primary Trace/action emphasis.
-- `#2F80ED` and `#173B67` only where analytical meaning requires them.
-- Old khaki is not the master-brand default.
+## First view and whole-page composition
 
-## Hard anti-patterns
+The first seconds must contain a distinct visual event or scene before long reading. Fail a first view made mostly of a large headline, plain rectangles, text diagram, service infographic, or unmotivated empty space. Apply the Remove-Text test: if taking away most text leaves no interesting idea/change, revise the concept.
 
-No generic AI UI, card wall, SaaS dashboard, giant empty hero, template consulting site, Canva/social-poster grammar, decorative Trace, fake metrics/cases/testimonials/interfaces, or random gradients.
+Design one continuous page narrative with contrasting scales and types of content: image-led, editorial, interactive, compact, immersive and useful utility as appropriate. Every block has `USER JOB + NEW VALUE + NEXT ACTION`. Merge/remove duplicate roles. An article feature and a second nearly identical latest-articles block are a failure. Large whitespace needs dramaturgical, visual or interaction purpose. A page is not a sequence of isolated slides.
 
-## Asset and motion rules
+Before handoff ask whether the actual page catches attention, remains recognizable as DOKRUTI without the logo, creates memorable/shareable moments, encourages continued exploration, increases trust and advances a useful follow/follow-up/contact/service/tool action. Virality, attention and portfolio/showcase quality are normal goals when they help comprehension, trust and conversion without harming speed, accessibility or truth.
 
-Use owner assets by role: founder/About, DOKRUTI materiality, Trace character, and relevant social references only where they support the website task. Do not import social poster grammar into website UI. Motion is allowed only when it clarifies a meaningful state change and must respect reduced-motion preferences.
+## Navigation and interaction
 
-## Route invariants
+Navigation has direct useful destinations. A pain choice always reaches its correct useful route in one click; preview is optional and never gates navigation. Interactions must enable discovery, reveal, comparison, transformation, response, causality or navigation. A color hover, fade-in or decorative parallax alone is not meaningful interaction. Use several distinct interaction moments only when supported by the concept; each must work by keyboard and respect reduced motion.
 
-Preserve canonical routes, factual content, seven pain directions, three frozen services, articles/library, contacts, SEO/meta/schema/internal links, event hooks, staging noindex, and commercial/legal architecture. Visual restructuring must not rewrite business truth.
+## Assets, founder and factual presentation
+
+Search current Drive references, approved founder references, the asset registry, current website assets and appropriate edit/generation options before placeholders or generic stock. Choose and document `REUSE / EDIT / GENERATE NEW / NO IMAGE` for each material visual, with meaning, provenance, approval, rights, crop/quality, role and fallback. Realistic-looking or existing images are not automatically documentary or approved. Never present AI-generated/composited founder imagery as real photography. When no appropriate approved portrait is verifiable, show the founder truthfully without inventing photographic evidence.
+
+Tools, products, channels and services are factual objects with current readiness, use and destination. No fake store, fake readiness, active-looking empty channel, unverifiable metric/case or unsupported claim.
+
+## Brand and public language
+
+Use live palette, type and visual rules, while adapting them for the concept. The orange След and point need a real relation to a problem, change, route, evidence or result. Use owner language; no internal statuses, numbering, proofs, production notes or technical labels on public pages. Keep legal/privacy and analytics truth intact.
+
+## Responsive and functional quality
+
+Recompose for mobile with its own sequence, crops, density, interaction and navigation. Preserve clarity, legibility, touch and keyboard access, contrast, no overflow and direct conversion routes. Motion communicates a meaningful state change and honors `prefers-reduced-motion`. Keep media performant and avoid loading decorative assets that don't strengthen the experience.

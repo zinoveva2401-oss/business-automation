@@ -1,54 +1,72 @@
 ---
 name: dokruti-web-design
-description: Route substantial DOKRUTI web design work through current sources, a resolved visual target, official visual-production tools, and evidence-based browser QA. Do not use for routine copy or minor implementation fixes.
+description: Route substantial DOKRUTI web design through current business and brand sources, live reference discovery, adaptive visual decisions, real asset provenance, full-page production, and browser evidence.
 ---
 
 # DOKRUTI web production
 
-This is the DOKRUTI-specific web/design execution contract. It does not replace Product Design, Build Web Apps, ImageGen, Browser, Playwright, or optional Figma capabilities; it routes them around the current DOKRUTI source and review rules.
+Use for substantial DOKRUTI site/page/hero/redesign/visual-system work. This routes Product Design, frontend production, image creation/editing, browser QA, and review around current DOKRUTI truth. Routine copy/CSS patches use a proportional path.
 
-## Source order and source access
+## Source and capability preflight
 
-Resolve sources in this order:
+Before concept work, read the latest owner decision and the relevant live sources; verify each source's Version / Date / Status. For substantial site work, inspect:
 
-1. latest explicit owner decision;
-2. live `Бизнес-система` / Drive and Sheets sources;
-3. current Brand System and `12_САЙТ_МАТРИЦА`;
-4. current task Visual SOT and approved reference artifacts, when they are explicitly current;
-5. repository implementation.
+1. Google Drive `Референсы` folder and actually open/view relevant current files;
+2. live Business System `11_КОНКУРЕНТЫ_И_РЕФЕРЕНСЫ` (Radar);
+3. current `02_Бренд-система`;
+4. current `03_Активы_проекта`;
+5. current `12_САЙТ_МАТРИЦА`;
+6. `10_САЙТ_ТЕХКОНТУР` and other relevant live registers;
+7. the repository's real routes, content, assets, state and Git status.
 
-Before substantial work record a source access map: `LOCAL REPO`, `GITHUB`, `LIVE DRIVE/SHEETS`, `BROWSER/WEB`, and `OWNER/BUSINESS OS SNAPSHOT` as `YES/NO`, with date and limitation. Private source IDs, URLs, contents, prices, queues, or credentials do not enter the repository.
+Do not treat a folder listing, search result, archive, previous task, memory, or existing file as proof of current status, approval, rights, readiness, or documentary truth. Record source access as YES/NO with date and limitation. If canonical live data is unavailable, follow the project source gate; do not invent a second source of truth.
 
-The historical `docs/design/site-brand-001/approved/` B+A package is not automatically current authority. Use it only when the current task explicitly promotes an exact artifact as immutable reference or asks for BEFORE comparison.
+Use current web/reference research when freshness matters. Verify candidate sites at their actual URLs and inspect their current experience. A reference title or a trend report alone is not design evidence. Capability preflight selects the lightest available free route; no paid, credentialed, irreversible, or unclear-license dependency without the required owner gate.
 
 ## Mandatory production route
 
-Use this route for a new page, substantial redesign, hero, visual system, or material page rebuild:
+`OWNER INTENT → LIVE SOURCES → REFERENCE LIBRARY + RADAR → PAGE INVENTORY → ADAPTIVE DONOR DECISION → VISUAL/CONTENT/ASSET CONCEPT → PRE-PRODUCTION PROOF → IMPLEMENTATION → REAL BROWSER → WHOLE-PAGE QA → SEQUENTIAL SPECIALIST REVIEW → CONSOLIDATED REPAIR → RERENDER → REGRESSION → HANDOFF`
 
-`OWNER INTENT → LIVE SITE MATRIX → PAGE INVENTORY → CONTENT/SOURCE RESOLUTION → CURRENT REFERENCES → VISUAL TARGET → ASSET PLAN → IMPLEMENTATION → REAL BROWSER → FULL-PAGE QA → SPECIALIST REVIEW → CONSOLIDATED REPAIR → RERENDER → HANDOFF`
+Before production, record `CURRENT → TARGET → REQUIRED STRUCTURAL CHANGE → OBSERVABLE ACCEPTANCE`, section jobs, reference donor decisions, asset truth/provenance, interactions, responsive strategy, conversion route, and verification plan. For significant work, run executable SPEC-LINT before editing. The first implementation is a draft.
 
-Do not write production Astro before the route has a page inventory, selected visual target, material transformation map, asset decision, and QA plan. A code diff, build, or producer screenshot list is not visual evidence by itself.
+## Reference-led adaptive design gate
 
-## Page Completeness Gate
+Choose several strong, currently verified donors from the live reference folder, Radar, relevant public sites and current research. For every selected donor record:
 
-For every substantial page, read the current Site Matrix and write `CURRENT → APPROVED TARGET → REQUIRED STRUCTURAL CHANGE → ACCEPTANCE EVIDENCE` before implementation. Do not satisfy a materially different reference by leaving legacy sections in place and changing only copy, CTA, padding, or color.
+`REFERENCE → WHAT IS STRONG → MECHANIC → ATTENTION → USER VALUE → BRAND FIT → CONVERSION → PERFORMANCE / ACCESSIBILITY → DOKRUTI ADAPTATION → TARGET SECTION → WHAT NOT TO COPY`.
 
-For a complete Home, inspect the whole page contract: header/navigation; compact hero; seven problem directions; factual evidence/how it works; articles/library; tools/product access; active services; founder/About/trust; active channel reasons; footer/next step; SEO/schema/navigation/conversion. The exact inventory for other routes comes from the current Site Matrix, not memory.
+Choose mechanics for this user, page, assets and moment. External brands such as SYPartners, NOBL, 11point2, or any other donor are candidates only; none is permanent visual authority. A donor may be rejected after current inspection. Never imitate a donor's whole visual language or turn one successful device into a site-wide template.
 
-## Visual and asset decisions
+Apply stable DOKRUTI Brand DNA with adaptive current mechanics. If a concept depends on reading a long explanation to become visually interesting, revise it before coding.
 
-Use Product Design for context, ideation, image-to-code, and design QA where appropriate; use Build Web Apps after the target is resolved; use ImageGen for a meaningful bespoke raster asset when reuse is generic, stale, or semantically weak. For every material visual asset record one decision: `REUSE`, `EDIT`, `GENERATE NEW`, or `NO IMAGE`, with semantic fit, brand specificity, source/provenance, rights, quality/crop, role, and fallback.
+## Page completeness and public truth
 
-The current DOKRUTI visual contract is SYPartners for composition, NOBL only as a bounded semantic-identity principle, and 11point2 only for meaningful `START → ACTION → CHANGE → PAYOFF` motion. Prefer controlled asymmetry, editorial rhythm, real evidence, materiality, causal Trace, and a visual event first. Avoid generic AI UI, dashboard/card walls, giant dead-space hero, social-poster grammar, decorative Trace, fake proof, random gradients, and CSS art replacing meaningful imagery. Mobile is recomposed, not merely scaled.
+The current Site Matrix defines business outcomes, routes, frozen terms and required user jobs. Preserve its current truth and latest explicit owner additions; do not put designer implementation rules into the Site Matrix. Inspect all existing route/content/data dependencies before restructuring.
+
+For a complete Home, cover every current Home job in a coherent page: navigation; high-impact compact hero; direct pain discovery; one useful editorial module; real tools/products; founder/approach/trust; how the work helps; current services; live channels/contact routes; and footer. Jobs may be composed together and do not require one section each. No duplicated modules or repeated content roles. Keep public copy in the language of a small-business owner. Never expose internal numbering, proofs, statuses, technical/production labels, or unsupported claims.
+
+For every section define `USER JOB + NEW VALUE + NEXT ACTION`. Merge or remove a block that adds no distinct value. Plan the page as one narrative with pace, visual peaks, calmer intervals, transitions, useful density and cumulative trust, not as disconnected presentation slides. Check whether people want to keep scrolling, remember or share a moment, recognize DOKRUTI without its logo, and have a clear next action. Attention and shareability are valid when they improve understanding, trust and conversion. Generic consultant/agency templates fail.
+
+Do not add click depth to decorate an interaction. Every pain/navigation choice must lead directly to its useful destination in one click. Interactions must produce discovery, reveal, comparison, transformation, response, causality or navigation; hover-color, fade-in, and decorative parallax alone do not qualify. Select several meaningful moments where the current concept supports them.
+
+## Asset discovery and truth
+
+Before placeholders, initials or generic stock, inspect the live reference folder, current asset registry, site assets, real founder photos, owner-approved likeness references, and usable editing/generation paths. For each material asset record `REUSE / EDIT / GENERATE NEW / NO IMAGE`, with semantic fit, provenance, approval, rights, quality/crop, role, and fallback.
+
+A file's existence or a realistic appearance does not prove it is a real photograph, an approved likeness, a current asset, or cleared for publication. Never present generated or composited founder imagery as documentary photography. If no suitable approved founder asset is verifiable, use a truthful non-documentary visual treatment and state the limitation; do not fabricate a founder photo or replace an available approved photo with initials.
+
+## Experience, conversion and adaptive signals
+
+Check current applicable signals for interaction, editorial digital, motion/scrollytelling, mixed media/photography, visual storytelling, navigation, content presentation, founder/creator sites, and AI/digital experiences. Evaluate each candidate by attention, user value, brand fit, conversion, performance and accessibility; adopt only what serves the page.
+
+Map the actual visitor path: `ATTENTION → UNDERSTAND → FIND MY PROBLEM → TRUST → USEFUL CONTENT → SOLUTION → CONTACT / SERVICE / FOLLOW / TOOL`. Every important CTA needs a clear reason and truthful destination. Product/tool and channel prominence must match current readiness, role and usefulness. Empty or unverified channels must not look active.
+
+## Real production and review
+
+Use the actual rendering route. Build success is not visual acceptance. Capture the complete rendered page through sequential real viewport captures at required desktop and mobile widths; do not use a stitched full-page image as sole proof. Test actual interactions, keyboard/focus, reduced motion, touch targets, contrast, overflow, images, broken links/routes, console/network, metadata/schema, event hooks, security-sensitive content, performance and build/check as applicable.
+
+Review the final artifact itself, identified by exact URL/path and final SHA. Apply relevant sequential read-only lenses: current research, visual, product/growth, media when material, technical, then review chair. Record factual `PASS / FAIL / UNKNOWN` and evidence. A material unknown or major defect blocks READY. Make one consolidated repair pass and review the new rendered artifact again. Never present REWORK as ready.
 
 ## Invariants
 
-Preserve canonical Astro routes, real texts/articles, seven pain directions, three frozen services, contacts, SEO/meta/schema/internal links, event hooks, staging noindex, commercial/legal guards, and the current Business System truth. Visual restructuring must not invent products, prices, cases, metrics, partners, or claims.
-
-## Full-page QA
-
-Capture exact current/reference/after artifacts at requested desktop and mobile viewports. Inspect the full page and section evidence for composition, hierarchy, density, whitespace, typography, CTA hierarchy, specificity, asset meaning, article/product/service/founder/trust presence, mobile recomposition, reduced motion, accessibility/contrast, touch targets, images, overflow, console/network, metadata/schema, links/404, and build/check. Use real Browser/Playwright evidence; `build != visual PASS`.
-
-## Review and handoff
-
-Run relevant read-only passes sequentially in this owner chat: Research/Current Intelligence when needed, Visual, Product/Growth, Media when relevant, Technical, then Review Chair. Record `artifact_truth`, `reference_fidelity`, exact artifact path/SHA, viewport, observed result, and PASS/FAIL/UNKNOWN. Technical PASS never overrides a material visual or product FAIL. A material result requires consolidated repair and rerender before owner-facing handoff.
+Preserve canonical Astro routes, verified published content, current pain taxonomy, frozen active services, contacts, analytics/events, SEO/schema, legal/privacy boundaries, staging noindex and commercial guards. Visual production must not invent products, prices, cases, metrics, channel activity, credentials or promises. Mobile is intentionally recomposed, not merely scaled.

@@ -23,6 +23,17 @@ export const projectLinks = [
   { id: 'vc', label: 'VC.ru', href: 'https://vc.ru/id5659262', event: 'click_vc', icon: 'ti-news' },
 ] as const;
 
+// Public Home channel snapshot checked against the live Content System on 2026-09-21.
+// Recheck status and role against the live register before future editorial changes.
+export const homeChannels = [
+  { id: 'CH-TG', channelId: 'telegram', label: 'Telegram', href: 'https://t.me/Svetlana_Marketolog_riteil', short: 'TG', role: 'Короткие разборы, наблюдения и возврат к полезным материалам.', state: 'Переупаковка начата; аудит исторической аудитории ещё впереди.' },
+  { id: 'CH-VK', channelId: 'vk', label: 'ВКонтакте', href: 'https://vk.ru/svetlana_tarasova_marketolog', short: 'VK', role: 'Охват, доверие и сообщество вокруг рабочих задач.', state: 'Публичная ссылка подтверждена; оформление ещё проверяется.' },
+  { id: 'CH-DZEN', channelId: 'dzen', label: 'Дзен', href: 'https://dzen.ru/user/j0k4kngnxzw8m5tlmxy8gvho3im?share_to=link', short: 'ДЗ', role: 'Длинные самостоятельные статьи и поиск.', state: 'Публикаций пока нет; канал ожидает запуска.' },
+  { id: 'CH-IG', channelId: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/svetlana.24011982/', short: 'IG', role: 'Лицо автора и короткие видео для знакомства с подходом.', state: 'Аккаунт найден; старое позиционирование требует обновления.' },
+  { id: 'CH-MAX', channelId: 'max', label: 'MAX', href: 'https://max.ru/se13981398_biz', short: 'MX', role: 'Дополнительный российский канал; полезность тестируется.', state: 'Тестовый контур; это не основной канал проекта.' },
+  { id: 'CH-VC', channelId: 'vc', label: 'VC.ru', href: 'https://vc.ru/id5659262', short: 'VC', role: 'Деловые разборы и репутационные материалы.', state: 'Профиль существует, публикаций пока нет.' },
+] as const;
+
 export const personalMaxLink = { id: 'max-personal', label: 'MAX, личный контакт', href: 'https://max.ru/u/f9LHodD0cOLF-PQtORzTwE5pK8qp1T1cWwz87rnQkkVb8yHYO66Qp8BcOO0', event: 'click_max', icon: 'ti-message-circle' } as const;
 export const projectMaxLink = { id: 'max-channel', label: 'MAX-канал «Докрути»', href: 'https://max.ru/se13981398_biz', event: 'click_max', icon: 'ti-message-circle' } as const;
 
