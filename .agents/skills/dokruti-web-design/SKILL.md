@@ -65,6 +65,8 @@ Map the actual visitor path: `ATTENTION → UNDERSTAND → FIND MY PROBLEM → T
 
 Use the actual rendering route. Build success is not visual acceptance. Capture the complete rendered page through sequential real viewport captures at required desktop and mobile widths; do not use a stitched full-page image as sole proof. Test actual interactions, keyboard/focus, reduced motion, touch targets, contrast, overflow, images, broken links/routes, console/network, metadata/schema, event hooks, security-sensitive content, performance and build/check as applicable.
 
+Visual handoff is incomplete until all required screenshot files are verified and actually shown or attached inline in the owner-facing chat. List section, viewport, local path and exact source artifact SHA for each file. Do not claim that evidence is available in chat unless the images are visibly surfaced in that conversation.
+
 Review the final artifact itself, identified by exact URL/path and final SHA. Apply relevant sequential read-only lenses: current research, visual, product/growth, media when material, technical, then review chair. Record factual `PASS / FAIL / UNKNOWN` and evidence. A material unknown or major defect blocks READY. Make one consolidated repair pass and review the new rendered artifact again. Never present REWORK as ready.
 
 ## Invariants

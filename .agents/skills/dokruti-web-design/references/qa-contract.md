@@ -10,6 +10,10 @@ Before code, create the whole-page `CURRENT → TARGET → ACTUAL` transformatio
 
 For the exact final SHA or live local artifact, capture sequential actual viewport renders across the complete page at desktop 1440 CSS px and mobile 390 CSS px. Scroll in viewport-sized segments and include all sections; a stitched full-page screenshot is not sole evidence. Check the real browser viewport and link each capture to exact route and artifact SHA. Include the reference artifacts/URLs used and their actual fit. Test material interactions at browser widths.
 
+### Owner-facing screenshot handoff
+
+Visual evidence handoff is incomplete until every required screenshot file exists and the screenshots are actually attached or displayed inline in the owner-facing chat. For every capture, identify its section, viewport, local file path, exact source artifact SHA, and (when useful) file checksum. Before handoff, verify the listed captures against the files and confirm the images are visibly surfaced in that conversation. Never claim “evidence available in chat” (or equivalent) unless the screenshot images are actually shown or attached there; a path, report, or screenshot inventory alone does not satisfy this requirement.
+
 ## Experience, content and conversion
 
 Check all of these against live source data and actual rendered behavior:
