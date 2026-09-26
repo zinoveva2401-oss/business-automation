@@ -1,0 +1,5 @@
+---
+import { legalRoutes, legalPublicReady } from '../lib/legal';
+export function getStaticPaths(){return legalRoutes.map(legal=>({params:{legal}}))}
+if(!legalPublicReady) return Astro.redirect('/',302);
+---

@@ -1,65 +1,25 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Breadcrumbs from '../../components/Breadcrumbs.astro';
-import EditorialFolio from '../../components/EditorialFolio.astro';
-import EditorialProblemMap from '../../components/EditorialProblemMap.astro';
 import EditorialArticleRow from '../../components/EditorialArticleRow.astro';
 import { getPublishedArticles } from '../../lib/content';
 import { categories } from '../../lib/site';
-const articles = await getPublishedArticles();
-const featuredArticle = articles.find(({ data }) => data.id === 'CNT-0007') ?? articles[0];
-const supportingArticles = featuredArticle ? articles.filter((article) => article.data.id !== featuredArticle.data.id) : articles;
-const clusters = [...new Set(articles.map(({ data }) => data.cluster))];
-const selectedCategory = Astro.url.searchParams.get('category') ?? '';
+const articles=await getPublishedArticles();
+const featured=articles.find(item=>item.data.id==='CNT-0026') ?? articles[0];
+const rest=articles.filter(item=>item.data.id!==featured?.data.id);
+const heroScene=rest[0]??featured;
+const types=[...new Set(articles.map(item=>item.data.content_type))];
 ---
-<BaseLayout title="Библиотека «Докрути» — статьи и разборы" description="Практические материалы о продажах, клиентах, команде, управлении, маркетинге и автоматизации." image={featuredArticle?.data.cover ?? '/images/home-hero-editorial.png'}>
-  <article class="library-route">
-    <div class="container library-route__top"><Breadcrumbs items={[{ name: 'Главная', href: '/' }, { name: 'Библиотека' }]} /><EditorialFolio number="03" label="Library" /></div>
-    <section class="library-route__intro"><div class="container"><p class="eyebrow">Свежие материалы</p><h1>Сначала увидеть причину.<br /><em>Потом выбрать действие.</em></h1><p>Разборы рабочих ситуаций, в которых важно начать с наблюдаемого факта и одной следующей проверки.</p></div></section>
-    <section class="library-route__map"><div class="container"><EditorialProblemMap currentSlug={selectedCategory} /></div></section>
-    <section class="library-route__desk"><div class="container">
-      <form class="editorial-filters" data-article-filters><label>Поиск<input type="search" name="search" placeholder="Название или вопрос" /></label><label>Тема<select name="category"><option value="">Все темы</option>{categories.map((topic) => <option value={topic.slug}>{topic.name}</option>)}</select></label><label>Кластер<select name="cluster"><option value="">Все кластеры</option>{clusters.map((cluster) => <option value={cluster}>{cluster}</option>)}</select></label><label>Сортировка<select name="sort"><option value="new">Сначала новые</option><option value="old">Сначала старые</option><option value="featured">Сначала избранные</option></select></label></form>
-      <p class="result-count" data-result-count>Материалов: {articles.length}</p>
-      <div class="library-results" data-article-results>
-        {featuredArticle && <EditorialArticleRow article={featuredArticle} featured placement="articles_featured" />}
-        {supportingArticles.map((article, index) => <EditorialArticleRow article={article} rank={index + 1} placement="articles_catalog" />)}
-      </div>
-    </div></section>
-  </article>
+<BaseLayout title="Библиотека Докрути — практические материалы для малого бизнеса" description="Статьи, разборы и другие опубликованные материалы по реальным задачам бизнеса." image={featured?.data.cover}>
+<article class="library-v4"><header class="library-intro"><div class="container intro-grid"><div><p class="eyebrow">ПРАКТИЧЕСКИЕ МАТЕРИАЛЫ</p><h1>Библиотека Докрути</h1><p>Практические материалы по реальным задачам бизнеса.</p></div><figure class="intro-artifact">{heroScene&&<img src={heroScene.data.cover} alt={heroScene.data.coverAlt} loading="eager" decoding="async"/>}<figcaption>Факт → проверка → следующий шаг</figcaption></figure></div></header>
+<section class="container library-content"><nav class="topic-filters" aria-label="Темы материалов" data-topic-filters><a href="/articles/" data-topic="" aria-current="page">Все темы</a>{categories.map(item=><a href={'/articles/?topic='+item.slug} data-topic={item.slug} data-analytics-event="topic_click" data-analytics-topic={item.slug}>{item.name}</a>)}</nav>
+{types.length>1&&<nav class="type-filters" aria-label="Форматы материалов" data-type-filters><a href="/articles/" data-type="" aria-current="page">Все форматы</a>{types.map(type=><a href={'/articles/?content_type='+encodeURIComponent(type)} data-type={type}>{type}</a>)}</nav>}
+<div class="library-title"><h2>Материалы для вашей задачи</h2><p data-empty hidden>По этому фильтру пока нет опубликованных материалов.</p></div>
+<div class="library-results" data-results>{featured&&<EditorialArticleRow article={featured} featured placement="library_feature"/>}{rest.map((item,index)=><EditorialArticleRow article={item} rank={index+1} placement="library_list"/>)}</div></section></article>
 </BaseLayout>
 <script>
-  const form = document.querySelector<HTMLFormElement>('[data-article-filters]');
-  const results = document.querySelector<HTMLElement>('[data-article-results]');
-  const counter = document.querySelector<HTMLElement>('[data-result-count]');
-  if (form && results && counter) {
-    const cards = [...results.querySelectorAll<HTMLElement>('[data-article-card]')];
-    const aliases = new Map([['sales', 'Продажи'], ['prodazhi', 'Продажи'], ['assortiment-i-zakupki', 'Ассортимент и закупки'], ['assortiment-zakupki', 'Товар'], ['tovar', 'Товар'], ['klienty', 'Клиенты'], ['pokupatel', 'Покупатель'], ['komanda', 'Команда'], ['personal', 'Персонал'], ['upravlenie-i-processy', 'Управление'], ['upravlenie', 'Управление'], ['ii-i-avtomatizaciya', 'ИИ и автоматизация'], ['ai-avtomatizatsiya', 'ИИ и автоматизация']]);
-    const apply = () => {
-      const values = new FormData(form);
-      const search = String(values.get('search') || '').trim().toLocaleLowerCase('ru');
-      const category = String(values.get('category') || '');
-      const cluster = String(values.get('cluster') || '');
-      const sort = String(values.get('sort') || 'new');
-      const ordered = [...cards].sort((a, b) => sort === 'old' ? Number(a.dataset.timestamp) - Number(b.dataset.timestamp) : sort === 'featured' ? Number(b.dataset.featured) - Number(a.dataset.featured) : Number(b.dataset.timestamp) - Number(a.dataset.timestamp));
-      ordered.forEach((card) => results.append(card));
-      let visible = 0;
-      cards.forEach((card) => {
-        const matchSearch = !search || (card.dataset.search || '').includes(search);
-        const matchCategory = !category || (card.dataset.category || '') === category || aliases.get(category) === card.dataset.category;
-        const matchCluster = !cluster || card.dataset.cluster === cluster;
-        const show = matchSearch && matchCategory && matchCluster;
-        card.hidden = !show;
-        if (show) visible += 1;
-      });
-      counter.textContent = 'Материалов: ' + visible;
-    };
-    form.addEventListener('input', apply);
-    form.addEventListener('change', apply);
-    const initial = new URLSearchParams(window.location.search).get('category');
-    if (initial) { const select = form.elements.namedItem('category'); if (select instanceof HTMLSelectElement) select.value = initial; }
-    apply();
-  }
+ const aliases:Record<string,string>={prodazhi:'sales','assortiment-zakupki':'assortiment-i-zakupki',pokupatel:'klienty',personal:'komanda',upravlenie:'upravlenie-i-processy','ai-avtomatizatsiya':'ii-i-avtomatizaciya'};
+ const cards=[...document.querySelectorAll<HTMLElement>('[data-article-card]')];const empty=document.querySelector<HTMLElement>('[data-empty]');
+ const update=()=>{const url=new URL(location.href);let topic=url.searchParams.get('topic')||url.searchParams.get('category')||'';topic=aliases[topic]||topic;const type=url.searchParams.get('content_type')||'';let shown=0;cards.forEach(card=>{const visible=(!topic||card.dataset.topic===topic)&&(!type||card.dataset.contentType===type);card.hidden=!visible;if(visible)shown++});if(empty)empty.hidden=shown!==0;document.querySelectorAll<HTMLElement>('[data-topic]').forEach(el=>{if(el.dataset.topic===topic)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current')});document.querySelectorAll<HTMLElement>('[data-type]').forEach(el=>{if(el.dataset.type===type)el.setAttribute('aria-current','page');else el.removeAttribute('aria-current')});const robots=document.querySelector<HTMLMetaElement>('meta[name=robots]');if(robots&&!robots.content.includes('nofollow'))robots.content=url.search?'noindex,follow':'index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1';};
+ document.querySelectorAll<HTMLAnchorElement>('[data-topic],[data-type]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();const url=new URL(location.href);if(link.dataset.topic!==undefined){const topic=link.dataset.topic;topic?url.searchParams.set('topic',topic):url.searchParams.delete('topic');url.searchParams.delete('category')}if(link.dataset.type!==undefined){const type=link.dataset.type;type?url.searchParams.set('content_type',type):url.searchParams.delete('content_type')}history.pushState(null,'',url);update()}));addEventListener('popstate',update);update();
 </script>
-<style>
-  .library-route{background:#fff;color:var(--c-graphite)}.library-route__top{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:1rem}.library-route__intro{padding:clamp(3rem,7vw,6rem) 0;background:var(--c-paper)}.library-route__intro h1{max-width:900px;margin:.45rem 0 1rem;font-size:clamp(3.2rem,6.4vw,6.5rem);line-height:.9;letter-spacing:-.05em}.library-route__intro h1 em{color:var(--c-orange);font-style:normal}.library-route__intro p:last-child{max-width:570px;margin:0;color:#56616a;font-size:1.08rem;line-height:1.55}.library-route__map{padding:2rem 0;background:var(--c-paper)}.library-route__map .editorial-problem-map__rows{display:grid;grid-template-columns:repeat(7,1fr);border-left:1px solid var(--c-graphite)}.library-route__map .editorial-problem-map__row{grid-template-columns:1fr;grid-template-rows:auto 1fr 20px;gap:.5rem;min-height:136px;padding:.75rem;border-right:1px solid var(--c-graphite)}.library-route__map .editorial-problem-map__row>b{text-align:left}.library-route__desk{padding:clamp(3rem,7vw,7rem) 0}.editorial-filters{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:.8rem;align-items:end;margin-bottom:1.2rem}.editorial-filters label{display:grid;gap:.35rem;color:var(--c-muted);font-size:.68rem;font-weight:800;text-transform:uppercase}.editorial-filters input,.editorial-filters select{width:100%;min-height:42px;padding:.55rem .65rem;border:1px solid var(--c-graphite);border-radius:0;background:#fff;color:var(--c-graphite);font:inherit;font-size:.82rem;text-transform:none}.result-count{margin:0 0 1rem;color:var(--c-muted);font-size:.75rem}.library-results{border-top:1px solid var(--c-graphite)}.library-results .editorial-article-row{border-top:0;border-bottom:1px solid var(--c-graphite)}.library-results .editorial-article-row--featured{margin-bottom:1.8rem;border:0;border-top:3px solid var(--c-orange)}.library-results .editorial-article-row--featured+ .editorial-article-row{border-top:1px solid var(--c-graphite)}.library-results .editorial-article-row[hidden]{display:none}@media(max-width:900px){.editorial-filters{grid-template-columns:1fr 1fr}.library-route__map .editorial-problem-map__rows{grid-template-columns:repeat(4,1fr)}.library-route__map .editorial-problem-map__row:nth-child(n+5){border-top:1px solid var(--c-graphite)}}@media(max-width:700px){.library-route__top{align-items:start;flex-direction:column}.library-route__intro h1{font-size:clamp(3rem,12vw,4.3rem)}.library-route__map .editorial-problem-map__rows{grid-template-columns:repeat(2,1fr)}.library-route__map .editorial-problem-map__row:nth-child(n+3){border-top:1px solid var(--c-graphite)}.editorial-filters{grid-template-columns:1fr}.library-route__desk{padding-top:3.5rem}}
-</style>
+<style>.library-v4{background:#fff}.library-intro{padding:58px 0;background:#f4f5f6}.intro-grid{display:grid;grid-template-columns:1fr .65fr;gap:40px;align-items:center}.intro-grid h1{max-width:800px;margin:0 0 18px;font-size:clamp(50px,6vw,85px)}.intro-grid p:last-child{max-width:600px;font-size:18px}.intro-artifact{position:relative;min-height:270px;margin:0;overflow:hidden;border-left:3px solid #d9562f;background:#17130f}.intro-artifact img{display:block;width:100%;height:270px;object-fit:cover}.intro-artifact figcaption{position:absolute;right:0;bottom:0;left:0;padding:24px;color:#fff;background:linear-gradient(transparent,#17130fe8);font:600 22px var(--font-editorial)}.library-content{padding-top:30px;padding-bottom:65px}.topic-filters,.type-filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}.topic-filters a,.type-filters a{display:inline-flex;min-height:44px;align-items:center;padding:8px 12px;border:1px solid #bfc4c9;font-size:12px;text-decoration:none}.topic-filters a[aria-current=page],.type-filters a[aria-current=page]{border-color:#17130f;background:#17130f;color:#fff}.library-title h2{margin:34px 0 24px;font-size:clamp(32px,4vw,50px)}.library-results{display:grid;grid-template-columns:1fr 1fr;gap:0 22px}.library-results :global(.editorial-article-row--featured){grid-column:1/-1;margin-bottom:20px}.library-results :global(.editorial-article-row[hidden]){display:none}@media(max-width:700px){.intro-grid,.library-results{grid-template-columns:1fr}.library-intro{padding:42px 0}.intro-grid h1{font-size:clamp(45px,11vw,65px)}.intro-artifact{display:none}.library-results :global(.editorial-article-row--featured){grid-column:1}.library-content{padding-bottom:45px}}</style>

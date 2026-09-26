@@ -1,32 +1,5 @@
----
-const metrikaId = import.meta.env.PUBLIC_YANDEX_METRIKA_ID;
----
-<script is:inline define:vars={{ metrikaId }}>
-  const allowed = new Set(['page_view','click_topic','open_article','click_article','click_related_article','click_service','open_product','view_product','click_product','click_question','click_contact','click_distribution_channel']);
-  const consentKey = 'rvd_analytics_consent';
-  const utmKey = 'rvd_utm';
-  const utmNames = new Set(['utm_source','utm_medium','utm_campaign','utm_content','utm_term']);
-  const params = new URLSearchParams(location.search);
-  const utm = Object.fromEntries([...params].filter(([key, value]) => utmNames.has(key) && value).map(([key, value]) => [key, value.slice(0, 200)]));
-  if (Object.keys(utm).length) sessionStorage.setItem(utmKey, JSON.stringify(utm));
-  const contextFrom = (element) => Object.fromEntries(Object.entries(element.dataset).filter(([key]) => key.startsWith('analytics') && key !== 'analyticsEvent' && key !== 'analyticsSecondaryEvent' && key !== 'analyticsView').map(([key, value]) => [key.replace(/^analytics/, '').replace(/^./, (letter) => letter.toLowerCase()).replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`), value]));
-  const send = (event, context = {}) => {
-    if (!allowed.has(event) || localStorage.getItem(consentKey) !== 'granted') return;
-    let savedUtm = {}; try { savedUtm = JSON.parse(sessionStorage.getItem(utmKey) || '{}'); } catch {}
-    const detail = { event, context, utm: savedUtm };
-    window.dispatchEvent(new CustomEvent('rvd:analytics-event', { detail }));
-    if (metrikaId && typeof window.ym === 'function') window.ym(Number(metrikaId), 'reachGoal', event, { ...context, ...savedUtm });
-  };
-  const startMetrika = () => {
-    if (!metrikaId || localStorage.getItem(consentKey) !== 'granted' || window.__rvdMetrikaStarted) return;
-    window.__rvdMetrikaStarted = true;
-    window.ym = window.ym || function(){ (window.ym.a = window.ym.a || []).push(arguments); };
-    window.ym.l = Date.now();
-    const script = document.createElement('script'); script.async = true; script.src = 'https://mc.yandex.ru/metrika/tag.js'; document.head.append(script);
-    window.ym(Number(metrikaId), 'init', { clickmap: true, trackLinks: true, accurateTrackBounce: true, webvisor: true });
-  };
-  startMetrika();
-  document.querySelectorAll('[data-analytics-view]').forEach((element) => send(element.dataset.analyticsView, contextFrom(element)));
-  document.addEventListener('click', (click) => { const target = click.target.closest('[data-analytics-event]'); if (target) { const context = contextFrom(target); send(target.dataset.analyticsEvent, context); if (target.dataset.analyticsSecondaryEvent) send(target.dataset.analyticsSecondaryEvent, context); } });
-  window.addEventListener('rvd:analytics-consent', (event) => { if (event.detail?.value === 'granted') startMetrika(); });
+<script>
+  const allowed = new Set(['page_view','topic_click','content_click','cta_click','channel_subscribe_click','contact_open','contact_platform_click','commercial_impression','commercial_click','product_view','buy_click']);
+  const eventContext = (el: HTMLElement) => Object.fromEntries(Object.entries(el.dataset).filter(([key]) => ['analyticsPageType','analyticsContentId','analyticsProductId','analyticsServiceId','analyticsTopic','analyticsContentType','analyticsPlacement','analyticsCtaId','analyticsChannelId'].includes(key)).map(([key,value]) => [key.replace('analytics','').replace(/^[A-Z]/,letter=>letter.toLowerCase()).replace(/[A-Z]/g,letter=>'_'+letter.toLowerCase()),value]));
+  document.addEventListener('click',event=>{const target=(event.target as Element)?.closest<HTMLElement>('[data-analytics-event]');if(!target)return;const name=target.dataset.analyticsEvent;if(!name||!allowed.has(name))return;window.dispatchEvent(new CustomEvent('dokruti:analytics-hook',{detail:{event:name,context:eventContext(target)}}));});
 </script>

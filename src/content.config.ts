@@ -15,6 +15,9 @@ const articles = defineCollection({
     primarySearchQuestion: z.string(), category, cluster, publishedAt: z.coerce.date().nullable().default(null),
     updatedAt: z.coerce.date().nullable().optional(), author: z.string(), draft: z.boolean().default(true),
     status: z.string().optional(),
+    content_type: z.enum(['Статья', 'Разбор', 'Эксперимент', 'Инструмент', 'История', 'Сигнал', 'Внутри Докрути']).default('Статья'),
+    revenue_route: z.enum(['NONE', 'OWN_PRODUCT', 'OWN_SERVICE', 'AFFILIATE', 'SPONSOR', 'OWN_PARTNER_PROGRAM', 'PLATFORM', 'LEADGEN', 'CORPORATE']).default('NONE'),
+    commercial_status: z.enum(['OFF', 'DRAFT', 'LEGAL_HOLD', 'READY', 'ACTIVE', 'EXPIRED']).default('OFF'),
     featured: z.boolean().default(false), cover: z.string().optional(), coverAlt: z.string().optional(),
     readingTime: readingTime.pipe(z.number().int().positive()), relatedArticleIds: z.array(z.string()).default([]),
     relatedProductIds: z.array(z.string()).default([]), relatedServiceIds: z.array(z.string()).default([]), contentRole: z.string().default('support'),
@@ -46,6 +49,7 @@ const services = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/services' }),
   schema: z.object({
     id: z.string().optional(), slug: z.string(), title: z.string(), description: z.string().optional(),
+    situation: z.string().optional(), process: z.string().optional(), output: z.string().optional(), clientInput: z.string().optional(),
     h1: z.string().optional(), page: z.string().optional(), status: z.string().optional(), draft: z.boolean().default(false),
     order: z.number().int().positive().default(99), active: z.boolean().default(true), seoTitle: z.string().default('Услуги «Докрути»'), seoDescription: z.string().default('Форматы помощи «Докрути».'),
   }),

@@ -1,4 +1,4 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<BaseLayout title="Страница не найдена — Докрути" description="Запрошенная страница не найдена."><section class="route-hero"><div class="route-hero__image"><img src="/images/home-hero-editorial.png" alt="" width="1672" height="941"/></div><div class="container route-hero__copy"><p class="eyebrow">Ошибка 404</p><h1>След оборвался.</h1><p>Такой страницы нет. Вернитесь на <a href="/">главную страницу</a> или перейдите в <a href="/articles/">библиотеку</a>.</p></div></section></BaseLayout>
+<BaseLayout title="Страница не найдена — Докрути" description="Запрошенная страница не найдена." noindex={true}><section class="route-hero"><div class="container route-hero__copy"><p class="eyebrow">Ошибка 404</p><h1>Страница не найдена.</h1><p>Вернитесь на <a href="/">главную страницу</a> или перейдите в <a href="/articles/">библиотеку</a>.</p></div></section></BaseLayout>

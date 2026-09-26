@@ -1,7 +1,7 @@
 ---
 import { categories } from '../../../lib/site';
 export function getStaticPaths(){return categories.flatMap((topic)=>[{params:{category:topic.slug},props:{category:topic}},...(topic.legacySlug!==topic.slug?[{params:{category:topic.legacySlug},props:{category:topic}}]:[])])}
-const destination='/articles/?category='+Astro.props.category.slug;
+const destination='/articles/?topic='+Astro.props.category.slug;
 ---
 <meta http-equiv="refresh" content={`0;url=${destination}`} />
 <link rel="canonical" href={destination} />
