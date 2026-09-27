@@ -5,7 +5,7 @@ import sharp from 'sharp';
 const publicDir = path.resolve('public');
 const outputDir = path.join(publicDir, '_optimized');
 const widths = [480, 768, 1200, 1600];
-const raster = /\.(png|jpe?g)$/i;
+const raster = /\.(png|jpe?g|webp)$/i;
 
 async function filesIn(dir) {
   const entries = await fs.readdir(dir, { withFileTypes: true });
