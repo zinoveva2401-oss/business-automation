@@ -17,6 +17,17 @@ visualAssetId: VIS-CNT-0030
 relatedArticleIds: [CNT-0027, CNT-0034]
 relatedProductIds: []
 relatedServiceIds: [sistema-raboty-komandy]
+presentationMap:
+  - heading: "Один разговор, который нельзя пропустить"
+    component: exampleCase
+  - heading: "Где ошибается руководитель"
+    component: contrast
+  - heading: "Что сделать в первые дни"
+    component: diagnosticPath
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "team"
 seoTitle: "Сотрудника повысили до администратора: что сделать первым"
 seoDescription: "Что обсудить с сотрудником в первый день после повышения, чтобы роль получила полномочия, границы и понятный результат."

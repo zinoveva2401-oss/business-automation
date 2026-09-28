@@ -17,6 +17,18 @@ visualAssetId: VIS-CNT-0026
 relatedArticleIds: [CNT-0017, CNT-0023]
 relatedProductIds: []
 relatedServiceIds: [audit-prodazh-i-processov]
+presentationMap:
+  - heading: "Один минус, две поломки"
+    component: comparison
+    layout: paired-scenarios
+  - heading: "Где ошибается руководитель"
+    component: principleCallout
+  - heading: "Что можно сделать сегодня"
+    component: checklist
+  - heading: "Где заканчивается этот материал"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "management-diagnosis"
 seoTitle: "План продаж не выполнен: что проверить первым"
 seoDescription: "Две ситуации с одинаковым падением выручки показывают, почему нельзя сразу менять продавцов, рекламу или ассортимент."

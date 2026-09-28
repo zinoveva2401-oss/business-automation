@@ -17,6 +17,18 @@ visualAssetId: VIS-CNT-0014
 relatedArticleIds: [CNT-0007, CNT-0024]
 relatedProductIds: []
 relatedServiceIds: [audit-prodazh-i-processov]
+presentationMap:
+  - heading: "Сравнить обещание с тем, что получил человек"
+    component: comparison
+    layout: paired
+  - heading: "Одна проверка без нового бюджета"
+    component: diagnosticPath
+  - heading: "Где ошибка в выводе по рекламе"
+    component: contrast
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "marketing"
 seoTitle: "Почему реклама не приводит покупателей: что проверить"
 seoDescription: "Как найти разрыв между рекламным обещанием, переходом, обращением и покупкой до того, как менять канал и бюджет."

@@ -17,6 +17,17 @@ visualAssetId: VIS-CNT-0007
 relatedArticleIds: [CNT-0017, CNT-0037]
 relatedProductIds: []
 relatedServiceIds: [razbor-odnoy-zadachi]
+presentationMap:
+  - heading: "Один маршрут, одна точка ухода"
+    component: diagnosticPath
+  - heading: "Ошибка, которая портит проверку"
+    component: principleCallout
+  - heading: "Что сделать сегодня"
+    component: checklist
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "customer-diagnosis"
 seoTitle: "Покупатели заходят и не покупают: что проверить"
 seoDescription: "Как за коротким наблюдением увидеть, где посетитель перестаёт двигаться к покупке, и выбрать одну проверку."

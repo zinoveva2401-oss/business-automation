@@ -29,6 +29,21 @@ Commercial content is optional and pain-first. Show only verified active own off
 
 Choose `REUSE`, `EDIT`, `GENERATE NEW`, or `NO IMAGE` for material visuals; record semantic role, provenance, rights, crop/quality, and fallback. For video/audio, preserve transcript/paper edit, rights, captions, voice/music status, master/delivery metadata, and real visual/audio inspection. For SEO/discovery, use current intent/source checks without promising rankings. Preserve article author meaning, metadata, schema, links, responsive presentation, and route contracts.
 
+## ARTICLE PUBLICATION GATE
+
+Before publishing any new article, verify:
+
+1. Approved content has a meaning-based presentation map.
+2. The shared template does not make every article composition identical.
+3. The hero contains only public-facing information.
+4. Internal IDs, statuses, and editorial instructions do not enter rendered DOM or visible text.
+5. Empty editorial components are not rendered.
+6. The article ending contains no production delimiter such as “Где заканчивается статья”.
+7. Related materials, CTA, and footer do not leave a large empty gap.
+8. Desktop and 390px visual QA pass.
+9. Browser console errors = 0.
+10. Horizontal overflow = 0.
+
 ## Review and handoff
 
 Run relevant `research-scout`/current-source, `visual-critic`, `media-critic`, `product-growth-critic`, `technical-auditor`, and `review-chair` passes sequentially in the same owner chat. Record exact master/adaptation artifact paths and hashes, evidence, rights/legal/AI-data status, claim ledger, and PASS/FAIL/UNKNOWN. A draft is not a final content package until consolidated repair and rerender/recheck are complete.

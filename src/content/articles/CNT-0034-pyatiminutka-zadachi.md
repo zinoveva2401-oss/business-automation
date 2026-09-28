@@ -17,6 +17,17 @@ visualAssetId: VIS-CNT-0034
 relatedArticleIds: [CNT-0029, CNT-0030]
 relatedProductIds: []
 relatedServiceIds: [sistema-raboty-komandy]
+presentationMap:
+  - heading: "Одна фраза до и после"
+    component: contrast
+  - heading: "Где возникает ошибка"
+    component: principleCallout
+  - heading: "Что проверить самому"
+    component: checklist
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "management"
 seoTitle: "Как правильно ставить задачи сотрудникам: пример"
 seoDescription: "Почему после короткой встречи задача остаётся неясной и как за одну минуту уточнить результат, владельца и срок."

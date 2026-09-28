@@ -17,6 +17,18 @@ visualAssetId: VIS-CNT-0020
 relatedArticleIds: [CNT-0017, CNT-0037]
 relatedProductIds: []
 relatedServiceIds: [razbor-odnoy-zadachi]
+presentationMap:
+  - heading: "Один учебный расчёт"
+    component: exampleCase
+  - heading: "Как не перепутать скорость и популярность"
+    component: contrast
+    layout: paired
+  - heading: "Что можно проверить самостоятельно"
+    component: checklist
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "assortment"
 seoTitle: "Как понять, какой товар и сколько закупать"
 seoDescription: "Простой способ проверить закупку: продажи, остаток, срок поставки и риск неликвида — на учебном примере."

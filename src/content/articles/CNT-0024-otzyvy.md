@@ -17,6 +17,18 @@ visualAssetId: VIS-CNT-0024
 relatedArticleIds: [CNT-0037, CNT-0007]
 relatedProductIds: []
 relatedServiceIds: [razbor-odnoy-zadachi]
+presentationMap:
+  - heading: "Как увидеть разницу"
+    component: comparison
+    layout: paired
+  - heading: "Один вопрос, который улучшает содержание"
+    component: quote
+  - heading: "Что сделать с отзывом после публикации"
+    component: diagnosticPath
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "trust"
 seoTitle: "Отзывы о магазине: какие помогают покупателю выбрать"
 seoDescription: "Почему общий отзыв и подробный отзыв с одинаковой оценкой работают по-разному и как попросить клиента о полезной детали."

@@ -17,6 +17,17 @@ visualAssetId: VIS-CNT-0023
 relatedArticleIds: [CNT-0017, CNT-0020]
 relatedProductIds: []
 relatedServiceIds: [razbor-odnoy-zadachi]
+presentationMap:
+  - heading: "Один ответ, три разных статуса"
+    component: contrast
+  - heading: "Как проверить вывод за десять минут"
+    component: steps
+  - heading: "Как попросить ИИ отвечать честнее"
+    component: quote
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "ai-literacy"
 seoTitle: "Можно ли доверять ИИ при анализе продаж: как проверить вывод"
 seoDescription: "Один учебный ответ ИИ показывает, где заканчивается расчёт и начинается догадка. Проверка, которую можно сделать до управленческого решения."

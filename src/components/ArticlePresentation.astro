@@ -1,0 +1,56 @@
+---
+import ArticleEditorialBlock from './ArticleEditorialBlock.astro';
+
+type ComponentKind = 'prose' | 'principleCallout' | 'comparison' | 'checklist' | 'diagnosticPath' | 'steps' | 'exampleCase' | 'contrast' | 'quote' | 'keyTakeaways' | 'productBridge';
+type Heading = { slug: string; text: string };
+type Presentation = { heading: string; component: ComponentKind; layout?: 'paired' | 'paired-scenarios' | 'paired-answers'; takeaway?: boolean; hideHeading?: boolean };
+
+const { headings, presentationMap } = Astro.props as { headings: Heading[]; presentationMap: Presentation[] };
+const html = await Astro.slots.render('default');
+const headingBySlug = new Map(headings.map((heading) => [heading.slug, heading.text]));
+const presentationByHeading = new Map(presentationMap.map((item) => [item.heading, item]));
+const headingMatches = [...html.matchAll(/<h2\b[^>]*\bid=(['"])(.*?)\1[^>]*>[\s\S]*?<\/h2>/gi)];
+const segments: { kind?: ComponentKind; layout?: Presentation['layout']; html: string }[] = [];
+const hasContent = (markup: string) => markup
+  .replace(/<h[1-6]\b[^>]*>[\s\S]*?<\/h[1-6]>/gi, '')
+  .replace(/<[^>]*>/g, ' ')
+  .replace(/&(?:nbsp|#160);/gi, ' ')
+  .trim().length > 0;
+
+if (headingMatches.length === 0) segments.push({ html });
+else {
+  const firstStart = headingMatches[0].index ?? 0;
+  if (firstStart > 0) segments.push({ html: html.slice(0, firstStart) });
+
+  headingMatches.forEach((match, index) => {
+    const start = match.index ?? 0;
+    const end = index + 1 < headingMatches.length ? (headingMatches[index + 1].index ?? html.length) : html.length;
+    const sectionHtml = html.slice(start, end);
+    const slug = match[2];
+    const heading = headingBySlug.get(slug);
+    const presentation = heading ? presentationByHeading.get(heading) : undefined;
+    const kind = presentation?.component ?? 'prose';
+    const publicSectionHtml = presentation?.hideHeading ? sectionHtml.replace(match[0], '') : sectionHtml;
+    if (!hasContent(publicSectionHtml)) return;
+
+    if (presentation?.takeaway) {
+      const lastParagraphStart = publicSectionHtml.lastIndexOf('<p');
+      const lastParagraphEnd = lastParagraphStart >= 0 ? publicSectionHtml.indexOf('</p>', lastParagraphStart) : -1;
+      if (lastParagraphStart >= 0 && lastParagraphEnd >= 0 && publicSectionHtml.slice(lastParagraphEnd + 4).trim() === '') {
+        const beforeTakeaway = publicSectionHtml.slice(0, lastParagraphStart);
+        const takeaway = publicSectionHtml.slice(lastParagraphStart, lastParagraphEnd + 4);
+        if (hasContent(beforeTakeaway)) segments.push({ ...(kind !== 'prose' ? { kind } : {}), ...(presentation?.layout ? { layout: presentation.layout } : {}), html: beforeTakeaway });
+        if (hasContent(takeaway)) segments.push({ kind: 'keyTakeaways', html: takeaway });
+        return;
+      }
+    }
+
+    segments.push({ ...(kind !== 'prose' ? { kind } : {}), ...(presentation?.layout ? { layout: presentation.layout } : {}), html: publicSectionHtml });
+  });
+}
+---
+<div class="article-presentation">
+  {segments.map((segment) => segment.kind
+    ? <ArticleEditorialBlock kind={segment.kind} layout={segment.layout} html={segment.html} />
+    : <Fragment set:html={segment.html} />)}
+</div>

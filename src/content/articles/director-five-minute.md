@@ -17,6 +17,16 @@ visualAssetId: VIS-CNT-0029
 relatedArticleIds: [CNT-0034, CNT-0030]
 relatedProductIds: []
 relatedServiceIds: [sistema-raboty-komandy]
+presentationMap:
+  - heading: "Что должно остаться после встречи"
+    component: principleCallout
+  - heading: "Сценарий на одну ситуацию"
+    component: steps
+  - heading: "Что не нужно обсуждать всем"
+    component: contrast
+  - heading: "Попробуйте завтра"
+    component: prose
+    takeaway: true
 contentRole: "management"
 seoTitle: "Пятиминутка директора: как проводить короткую встречу"
 seoDescription: "Что обсуждать на ежедневной пятиминутке, какой результат должен остаться и какие разговоры лучше вынести за пределы общей встречи."

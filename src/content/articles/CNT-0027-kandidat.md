@@ -17,6 +17,18 @@ visualAssetId: VIS-CNT-0027
 relatedArticleIds: [CNT-0030, CNT-0034]
 relatedProductIds: []
 relatedServiceIds: [sistema-raboty-komandy]
+presentationMap:
+  - heading: "Вопрос"
+    component: quote
+  - heading: "Что разделяет два ответа"
+    component: comparison
+    layout: paired-answers
+  - heading: "Как принять решение по ответу"
+    component: checklist
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "team"
 seoTitle: "Как понять на собеседовании, будет ли кандидат продавать"
 seoDescription: "Ситуационный вопрос для собеседования продавца: как увидеть ход мысли кандидата, а не принять уверенную речь за навык."

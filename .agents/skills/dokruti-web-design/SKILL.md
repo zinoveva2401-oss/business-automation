@@ -49,6 +49,55 @@ Preserve canonical Astro routes, real texts/articles, seven pain directions, thr
 
 Capture exact current/reference/after artifacts at requested desktop and mobile viewports. Inspect the full page and section evidence for composition, hierarchy, density, whitespace, typography, CTA hierarchy, specificity, asset meaning, article/product/service/founder/trust presence, mobile recomposition, reduced motion, accessibility/contrast, touch targets, images, overflow, console/network, metadata/schema, links/404, and build/check. Use real Browser/Playwright evidence; `build != visual PASS`.
 
+## Article renderer and editorial composition
+
+Shared article template does not mean identical article composition. The shared shell is limited to:
+
+- header and unified cover hero;
+- reading width and typography;
+- navigation / TOC;
+- author and related materials;
+- shared contacts/footer;
+- SEO and schema;
+- responsive/mobile rules.
+
+Before assembling a new article, read its approved content, map its actual meaning and section structure, create an explicit article presentation map in its content data, and only then compose the page from reusable editorial components. The map must account for every real H2 and state which sections remain prose, where a meaningful comparison/checklist/path/steps/example/callout belongs, and whether the existing final takeaway should be emphasized. A presentation map changes presentation only; it does not duplicate or replace the article's copy.
+
+The common presentation shared by articles is limited to:
+
+- Site header;
+- article hero;
+- reading width and typography;
+- navigation / table of contents;
+- author block;
+- related materials;
+- shared contacts and footer;
+- SEO and schema;
+- responsive and mobile behavior.
+
+Each article's internal composition follows the meaning and actual structure of its approved text. Do not automatically format every H2 the same way. Do not render articles as plain text plus TOC or as a UI kit of identical cards. Keep prose readable and broken into meaningful authored sections; do not turn it into a dashboard or PDF-like page. Never apply the same component set to all articles.
+
+Reusable editorial components are: PrincipleCallout, Comparison, Checklist, DiagnosticPath, Steps, ExampleCase, Contrast, Quote, KeyTakeaways, and ProductBridge. Use only components that the approved text supports; a section with no clear fit remains ordinary editorial prose. Components must present existing article content without adding facts, numbers, conclusions, CTAs, or imagery. For already approved copy, change presentation only; never rewrite, shorten, or extend the text.
+
+By default, every article gets one unified editorial hero built from that article's own cover image. The cover fills the hero composition and the breadcrumb, topic, H1, and existing lead are integrated with it using a soft readability gradient; do not use the pattern "copy on the left + small separate cover on the right" or a separate white text card. A small side image is allowed only when the owner explicitly approves that treatment for the specific article. Use the responsive image pipeline, `srcset`/`sizes`, reserved dimensions, and an intentionally recomposed mobile layout that keeps the title readable and avoids reducing the cover to a tiny crop.
+
+Before handoff of each article, inspect its real desktop render and its 390px mobile render. Verify the TOC comes from that article's actual H2 headings; mobile TOC is collapsed and not sticky. Check single-column flow and no horizontal overflow at 390/375/360 when those widths are in scope.
+
+### ARTICLE PUBLICATION GATE
+
+Before publishing any new article, verify:
+
+1. Approved content has a meaning-based presentation map.
+2. The shared template does not make every article composition identical.
+3. The hero contains only public-facing information.
+4. Internal IDs, statuses, and editorial instructions do not enter rendered DOM or visible text.
+5. Empty editorial components are not rendered.
+6. The article ending contains no production delimiter such as “Где заканчивается статья”.
+7. Related materials, CTA, and footer do not leave a large empty gap.
+8. Desktop and 390px visual QA pass.
+9. Browser console errors = 0.
+10. Horizontal overflow = 0.
+
 ## Review and handoff
 
 Run relevant read-only passes sequentially in this owner chat: Research/Current Intelligence when needed, Visual, Product/Growth, Media when relevant, Technical, then Review Chair. Record `artifact_truth`, `reference_fidelity`, exact artifact path/SHA, viewport, observed result, and PASS/FAIL/UNKNOWN. Technical PASS never overrides a material visual or product FAIL. A material result requires consolidated repair and rerender before owner-facing handoff.

@@ -1,0 +1,43 @@
+---
+type Kind = 'principleCallout' | 'comparison' | 'checklist' | 'diagnosticPath' | 'steps' | 'exampleCase' | 'contrast' | 'quote' | 'keyTakeaways' | 'productBridge';
+const { kind, layout, html } = Astro.props as { kind: Kind; layout?: 'paired' | 'paired-scenarios' | 'paired-answers'; html: string };
+---
+<section class:list={['article-editorial-block', `article-editorial-block--${kind}`]} data-editorial-component={kind} data-editorial-layout={layout}>
+  <Fragment set:html={html} />
+</section>
+
+<style is:global>
+  .article-editorial-block{min-width:0;margin:1.65rem 0}
+  .article-editorial-block--principleCallout{padding:.9rem 1.15rem;border-left:3px solid var(--c-orange);background:linear-gradient(90deg,#f4f5f6,rgba(244,245,246,.24));}
+  .article-editorial-block--principleCallout h2,.article-editorial-block--comparison h2,.article-editorial-block--checklist h2,.article-editorial-block--diagnosticPath h2,.article-editorial-block--steps h2,.article-editorial-block--exampleCase h2,.article-editorial-block--contrast h2,.article-editorial-block--quote h2,.article-editorial-block--productBridge h2{margin-top:0}
+  .article-editorial-block--comparison{padding:1rem 0;border-top:1px solid var(--c-line);border-bottom:1px solid var(--c-line)}
+  .article-editorial-block--comparison[data-editorial-layout="paired"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem 1rem}
+  .article-editorial-block--comparison[data-editorial-layout="paired"] h2,.article-editorial-block--comparison[data-editorial-layout="paired"] table,.article-editorial-block--comparison[data-editorial-layout="paired"] ul,.article-editorial-block--comparison[data-editorial-layout="paired"] ol{grid-column:1/-1}
+  .article-editorial-block--comparison[data-editorial-layout="paired"]>p{margin:0;padding:.55rem 0}
+  .article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1rem}
+  .article-editorial-block--comparison[data-editorial-layout="paired-scenarios"] h2,.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(1),.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(2),.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(5){grid-column:1/-1}
+  .article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(3),.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(4){margin:0;padding:.8rem;background:#f4f5f6}
+  .article-editorial-block--comparison[data-editorial-layout="paired-answers"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem 1rem}
+  .article-editorial-block--comparison[data-editorial-layout="paired-answers"] h2,.article-editorial-block--comparison[data-editorial-layout="paired-answers"]>p:nth-of-type(n+3){grid-column:1/-1}
+  .article-editorial-block--comparison[data-editorial-layout="paired-answers"]>p:nth-of-type(1),.article-editorial-block--comparison[data-editorial-layout="paired-answers"]>p:nth-of-type(2){margin:0;padding:.8rem;background:#f4f5f6}
+  .article-editorial-block--comparison table{margin:.75rem 0 0;background:#f8f9fa}
+  .article-editorial-block--checklist ul,.article-editorial-block--checklist ol{list-style:none;padding-left:0}
+  .article-editorial-block--checklist li{position:relative;padding-left:1.35rem}
+  .article-editorial-block--checklist li::before{position:absolute;left:0;top:.1em;color:var(--c-orange);content:'✓';font-weight:800}
+  .article-editorial-block--diagnosticPath ol{position:relative;gap:.7rem;padding-left:1.8rem;list-style:none;counter-reset:path}
+  .article-editorial-block--diagnosticPath li{position:relative;counter-increment:path}
+  .article-editorial-block--diagnosticPath li::before{position:absolute;left:-1.8rem;top:0;color:var(--c-orange);content:counter(path,decimal-leading-zero);font-size:.77rem;font-weight:800}
+  .article-editorial-block--steps{padding:.3rem 0 .3rem 1rem;border-left:1px solid var(--c-line)}
+  .article-editorial-block--steps p:has(> strong:first-child){padding:.48rem .65rem;border-bottom:1px solid var(--c-line)}
+  .article-editorial-block--exampleCase{padding:.9rem 1.05rem;background:#f4f5f6}
+  .article-editorial-block--contrast{padding:.75rem 0;border-top:1px solid var(--c-line)}
+  .article-editorial-block--contrast[data-editorial-layout="paired"]{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.35rem 1rem}
+  .article-editorial-block--contrast[data-editorial-layout="paired"] h2{grid-column:1/-1}
+  .article-editorial-block--contrast[data-editorial-layout="paired"]>p{margin:0;padding:.55rem 0}
+  .article-editorial-block--contrast strong{color:var(--c-orange)}
+  .article-editorial-block--quote{padding:1rem 1.2rem;border-left:2px solid var(--c-orange);font-family:var(--font-editorial);font-size:1.12em;line-height:1.5}
+  .article-editorial-block--keyTakeaways{margin:1.4rem 0;padding:.8rem 0;border-top:1px solid var(--c-graphite);border-bottom:1px solid var(--c-line);font-family:var(--font-editorial);font-size:1.12em;line-height:1.48}
+  .article-editorial-block--keyTakeaways p{margin:0}
+  .article-editorial-block--productBridge{padding:.8rem 1rem;border-left:2px solid var(--c-line);background:#f8f9fa}
+  @media(max-width:700px){.article-editorial-block{margin:1.3rem 0}.article-editorial-block--principleCallout,.article-editorial-block--exampleCase,.article-editorial-block--quote{padding:.75rem .85rem}.article-editorial-block--diagnosticPath ol{padding-left:1.65rem}.article-editorial-block--comparison[data-editorial-layout="paired"],.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"],.article-editorial-block--comparison[data-editorial-layout="paired-answers"],.article-editorial-block--contrast[data-editorial-layout="paired"]{grid-template-columns:1fr}.article-editorial-block--comparison[data-editorial-layout="paired"] h2,.article-editorial-block--comparison[data-editorial-layout="paired"] table,.article-editorial-block--comparison[data-editorial-layout="paired"] ul,.article-editorial-block--comparison[data-editorial-layout="paired"] ol,.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"] h2,.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(1),.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(2),.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(5),.article-editorial-block--comparison[data-editorial-layout="paired-answers"] h2,.article-editorial-block--comparison[data-editorial-layout="paired-answers"]>p:nth-of-type(n+3),.article-editorial-block--contrast[data-editorial-layout="paired"] h2{grid-column:1}.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(3),.article-editorial-block--comparison[data-editorial-layout="paired-scenarios"]>p:nth-of-type(4),.article-editorial-block--comparison[data-editorial-layout="paired-answers"]>p:nth-of-type(1),.article-editorial-block--comparison[data-editorial-layout="paired-answers"]>p:nth-of-type(2){padding:.65rem}}
+</style>

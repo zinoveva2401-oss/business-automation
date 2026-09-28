@@ -17,6 +17,17 @@ visualAssetId: VIS-CNT-0037
 relatedArticleIds: [CNT-0024, CNT-0007]
 relatedProductIds: []
 relatedServiceIds: [razbor-odnoy-zadachi]
+presentationMap:
+  - heading: "Один путь после покупки"
+    component: exampleCase
+  - heading: "Разделить впечатление и результат"
+    component: contrast
+  - heading: "Что сделать самостоятельно"
+    component: diagnosticPath
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "customer"
 seoTitle: "Почему клиенты не возвращаются при хорошем сервисе"
 seoDescription: "Как отличить вежливое общение от причины для повторного визита и какую одну деталь клиентского пути проверить."

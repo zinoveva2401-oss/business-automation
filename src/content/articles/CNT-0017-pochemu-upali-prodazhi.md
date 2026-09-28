@@ -17,6 +17,17 @@ visualAssetId: VIS-CNT-0017
 relatedArticleIds: [CNT-0007, CNT-0020]
 relatedProductIds: []
 relatedServiceIds: [audit-prodazh-i-processov]
+presentationMap:
+  - heading: "Один расчёт вместо общего впечатления"
+    component: exampleCase
+  - heading: "Как не сделать лишнее"
+    component: prose
+  - heading: "Что проверить самостоятельно сегодня"
+    component: diagnosticPath
+  - heading: "Где заканчивается статья"
+    component: prose
+    takeaway: true
+    hideHeading: true
 contentRole: "analytics"
 seoTitle: "Почему упали продажи: что проверить первым"
 seoDescription: "Как по показателям понять, упал поток, конверсия или средний чек, и выбрать первую проверку без догадок о виноватых."

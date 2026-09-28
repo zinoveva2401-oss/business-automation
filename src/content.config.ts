@@ -19,6 +19,13 @@ const articles = defineCollection({
     revenue_route: z.enum(['NONE', 'OWN_PRODUCT', 'OWN_SERVICE', 'AFFILIATE', 'SPONSOR', 'OWN_PARTNER_PROGRAM', 'PLATFORM', 'LEADGEN', 'CORPORATE']).default('NONE'),
     commercial_status: z.enum(['OFF', 'DRAFT', 'LEGAL_HOLD', 'READY', 'ACTIVE', 'EXPIRED']).default('OFF'),
     featured: z.boolean().default(false), cover: z.string().optional(), coverAlt: z.string().optional(),
+    presentationMap: z.array(z.object({
+      heading: z.string(),
+      component: z.enum(['prose', 'principleCallout', 'comparison', 'checklist', 'diagnosticPath', 'steps', 'exampleCase', 'contrast', 'quote', 'keyTakeaways', 'productBridge']),
+      layout: z.enum(['paired', 'paired-scenarios', 'paired-answers']).optional(),
+      takeaway: z.boolean().default(false),
+      hideHeading: z.boolean().default(false),
+    })).default([]),
     readingTime: readingTime.pipe(z.number().int().positive()), relatedArticleIds: z.array(z.string()).default([]),
     relatedProductIds: z.array(z.string()).default([]), relatedServiceIds: z.array(z.string()).default([]), contentRole: z.string().default('support'),
     seoTitle: z.string(), seoDescription: z.string(), canonicalUrl: z.string().url().optional(), ogImage: z.string().optional(),
