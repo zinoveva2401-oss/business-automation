@@ -1,37 +1,24 @@
 ---
 import { readingChannels, questionChannels } from '../lib/channels';
 const isHome = Astro.url.pathname === '/';
-const homeReadingChannels = [
-  { label: 'Telegram', href: 'https://t.me/dokruti_biz' },
-  { label: 'VK', href: 'https://vk.ru/svetlana_tarasova_marketolog' },
-  { label: 'Дзен', href: 'https://dzen.ru/user/j0k4kngnxzw8m5tlmxy8gvho3im?share_to=link' },
-  { label: 'Instagram', href: 'https://www.instagram.com/svetlana.24011982/' },
-  { label: 'MAX', href: 'https://max.ru/se13981398_biz' },
-  { label: 'VC.ru', href: 'https://vc.ru/id5659262' },
-];
-const homeContactChannels = [
-  { label: 'Telegram', href: 'https://t.me/Cvetlana2401' },
-  { label: 'MAX', href: 'https://max.ru/u/f9LHodD0cOI3kOAFuFlFv0E5gzchvPbqueGHIJMaGzLlQRuLbbA6G9GEI3k' },
-];
 ---
 <a class="skip-link" href="#main">К содержанию</a>
 <header class:list={['site-header', isHome && 'site-header--home']} data-site-header><div class="container header-inner">
   <a class="brand" href="/" aria-label="Докрути — главная">ДОКРУТИ<small>Практические решения для бизнеса</small></a>
   <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Открыть меню">☰</button>
   <nav id="main-nav" aria-label="Основная навигация"><a href="/articles/">Библиотека</a><a href="/tools/">Инструменты</a><a href="/services/">Услуги</a><a href="/about/">Обо мне</a></nav>
-  <div class="header-actions"><button type="button" data-open-sheet="read" aria-haspopup="dialog" aria-expanded="false">Где читать</button><button type="button" class="header-cta" data-open-sheet="ask" data-analytics-event="contact_open">{isHome ? 'Описать задачу' : 'Описать задачу ↗'}</button></div>
+  <div class="header-actions"><button type="button" data-open-sheet="read" aria-haspopup="dialog" aria-expanded="false">Где читать</button><button type="button" class="header-cta" data-open-sheet="ask" aria-haspopup="dialog" aria-expanded="false" data-analytics-event="contact_open">Описать задачу</button></div>
 </div></header>
-<dialog class="utility-sheet" id="read-sheet" aria-labelledby="read-sheet-title" data-home-panel={isHome ? 'true' : undefined}><div class="sheet-inner"><button class="sheet-close" type="button" data-close-sheet aria-label="Закрыть">×</button><p class="eyebrow">Материалы Докрути</p><h2 id="read-sheet-title">{isHome ? 'Контакты Докрути' : 'Где читать'}</h2>{isHome ? <><section class="home-panel-section" data-panel-section-content="channels" aria-labelledby="home-channels-title"><h3 id="home-channels-title">Где читать Докрути</h3><ul>{homeReadingChannels.map(channel => <li><a href={channel.href} target="_blank" rel="noopener noreferrer" data-analytics-event="channel_subscribe_click"><strong>{channel.label}</strong><b aria-hidden="true">↗</b></a></li>)}</ul></section><section class="home-panel-section home-panel-contact" data-panel-section-content="contact" aria-labelledby="home-contact-title"><h3 id="home-contact-title">Связаться со Светланой</h3><ul>{homeContactChannels.map(channel => <li><a href={channel.href} target="_blank" rel="noopener noreferrer" data-analytics-event="contact_platform_click"><strong>{channel.label}</strong><b aria-hidden="true">↗</b></a></li>)}<li class="home-email-row"><span class="home-email-label">Email</span><a class="home-email-address" href="mailto:As24011982@yandex.ru">As24011982@yandex.ru</a><button class="home-email-copy" type="button" data-copy-email>Скопировать</button></li></ul></section></> : <ul>{readingChannels.map(channel => <li><a href={channel.href} target="_blank" rel="noopener noreferrer" data-analytics-event="channel_subscribe_click" data-analytics-channel-id={channel.id}><strong>{channel.label}</strong><span>{channel.reason}</span><b aria-hidden="true">↗</b></a></li>)}</ul>}</div></dialog>
-{!isHome && <dialog class="utility-sheet" id="ask-sheet" aria-labelledby="ask-sheet-title"><div class="sheet-inner"><button class="sheet-close" type="button" data-close-sheet aria-label="Закрыть">×</button><p class="eyebrow">Связаться</p><h2 id="ask-sheet-title">Задать вопрос</h2><p>Коротко опишите ситуацию и что уже пробовали.</p><ul>{questionChannels.map(channel => <li><a href={channel.href} target="_blank" rel="noopener noreferrer" data-analytics-event="contact_platform_click" data-analytics-channel-id={channel.id}><strong>{channel.label}</strong><span>{channel.reason}</span><b aria-hidden="true">↗</b></a></li>)}</ul></div></dialog>}
+<dialog class="utility-sheet" id="read-sheet" aria-labelledby="read-sheet-title" data-home-panel={isHome ? 'true' : undefined}><div class="sheet-inner"><button class="sheet-close" type="button" data-close-sheet aria-label="Закрыть">×</button><p class="eyebrow">Материалы Докрути</p><h2 id="read-sheet-title">Контакты Докрути</h2><section class="home-panel-section" data-panel-section-content="channels" aria-labelledby="home-channels-title"><h3 id="home-channels-title">Где читать Докрути</h3><ul>{readingChannels.map(channel => <li><a href={channel.href} target="_blank" rel="noopener noreferrer" data-analytics-event="channel_subscribe_click" data-analytics-channel-id={channel.id}><strong>{channel.label}</strong>{channel.reason && <span>{channel.reason}</span>}<b aria-hidden="true">↗</b></a></li>)}</ul></section><section class="home-panel-section home-panel-contact" data-panel-section-content="contact" aria-labelledby="home-contact-title"><h3 id="home-contact-title">Связаться со Светланой</h3><ul>{questionChannels.map(channel => channel.id === 'email' ? <li class="home-email-row"><span class="home-email-label">{channel.label}</span><a class="home-email-address" href={channel.href}>{channel.address}</a><button class="home-email-copy" type="button" data-copy-email={channel.address}>Скопировать</button></li> : <li><a href={channel.href} target="_blank" rel="noopener noreferrer" data-analytics-event="contact_platform_click" data-analytics-channel-id={channel.id}><strong>{channel.label}</strong>{channel.reason && <span>{channel.reason}</span>}<b aria-hidden="true">↗</b></a></li>)}</ul></section></div></dialog>
 <a class="back-top" href="#main" aria-label="Наверх">↑</a><button class="mobile-action" type="button" data-open-sheet="ask">Описать задачу ↗</button>
 <script>
  const toggle=document.querySelector<HTMLButtonElement>('.menu-toggle');const nav=document.querySelector<HTMLElement>('#main-nav');toggle?.addEventListener('click',()=>{const open=toggle.getAttribute('aria-expanded')!=='true';toggle.setAttribute('aria-expanded',String(open));nav?.classList.toggle('open',open)});
  const homeHeader=!!document.querySelector('.site-header--home');let opener:HTMLElement|null=null;const readPanel=document.getElementById('read-sheet') as HTMLDialogElement|null;
  const placeReadPanel=(trigger:HTMLElement)=>{if(!readPanel||innerWidth<=600)return;const anchor=trigger.getBoundingClientRect();const panel=readPanel.getBoundingClientRect();const left=Math.max(12,Math.min(anchor.right-panel.width,innerWidth-panel.width-12));const top=Math.max(68,Math.min(anchor.bottom+7,innerHeight-panel.height-12));readPanel.style.left=`${left}px`;readPanel.style.top=`${top}px`;};
- document.querySelectorAll<HTMLElement>('[data-open-sheet]').forEach(trigger=>trigger.addEventListener('click',()=>{const dialog=(homeHeader?readPanel:document.getElementById(`${trigger.dataset.openSheet}-sheet`)) as HTMLDialogElement|null;if(!dialog)return;opener=trigger;if(homeHeader){dialog.dataset.activeSection=trigger.dataset.panelSection||(trigger.dataset.openSheet==='ask'?'contact':'channels');if(!dialog.open)dialog.show();requestAnimationFrame(()=>{const active=dialog.querySelector<HTMLElement>(`[data-panel-section-content="${dialog.dataset.activeSection}"]`);const content=dialog.querySelector<HTMLElement>('.sheet-inner');if(active&&content)content.scrollTop=active.offsetTop;if(trigger.dataset.openSheet==='read')trigger.setAttribute('aria-expanded','true');placeReadPanel(trigger)})}else dialog.showModal()}));
- document.querySelectorAll<HTMLDialogElement>('.utility-sheet').forEach(dialog=>{dialog.querySelector('[data-close-sheet]')?.addEventListener('click',()=>{dialog.close();opener?.focus()});dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});dialog.addEventListener('close',()=>{if(homeHeader&&dialog===readPanel)document.querySelectorAll<HTMLElement>('[data-open-sheet="read"]').forEach(trigger=>trigger.setAttribute('aria-expanded','false'));opener?.focus()})});
- if(homeHeader&&readPanel){document.addEventListener('pointerdown',event=>{const target=event.target;if(readPanel.open&&target instanceof Node&&!readPanel.contains(target)&&!(target instanceof Element&&target.closest('[data-open-sheet]')))readPanel.close()});document.addEventListener('keydown',event=>{if(event.key==='Escape'&&readPanel.open){readPanel.close();opener?.focus()}})}
- document.querySelector<HTMLButtonElement>('[data-copy-email]')?.addEventListener('click',async(event)=>{const button=event.currentTarget as HTMLButtonElement;try{await navigator.clipboard.writeText('As24011982@yandex.ru');button.textContent='Скопировано';window.setTimeout(()=>button.textContent='Скопировать',1600)}catch{button.textContent='Не скопировано';window.setTimeout(()=>button.textContent='Скопировать',1600)}});
+ document.querySelectorAll<HTMLElement>('[data-open-sheet]').forEach(trigger=>trigger.addEventListener('click',()=>{if(!readPanel)return;opener=trigger;trigger.setAttribute('aria-expanded','true');const section=trigger.dataset.openSheet==='ask'?'contact':'channels';readPanel.dataset.activeSection=section;const content=readPanel.querySelector<HTMLElement>('.sheet-inner');const channels=readPanel.querySelector<HTMLElement>('[data-panel-section-content="channels"]');const contact=readPanel.querySelector<HTMLElement>('[data-panel-section-content="contact"]');if(content&&channels&&contact)content.insertBefore(section==='contact'?contact:channels,section==='contact'?channels:contact);readPanel.scrollTop=0;if(content)content.scrollTop=0;if(!readPanel.open){if(!homeHeader&&innerWidth<=600)readPanel.showModal();else readPanel.show()}requestAnimationFrame(()=>placeReadPanel(trigger))}));
+ document.querySelectorAll<HTMLDialogElement>('.utility-sheet').forEach(dialog=>{dialog.querySelector('[data-close-sheet]')?.addEventListener('click',()=>{dialog.close();opener?.focus()});dialog.addEventListener('click',event=>{if(event.target===dialog)dialog.close()});dialog.addEventListener('close',()=>{document.querySelectorAll<HTMLElement>('[data-open-sheet]').forEach(trigger=>trigger.setAttribute('aria-expanded','false'));opener?.focus()})});
+ if(readPanel){document.addEventListener('keydown',event=>{if(event.key==='Escape'&&readPanel.open){readPanel.close();opener?.focus()}});document.addEventListener('pointerdown',event=>{const target=event.target;if(readPanel.open&&!readPanel.matches(':modal')&&target instanceof Node&&!readPanel.contains(target)&&!(target instanceof Element&&target.closest('[data-open-sheet]')))readPanel.close()})}
+ document.querySelectorAll<HTMLButtonElement>('[data-copy-email]').forEach(button=>button.addEventListener('click',async()=>{const email=button.dataset.copyEmail;if(!email)return;try{await navigator.clipboard.writeText(email);button.textContent='Скопировано';window.setTimeout(()=>button.textContent='Скопировать',1600)}catch{button.textContent='Не скопировано';window.setTimeout(()=>button.textContent='Скопировать',1600)}}));
  const top=document.querySelector<HTMLElement>('.back-top');const onScroll=()=>{top?.classList.toggle('visible',scrollY>500);document.querySelector('[data-site-header]')?.classList.toggle('scrolled',scrollY>200)};addEventListener('scroll',onScroll,{passive:true});onScroll();
 </script>
 <style>
@@ -60,6 +47,57 @@ const homeContactChannels = [
 .utility-sheet[data-home-panel="true"] .home-email-label{font-size:12px}
 .utility-sheet[data-home-panel="true"] .home-email-address{font-size:11px;text-decoration:underline}
 .utility-sheet[data-home-panel="true"] .home-email-copy{border:1px solid #dfe3e6;border-radius:999px;padding:4px 7px;background:#fff;color:#292929;font:500 10px var(--font-ui);cursor:pointer}
+/* Shared compact header and contact popover for interior pages. */
+.site-header .brand:after{display:none}
+.site-header:not(.site-header--home) .header-inner{grid-template-columns:auto minmax(0,1fr) auto;gap:clamp(12px,1.5vw,22px);min-height:60px}
+.site-header:not(.site-header--home).scrolled .header-inner{min-height:56px}
+.site-header:not(.site-header--home) .brand{min-width:0;font-size:19px}
+.site-header:not(.site-header--home) .header-inner nav{min-width:0;gap:clamp(10px,1.45vw,20px)}
+.site-header:not(.site-header--home) .header-inner nav a{font-size:12px;white-space:nowrap}
+.site-header:not(.site-header--home) .header-actions{gap:7px}
+.site-header:not(.site-header--home) .header-actions button{min-height:36px;padding:7px 11px;border:1px solid #ffffff55;border-radius:999px;background:transparent;color:#fff;font-size:11px;white-space:nowrap}
+.site-header:not(.site-header--home) .header-actions .header-cta{border-color:#d9562f;background:#d9562f;color:#fff}
+.utility-sheet:not([data-home-panel="true"]){inset:auto 20px 20px auto;width:min(310px,calc(100vw - 32px));max-height:min(78dvh,560px);overflow:auto;border:1px solid #e0e3e5;border-radius:12px;box-shadow:0 14px 42px #0003}
+.utility-sheet:not([data-home-panel="true"])::backdrop,.utility-sheet[data-home-panel="true"]::backdrop{background:transparent}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner{padding:17px 18px 16px}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner>.eyebrow{margin:0 0 6px;font-size:9px}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner h2{margin:0 38px 8px 0;font-size:22px;line-height:1.05}
+.utility-sheet:not([data-home-panel="true"]) .home-panel-section h3{margin:8px 0 3px;font-size:13px;line-height:1.2}
+.utility-sheet:not([data-home-panel="true"]) .home-panel-section+.home-panel-section{margin-top:7px;padding-top:6px;border-top:1px solid #e6e8ea}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner>p:not(.eyebrow){margin:0;font-size:12px;line-height:1.4}
+.utility-sheet:not([data-home-panel="true"]) .sheet-close{width:34px;height:34px;border-radius:50%;font-size:23px}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner ul{margin:9px 0 0}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner li{border-color:#e6e8ea}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner a{padding:8px 0;grid-template-columns:minmax(0,1fr) 18px;gap:1px 8px}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner a strong{font-size:13px}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner a span{font-size:10px}
+.utility-sheet:not([data-home-panel="true"]) .sheet-inner a b{font-size:12px}
+.utility-sheet:not([data-home-panel="true"]) .home-email-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:5px;padding:7px 0;border-top:1px solid #e6e8ea}
+.utility-sheet:not([data-home-panel="true"]) .home-email-label{font-size:12px}
+.utility-sheet:not([data-home-panel="true"]) .home-email-address{min-width:0;overflow-wrap:anywhere;font-size:11px}
+.utility-sheet:not([data-home-panel="true"]) .home-email-copy{border:1px solid #dfe3e6;border-radius:999px;padding:5px 7px;background:#fff;color:#292929;font:500 10px var(--font-ui);cursor:pointer}
+@media(max-width:900px){
+ .site-header:not(.site-header--home) .header-inner{display:flex;justify-content:flex-start;gap:8px;min-height:56px}
+ .site-header:not(.site-header--home) .brand{flex:1 1 auto;min-width:0;font-size:17px}
+ .site-header:not(.site-header--home) .brand small{display:none}
+ .site-header:not(.site-header--home) .header-actions{position:fixed;top:11px;right:58px;z-index:32;display:flex;flex:0 0 auto;margin:0}
+ .site-header:not(.site-header--home) .header-actions button:first-child{display:inline-flex;align-items:center;min-height:34px;padding:6px 9px;font-size:10px}
+ .site-header:not(.site-header--home) .header-actions button:last-child{display:none}
+ .site-header:not(.site-header--home) .menu-toggle{position:fixed;top:8px;right:12px;z-index:32;display:grid;flex:0 0 auto;width:40px;height:40px;place-items:center;border:1px solid #ffffff44;border-radius:50%;background:transparent;color:#fff;font-size:20px;cursor:pointer}
+ .site-header:not(.site-header--home) .header-inner nav{top:100%;right:0;left:0;display:none;flex-direction:column;gap:0;padding:8px 16px 14px;background:#17130f}
+ .site-header:not(.site-header--home) .header-inner nav.open{display:flex}
+ .site-header:not(.site-header--home) .header-inner nav a{padding:11px 4px;border-top:1px solid #ffffff24;font-size:14px}
+}
+@media(max-width:600px){
+ .site-header:not(.site-header--home) .header-inner{gap:6px;min-height:54px}
+ .site-header:not(.site-header--home) .brand{padding-left:9px;border-left-width:2px;font-size:16px}
+ .site-header:not(.site-header--home) .header-actions{top:11px;right:58px}
+ .site-header:not(.site-header--home) .header-actions button:first-child{min-height:32px;padding:5px 8px;font-size:10px}
+ .site-header:not(.site-header--home) .menu-toggle{top:8px;right:12px;width:38px;height:38px}
+ .utility-sheet:not([data-home-panel="true"]){inset:auto 8px calc(8px + env(safe-area-inset-bottom)) 8px;width:auto;max-height:min(78dvh,620px);margin-inline:auto;border-radius:16px}
+ .utility-sheet:not([data-home-panel="true"]) .sheet-inner{padding:17px 18px calc(18px + env(safe-area-inset-bottom))}
+ .utility-sheet::backdrop{background:#17130f66}
+}
 @media(min-width:701px){.home-opening .opening-proof{flex-wrap:nowrap;gap:clamp(10px,1.3vw,18px)}.home-opening .opening-proof span{white-space:nowrap}}
 @media(max-width:900px){.site-header--home .header-actions button:first-child{display:inline-flex;align-items:center}.site-header--home .header-actions button{min-height:36px;padding:6px 10px}}
 @media(max-width:600px){.site-header--home .header-inner{grid-template-columns:minmax(0,1fr) auto auto;gap:5px;min-height:56px}.site-header--home .brand{font-size:16px}.site-header--home .header-actions{display:flex;grid-column:2;grid-row:1}.site-header--home .header-actions button:first-child{display:inline-flex;min-height:34px;padding:5px 9px;font-size:10px}.site-header--home .header-actions button:last-child{display:none}.site-header--home .menu-toggle{grid-column:3;grid-row:1}.utility-sheet[data-home-panel="true"]{top:auto!important;right:12px!important;bottom:calc(12px + env(safe-area-inset-bottom))!important;left:12px!important;width:auto;max-width:420px;max-height:min(78dvh,620px);margin-inline:auto;border-radius:16px}.utility-sheet[data-home-panel="true"] .sheet-inner{padding:16px 18px calc(14px + env(safe-area-inset-bottom))}.utility-sheet[data-home-panel="true"] .sheet-inner h2{font-size:17px}.utility-sheet[data-home-panel="true"] .sheet-inner a{padding:7px 0}.utility-sheet[data-home-panel="true"] .sheet-inner a strong{font-size:13px}.utility-sheet[data-home-panel="true"] .home-email-row{grid-template-columns:auto minmax(0,1fr) auto;gap:5px}.utility-sheet[data-home-panel="true"] .home-email-address{font-size:11px}}

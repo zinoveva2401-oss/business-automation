@@ -1,14 +1,14 @@
 ---
 import ResponsiveImage from './ResponsiveImage.astro';
 import { formatDate, topicForCategory } from '../lib/site';
-const { article, placement = 'editorial_route', rank = 0, featured = false, imageLoading, imageSizes } = Astro.props;
+const { article, placement = 'editorial_route', rank = 0, featured = false, showIndex = true, initiallyHidden = false, imageLoading, imageSizes } = Astro.props;
 const resolvedImageLoading = imageLoading ?? (featured ? 'eager' : 'lazy');
 const topic = topicForCategory(article.data.category);
 const search = (article.data.title + ' ' + article.data.description + ' ' + article.data.primarySearchQuestion).toLocaleLowerCase('ru');
 ---
-<article class:list={['editorial-article-row', { 'editorial-article-row--featured': featured }]} data-article-card data-topic={topic?.slug} data-content-type={article.data.content_type} data-category={article.data.category} data-cluster={article.data.cluster} data-search={search} data-timestamp={article.data.publishedAt?.valueOf() ?? 0} data-featured={article.data.featured ? '1' : '0'}>
+<article class:list={['editorial-article-row', { 'editorial-article-row--featured': featured }]} data-article-card data-topic={topic?.slug} data-content-type={article.data.content_type} data-category={article.data.category} data-cluster={article.data.cluster} data-search={search} data-timestamp={article.data.publishedAt?.valueOf() ?? 0} data-featured={article.data.featured ? '1' : '0'} hidden={initiallyHidden}>
   <a class="editorial-article-row__link" href={'/articles/' + article.data.slug + '/'} data-analytics-event="content_click" data-analytics-content-id={article.data.id} data-analytics-topic={topic?.slug} data-analytics-content-type={article.data.content_type} data-analytics-placement={placement}>
-    <span class="editorial-article-row__index">0{rank + 1}</span>
+    {showIndex && <span class="editorial-article-row__index">0{rank + 1}</span>}
     <span class="editorial-article-row__image">{article.data.cover ? <ResponsiveImage src={article.data.cover} alt={article.data.coverAlt || ''} width={720} height={405} loading={resolvedImageLoading} fetchpriority={featured && resolvedImageLoading === 'eager' ? 'high' : 'auto'} sizes={imageSizes ?? (featured ? '(max-width: 700px) 100vw, 42vw' : '(max-width: 700px) 100vw, 180px')} /> : <i class="ti ti-file-description" aria-hidden="true"></i>}</span>
     <span class="editorial-article-row__body"><span class="editorial-article-row__meta"><b>{topic?.name || article.data.category}</b><span>{article.data.content_type}</span>{article.data.publishedAt&&<time datetime={article.data.publishedAt.toISOString()}>{formatDate(article.data.publishedAt)}</time>}</span><strong>{article.data.title}</strong><span class="editorial-article-row__description">{article.data.description}</span></span>
     <span class="editorial-article-row__arrow" aria-hidden="true">↗</span>
