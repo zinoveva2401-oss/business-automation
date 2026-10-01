@@ -1,13 +1,89 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { readingChannels } from '../lib/channels';
-const schema={'@context':'https://schema.org','@type':'Person',name:'Светлана Тарасова',description:'Основатель Докрути, практик по продажам, управлению, маркетингу и бизнес-процессам',image:new URL('/approved/founder-about.webp',Astro.url).href};
+import ResponsiveImage from '../components/ResponsiveImage.astro';
+const founderPhoto='/images/about-founder-editorial-2026-10-01.webp';
+const schema={'@context':'https://schema.org','@type':'Person',name:'Светлана Тарасова',description:'Основатель Докрути, практик по продажам, управлению, маркетингу и бизнес-процессам',image:new URL(founderPhoto,Astro.url).href};
 ---
-<BaseLayout title="Светлана Тарасова и Докрути — практика для малого бизнеса" description="Светлана Тарасова — основатель Докрути и практик по продажам, управлению, маркетингу и бизнес-процессам." image="/approved/founder-about.webp" schema={schema}>
-<article class="about-v4"><header class="about-hero"><div class="container about-hero-grid"><div><p class="eyebrow">ОБО МНЕ</p><h1>Светлана Тарасова</h1><p>Помогаю владельцу малого бизнеса понять, почему привычные действия перестали давать нужный результат, что проверить и какой шаг сделать дальше.</p><button class="button button--primary" type="button" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу ↗</button></div><figure><img src="/approved/founder-about.webp" alt="Светлана Тарасова, основатель Докрути" width="900" height="1122" fetchpriority="high"/></figure></div></header><section class="container about-practice"><div><p class="eyebrow">ПРАКТИКА</p><h2>Работа с реальными процессами</h2></div><div><p>Моя основная профессиональная база — торговля, управление сетями, продажи, закупки и рабочие процессы. Также я работала в опте, швейном производстве и смежных операционных задачах.</p><p>Этот опыт помогает видеть связь между показателями, действиями команды и тем, что происходит с клиентом.</p></div></section><section class="about-method"><div class="container"><p class="eyebrow">КАК РАЗБИРАЮ ЗАДАЧУ</p><h2>От наблюдения к проверке</h2><ol><li><span>01</span><strong>Увидеть ситуацию</strong><p>Что происходит и где это видно.</p></li><li><span>02</span><strong>Проверить причину</strong><p>Какие факты подтверждают или опровергают версию.</p></li><li><span>03</span><strong>Выбрать действие</strong><p>Какой шаг подходит после проверки.</p></li><li><span>04</span><strong>Вернуться к результату</strong><p>Что изменилось после действия.</p></li></ol></div></section><section class="container about-boundary"><div><p class="eyebrow">ПРИНЦИП РАБОТЫ</p><h2>У задачи есть границы</h2></div><p>Там, где ответ зависит от отраслевого права, технологии производства или другой специальной области, нужна отдельная профессиональная проверка. Практический опыт — отправная точка, которую важно сопоставлять с фактами.</p></section><section class="about-channels"><div class="container"><p class="eyebrow">ГДЕ ЧИТАТЬ</p><h2>Продолжить знакомство</h2>{readingChannels.map(channel=><a href={channel.href} target="_blank" rel="noopener noreferrer" data-analytics-event="channel_subscribe_click" data-analytics-channel-id={channel.id}><strong>{channel.label}</strong><span>{channel.reason}</span><b aria-hidden="true">↗</b></a>)}</div></section></article>
+<BaseLayout title="Светлана Тарасова и Докрути — практика для малого бизнеса" description="Светлана Тарасова — основатель Докрути и практик по продажам, управлению, маркетингу и бизнес-процессам." image={founderPhoto} schema={schema}>
+<article class="about-v4">
+  <header class="about-hero">
+    <div class="container about-hero__layout">
+      <div class="about-hero__copy">
+        <p class="eyebrow">ОБО МНЕ</p>
+        <h1>Светлана Тарасова</h1>
+        <p>Много лет я работаю внутри малого бизнеса — в рознице, опте, продажах, закупках, управлении и швейном бизнесе.<br /><br />Я открывала магазины с нуля, работала с ассортиментом и поставщиками, управляла командами и разбиралась с теми проблемами, которые в небольшом бизнесе в итоге всё равно приходится решать собственнику.<br /><br />Из этого опыта появился «Докрути» — место, где я собираю реальные бизнес-ситуации, практические разборы и инструменты, которые помогают сначала понять, что именно пошло не так, а уже потом решать, что менять.</p>
+        <button class="button button--primary" type="button" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу</button>
+      </div>
+      <figure class="about-hero__media"><ResponsiveImage src={founderPhoto} alt="Светлана Тарасова" width={1122} height={1402} loading="eager" fetchpriority="high" sizes="(max-width: 700px) 100vw, 48vw" class="about-hero__image" /></figure>
+    </div>
+  </header>
+
+  <section class="container about-practice" aria-labelledby="about-practice-title">
+    <div><p class="eyebrow">ПОЧЕМУ «ДОКРУТИ»</p><h2 id="about-practice-title">Опыт, который можно применить</h2></div>
+    <div><p>За годы работы я видела одну и ту же картину много раз: продажи просели — запускают рекламу, товар завис — делают скидку, сотрудник не справляется — меняют человека.</p><p>Иногда это помогает. А иногда причина вообще находится в другом месте.</p><p>Поэтому мне ближе другой подход: сначала посмотреть, что изменилось, где это видно и чем это можно проверить.</p><p>Сейчас к опыту в торговле и управлении добавились аналитика, цифровые инструменты, автоматизация и ИИ. Я использую их не ради моды, а там, где они помогают быстрее разобраться, убрать лишнюю ручную работу и принять решение на фактах.</p></div>
+  </section>
+
+  <section class="about-method" aria-labelledby="about-method-title">
+    <div class="container">
+      <p class="eyebrow">КАК Я РАЗБИРАЮ ЗАДАЧУ</p><h2 id="about-method-title">От наблюдения к проверке</h2>
+      <ol><li><span>01</span><strong>Увидеть ситуацию</strong><p>Что произошло и где это видно.</p></li><li><span>02</span><strong>Проверить причину</strong><p>Какие факты подтверждают или опровергают версию.</p></li><li><span>03</span><strong>Выбрать действие</strong><p>Что имеет смысл изменить первым.</p></li><li><span>04</span><strong>Вернуться к результату</strong><p>Что изменилось после действия.</p></li></ol>
+    </div>
+  </section>
+
+  <section class="container about-cta" aria-labelledby="about-cta-title">
+    <div class="about-cta__copy"><p class="eyebrow">ЕСТЬ ЗАДАЧА?</p><h2 id="about-cta-title">Начните с ситуации</h2><p>Не нужно заранее знать причину или писать техническое задание.<br />Расскажите простыми словами, что происходит, что изменилось и что уже пробовали. Дальше можно понять, что имеет смысл проверить первым.</p></div>
+    <div class="about-cta__actions"><button class="button button--primary" type="button" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу</button><button class="button button--secondary" type="button" data-open-sheet="read">Где читать Докрути</button></div>
+  </section>
+</article>
 </BaseLayout>
-<style>.about-v4{background:#fff}.about-hero{padding:55px 0;background:#f4f5f6}.about-hero-grid{display:grid;grid-template-columns:.8fr 1fr;gap:5vw;align-items:center}.about-hero h1{margin:0 0 20px;font-size:clamp(55px,6vw,85px)}.about-hero p:not(.eyebrow){max-width:550px;font-size:17px}.about-hero button{margin-top:17px;cursor:pointer}.about-hero figure{height:500px;margin:0;overflow:hidden}.about-hero img{width:100%;height:100%;object-fit:cover;object-position:62% 40%}.about-practice,.about-boundary{display:grid;grid-template-columns:.85fr 1fr;gap:60px;align-items:start;padding-top:65px;padding-bottom:65px}.about-practice h2,.about-boundary h2,.about-method h2,.about-channels h2{margin:0;font-size:clamp(37px,4vw,57px)}.about-practice p:not(.eyebrow),.about-boundary p:not(.eyebrow){margin-top:0;font-size:17px;line-height:1.6}.about-method{padding:55px 0;background:#17130f;color:#fff}.about-method ol{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin:35px 0 0;padding:0;list-style:none}.about-method li{padding-top:15px;border-top:2px solid #d9562f}.about-method li span{display:block;color:#ff8d69;font:600 22px var(--font-editorial)}.about-method li strong{display:block;margin:15px 0 8px;font-size:16px}.about-method li p{margin:0;color:#d2ceca;font-size:13px}.about-channels{padding:50px 0;background:#f4f5f6}.about-channels h2{margin-bottom:24px}.about-channels a{display:grid;grid-template-columns:1fr 1.5fr 22px;gap:18px;max-width:750px;padding:16px 0;border-top:1px solid #bfc4c9;text-decoration:none}.about-channels a span{font-size:13px}.about-channels a b{color:#d9562f}@media(max-width:700px){.about-hero-grid,.about-practice,.about-boundary{grid-template-columns:1fr;gap:20px}.about-hero{padding:42px 0}.about-hero h1{font-size:clamp(48px,11vw,68px)}.about-hero figure{height:390px}.about-practice,.about-boundary{padding-top:45px;padding-bottom:45px}.about-method ol{grid-template-columns:1fr 1fr}.about-channels a{grid-template-columns:1fr 22px}.about-channels a span{grid-column:1}.about-channels a b{grid-column:2;grid-row:1/3}}</style>
 <style>
-.about-hero img{object-position:62% 0}
-@media(max-width:700px){.about-hero figure{height:350px}.about-hero img{object-position:65% 0;transform:scale(1.75);transform-origin:67% 12%}}
+  .about-v4{background:#fff}
+  .about-v4 .eyebrow{color:#df4f22}
+  .about-hero{min-height:460px;display:flex;align-items:center;background:#f4f5f6}
+  .about-hero__layout{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);align-items:center;gap:32px;padding-block:20px}
+  .about-hero__media{display:flex;align-items:center;justify-content:center;width:100%;height:420px;margin:0;overflow:hidden}
+  .about-hero__media :global(picture){display:block;width:auto;height:100%;max-width:100%}
+  .about-hero__media :global(picture img){width:auto;height:100%;max-width:100%;object-fit:contain;object-position:center}
+  .about-hero__copy{max-width:540px}
+  .about-hero__copy h1{margin:0 0 14px;font-size:clamp(48px,4.6vw,64px);line-height:.98}
+  .about-hero__copy>p:not(.eyebrow){max-width:490px;margin:0;font-size:17px;line-height:1.5}
+  .about-hero__copy .button{margin-top:18px}
+  .about-practice,.about-boundary{display:grid;grid-template-columns:.9fr 1.1fr;gap:6vw;align-items:start;padding-block:34px}
+  .about-practice h2,.about-boundary h2,.about-method h2{max-width:580px;margin:0;font-size:clamp(32px,3.4vw,46px);line-height:1.02}
+  .about-practice p:not(.eyebrow),.about-boundary>p{max-width:670px;margin:0 0 12px;color:#444b51;font-size:16px;line-height:1.58}
+  .about-method{padding-block:30px;background:#17130f;color:#fff}
+  .about-method>.container>.eyebrow{color:#ff8d69}
+  .about-method ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin:18px 0 0;padding:0;list-style:none}
+  .about-method li{min-height:84px;padding-top:11px;border-top:1px solid #ffffff65}
+  .about-method li span{display:block;color:#ff8d69;font:500 24px/1 var(--font-editorial)}
+  .about-method li strong{display:block;margin:11px 0 5px;font-size:14px}
+  .about-method li p{margin:0;color:#d2ceca;font-size:13px;line-height:1.5}
+  .about-cta{display:flex;align-items:center;justify-content:space-between;gap:28px;padding-block:22px 28px}
+  .about-cta .eyebrow{margin-bottom:8px}
+  .about-cta h2{margin:0;font-size:clamp(34px,4vw,48px);line-height:1}
+  .about-cta__actions{display:flex;flex-wrap:wrap;gap:12px}
+  @media(max-width:850px){.about-hero__layout{gap:18px}.about-hero__media{height:400px}.about-practice,.about-boundary{grid-template-columns:1fr;gap:16px}.about-method ol{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:700px){
+    .about-hero{display:block;min-height:0;background:#fff}
+    .about-hero__layout{display:flex;flex-direction:column;align-items:stretch;gap:22px;padding-block:28px 0}
+    .about-hero__copy{order:1}
+    .about-hero__media{order:2;height:auto;aspect-ratio:1122/1402}
+    .about-hero__media :global(picture){width:100%;height:100%}
+    .about-hero__media :global(picture img){width:100%;height:100%}
+    .about-hero__copy h1{font-size:clamp(42px,11vw,54px)}
+    .about-hero__copy>p:not(.eyebrow){font-size:16px}
+    .about-hero__copy .button{margin-top:16px}
+    .about-practice,.about-boundary{padding-block:25px;gap:12px}
+    .about-practice h2,.about-boundary h2,.about-method h2{font-size:36px}
+    .about-practice p:not(.eyebrow),.about-boundary>p{font-size:15px;line-height:1.58}
+    .about-method{padding-block:25px}
+    .about-method ol{gap:12px;margin-top:15px}
+    .about-method li{min-height:88px;padding-top:9px}
+    .about-method li strong{margin:10px 0 5px;font-size:14px}
+    .about-method li p{font-size:12px}
+    .about-cta{display:block;padding-block:20px 26px}
+    .about-cta h2{font-size:35px}
+    .about-cta__actions{display:grid;margin-top:16px}
+    .about-cta__actions .button{width:100%}
+  }
 </style>

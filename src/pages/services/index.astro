@@ -1,16 +1,139 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getActiveServices } from '../../lib/content';
+import ResponsiveImage from '../../components/ResponsiveImage.astro';
 const services=await getActiveServices();
+const serviceVisuals={
+  'razbor-odnoy-zadachi':{src:'/images/services-single-task-2026-09-28.webp',alt:'Работа с документом и записями для разбора одной задачи'},
+  'audit-prodazh-i-processov':{src:'/images/services-sales-audit-2026-09-28.webp',alt:'Два специалиста вместе разбирают аналитику продаж'},
+  'dorabotka-sistemy-raboty':{src:'/images/services-work-system-2026-09-28.webp',alt:'Командная работа над схемой процессов'},
+};
 ---
 <BaseLayout title="Услуги Докрути — разбор, аудит и доработка системы работы" description="Три формата работы: разбор одной задачи, аудит продаж и процессов, доработка системы работы.">
-<article class="services-v4"><header class="services-hero"><div class="container hero-grid"><div><p class="eyebrow">УСЛУГИ ДОКРУТИ</p><h1>Формат зависит от задачи.</h1><p>Опишите, что происходит. Светлана проверит, подходит ли формат и какие данные нужны. Объём, срок и стоимость согласуются до начала работы.</p><button class="button button--primary" type="button" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу ↗</button></div><div class="hero-mark"><span>Ситуация</span><span>Проверка</span><span>Согласованный шаг</span></div></div></header><section class="container service-section"><p class="eyebrow">ТРИ ФОРМАТА РАБОТЫ</p><h2>С чем могу быть полезна</h2><div class="service-steps">{services.map((item,index)=><a class="service-step" href={'/services/'+item.data.slug+'/'} data-analytics-event="cta_click" data-analytics-service-id={item.data.id} data-analytics-placement="services_list"><span class="step-index">0{index+1}</span><div><h3>{item.data.title}</h3><p>{item.data.situation || item.data.description}</p></div><div><strong>Что происходит</strong><p>{item.data.process}</p></div><b aria-hidden="true">↗</b></a>)}</div></section><section class="service-process"><div class="container"><h2>Как начинается работа</h2><ol><li>Описать задачу</li><li>Проверить, подходит ли формат и какие данные нужны</li><li>Согласовать объём, срок и стоимость</li><li>Начать работу после согласования</li></ol><button class="button button--primary" type="button" data-open-sheet="ask" data-analytics-event="contact_open">Задать вопрос ↗</button></div></section></article>
+<article class="services-v4">
+  <header class="services-hero">
+    <div class="services-hero__media" aria-hidden="true"><ResponsiveImage src="/images/services-hero-editorial-2026-09-28.webp" alt="" width={1672} height={941} loading="eager" fetchpriority="high" sizes="100vw" class="services-hero__image" /></div>
+    <div class="container services-hero__inner">
+      <div class="services-hero__copy">
+        <p class="eyebrow">УСЛУГИ / ФОРМАТЫ РАБОТЫ</p>
+        <h1>Формат зависит от задачи</h1>
+        <p>Опишите, что происходит. Светлана проверит, подходит ли формат и какие данные нужны. Объём, срок и стоимость согласуются до начала работы.</p>
+        <button class="button button--primary" type="button" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу ↗</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="container service-section" aria-labelledby="service-formats-title">
+    <div class="service-section__heading"><div><p class="eyebrow">ТРИ ФОРМАТА РАБОТЫ</p><h2 id="service-formats-title">С чем могу быть полезна</h2></div></div>
+    <div class="service-formats">
+      {services.map((item,index)=>{
+        const visual=serviceVisuals[item.data.slug as keyof typeof serviceVisuals];
+        return <article class={`service-format service-format--${index+1}`} id={item.data.slug} data-analytics-service-id={item.data.id}>
+          <div class="service-format__image"><ResponsiveImage src={visual.src} alt={visual.alt} width={1448} height={1086} loading="lazy" sizes="(max-width: 700px) 100vw, 48vw" /></div>
+          <div class="service-format__copy">
+            <span class="service-format__number">0{index+1}</span>
+            <h3>{item.data.title}</h3>
+            <dl>
+              <div><dt>Когда подходит</dt><dd>{item.data.situation || item.data.description}</dd></div>
+              <div><dt>Что происходит</dt><dd>{item.data.process}</dd></div>
+              <div><dt>В результате</dt><dd>{item.data.output}</dd></div>
+            </dl>
+          </div>
+        </article>;
+      })}
+    </div>
+  </section>
+
+  <section class="service-process" aria-labelledby="service-process-title">
+    <div class="container service-process__inner">
+      <div class="service-process__heading"><p class="eyebrow">ПОСЛЕДОВАТЕЛЬНОСТЬ</p><h2 id="service-process-title">Как начинается работа</h2></div>
+      <ol>
+        <li>Описать задачу</li>
+        <li>Проверить, подходит ли формат и какие данные нужны</li>
+        <li>Согласовать объём, срок и стоимость</li>
+        <li>Начать работу после согласования</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="container services-cta" aria-labelledby="services-cta-title">
+    <div><p class="eyebrow">ОСТАЛИСЬ ВОПРОСЫ?</p><h2 id="services-cta-title">Не уверены, с чего начать?</h2></div>
+    <div class="services-cta__actions">
+      <button class="button button--primary" type="button" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу ↗</button>
+      <button class="button button--secondary" type="button" data-open-sheet="read">Где читать Докрути ↗</button>
+    </div>
+  </section>
+</article>
 </BaseLayout>
-<style>.services-v4{background:#fff}.services-hero{padding:60px 0;background:#f4f5f6}.hero-grid{display:grid;grid-template-columns:1fr .7fr;gap:60px;align-items:center}.hero-grid h1{max-width:780px;margin:0 0 18px;font-size:clamp(50px,6vw,85px)}.hero-grid p:not(.eyebrow){max-width:600px;font-size:17px}.hero-grid button{margin-top:16px;cursor:pointer}.hero-mark{display:grid;gap:0;padding:25px;border-left:3px solid #d9562f;background:#17130f;color:#fff}.hero-mark span{padding:18px 0;border-bottom:1px solid #ffffff66;font:600 25px var(--font-editorial)}.service-section{padding-top:60px;padding-bottom:70px}.service-section h2{margin:0 0 25px;font-size:clamp(35px,4vw,55px)}.service-steps{border-top:2px solid #262626}.service-step{display:grid;grid-template-columns:72px 1.2fr .8fr 25px;gap:20px;align-items:start;min-height:180px;padding:25px 0;border-bottom:1px solid #bfc4c9;text-decoration:none}.service-step:nth-child(2){padding-left:40px}.service-step:nth-child(3){padding-left:80px}.service-step:hover{background:#f4f5f6}.step-index{color:#d9562f;font:600 40px var(--font-editorial)}.service-step h3{margin:0 0 10px;font-size:clamp(27px,3vw,42px)}.service-step p{max-width:480px;margin:0;color:#555;font-size:14px}.service-step strong{display:block;margin:5px 0 8px;font-size:12px;text-transform:uppercase}.service-step>b{color:#d9562f}.service-process{padding:50px 0;background:#17130f;color:#fff}.service-process h2{margin:0 0 25px;font-size:clamp(34px,4vw,52px)}.service-process ol{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin:0 0 25px;padding:0;list-style:none;counter-reset:step}.service-process li{padding:12px 0;border-top:2px solid #d9562f;font-size:13px}.service-process li:before{counter-increment:step;display:block;margin-bottom:8px;color:#ff8d69;content:'0' counter(step);font:600 20px var(--font-editorial)}.service-process button{cursor:pointer}@media(max-width:700px){.hero-grid{grid-template-columns:1fr;gap:25px}.services-hero{padding:42px 0}.hero-grid h1{font-size:clamp(45px,11vw,65px)}.hero-mark{display:none}.service-section{padding-top:45px;padding-bottom:45px}.service-step,.service-step:nth-child(2),.service-step:nth-child(3){grid-template-columns:48px 1fr 20px;min-height:0;gap:10px;padding:20px 0}.service-step>div:nth-child(3){grid-column:2}.service-step>b{grid-column:3;grid-row:1}.step-index{font-size:28px}.service-process ol{grid-template-columns:1fr 1fr}}</style>
 <style>
-.hero-grid{display:block}.hero-grid>div:first-child{max-width:870px}
-.hero-mark{display:flex;justify-content:space-between;gap:20px;margin-top:42px;padding:0;border:0;border-top:2px solid #d9562f;background:transparent;color:#17130f}
-.hero-mark span{position:relative;flex:1;padding:20px 0 0;border:0;font:600 19px var(--font-editorial)}
-.hero-mark span::before{position:absolute;top:-8px;left:0;width:13px;height:13px;border:2px solid #d9562f;border-radius:50%;background:#f4f5f6;content:''}
-@media(max-width:700px){.hero-mark{display:flex;gap:10px;margin-top:34px}.hero-mark span{font-size:12px;line-height:1.2}}
+  .services-v4{background:#fff}
+  .services-v4 .eyebrow{color:#df4f22}
+  .services-hero{position:relative;isolation:isolate;min-height:500px;display:flex;align-items:center;background:#f4f5f6}
+  .services-hero__media{position:absolute;z-index:-1;inset:0;overflow:hidden}
+  .services-hero__media::after{position:absolute;inset:0;background:linear-gradient(90deg,#fff 0%,rgba(255,255,255,.97) 27%,rgba(255,255,255,.82) 42%,rgba(255,255,255,.18) 64%,transparent 77%);content:''}
+  .services-hero__image{width:100%;height:100%;object-fit:cover;object-position:center 52%}
+  .services-hero__inner{position:relative;padding-block:56px}
+  .services-hero__copy{max-width:590px}
+  .services-hero__copy h1{max-width:650px;margin:0 0 18px;font-size:clamp(48px,5.2vw,70px);line-height:.98}
+  .services-hero__copy>p:not(.eyebrow){max-width:520px;margin:0;color:#31363a;font-size:18px;line-height:1.5}
+  .services-hero__copy .button{margin-top:24px}
+  .service-section{padding-block:50px 56px}
+  .service-section__heading h2{margin:0;font-size:clamp(38px,4vw,54px)}
+  .service-section__heading .eyebrow{margin-bottom:10px}
+  .service-formats{display:grid;gap:18px;margin-top:24px}
+  .service-format{display:grid;grid-template-columns:1fr 1fr;min-height:380px;background:#f4f5f6}
+  .service-format:nth-child(2){grid-template-columns:1fr 1fr;background:#f7f7f7}
+  .service-format:nth-child(2) .service-format__image{order:2}
+  .service-format__image{position:relative;min-height:0;aspect-ratio:1.55;overflow:hidden}
+  .service-format__image picture,.service-format__image img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 42%}
+  .service-format__copy{position:relative;display:flex;flex-direction:column;justify-content:center;padding:20px clamp(22px,3vw,40px)}
+  .service-format__number{position:absolute;top:18px;right:22px;color:#c9cdd0;font:500 clamp(44px,5vw,64px)/1 var(--font-editorial)}
+  .service-format h3{max-width:560px;margin:0 0 14px;font:500 clamp(30px,2.8vw,40px)/.98 var(--font-editorial)}
+  .service-format dl{display:grid;gap:7px;margin:0}
+  .service-format dl div{display:grid;grid-template-columns:118px 1fr;gap:10px;padding-top:8px;border-top:1px solid #d5d9dc}
+  .service-format dt{color:#d9562f;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+  .service-format dd{margin:0;color:#4d5359;font-size:13px;line-height:1.45}
+  .service-process{padding-block:42px;background:#17130f;color:#fff}
+  .service-process__heading{display:flex;align-items:end;justify-content:space-between;gap:30px;margin-bottom:22px}
+  .service-process__heading .eyebrow{margin-bottom:10px;color:#ff8d69}
+  .service-process h2{max-width:680px;margin:0;font-size:clamp(38px,4vw,54px);line-height:1}
+  .service-process ol{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;margin:0;padding:0;list-style:none;counter-reset:process}
+  .service-process li{min-height:84px;padding:12px 10px 0 0;border-top:1px solid #ffffff60;color:#e6e2df;font-size:14px;line-height:1.45}
+  .service-process li::before{counter-increment:process;display:block;margin-bottom:9px;color:#ff8d69;content:'0' counter(process);font:500 22px/1 var(--font-editorial)}
+  .services-cta{display:flex;align-items:center;justify-content:space-between;gap:28px;padding-block:30px 36px}
+  .services-cta .eyebrow{margin-bottom:8px}
+  .services-cta h2{margin:0;font-size:clamp(34px,4vw,48px);line-height:1}
+  .services-cta__actions{display:flex;flex-wrap:wrap;gap:12px}
+  @media(max-width:900px){.service-format,.service-format:nth-child(2){grid-template-columns:1fr 1fr}.service-format__copy{padding:32px 26px}.service-format dl div{grid-template-columns:1fr;gap:5px}}
+  @media(max-width:700px){
+    .services-hero{display:block;min-height:0;padding-top:0;background:#fff}
+    .services-hero__media{position:relative;z-index:0;inset:auto;width:100%;height:255px;margin-top:0}
+    .services-hero__media::after{background:linear-gradient(180deg,rgba(255,255,255,.18),transparent 35%)}
+    .services-hero__image{object-position:center 52%}
+    .services-hero__inner{padding-block:0}
+    .services-hero__copy h1{max-width:500px;font-size:clamp(44px,11vw,56px)}
+    .services-hero__copy>p:not(.eyebrow){font-size:16px}
+    .services-hero__copy .button{margin-top:18px}
+    .service-section{padding-block:44px 50px}
+    .service-section__heading h2{font-size:40px}
+    .service-formats{gap:20px;margin-top:22px}
+    .service-format,.service-format:nth-child(2){grid-template-columns:1fr;min-height:0}
+    .service-format:nth-child(2) .service-format__image{order:0}
+    .service-format__image{min-height:0;height:auto;aspect-ratio:1.55}
+    .service-format__copy{padding:24px 22px 28px}
+    .service-format__number{top:20px;right:20px;font-size:50px}
+    .service-format h3{max-width:75%;margin-bottom:18px;font-size:36px}
+    .service-format dl{gap:12px}
+    .service-format dl div{grid-template-columns:1fr;gap:5px;padding-top:10px}
+    .service-process{padding-block:40px}
+    .service-process__heading{display:block;margin-bottom:22px}
+    .service-process h2{font-size:40px}
+    .service-process ol{grid-template-columns:1fr 1fr;gap:14px}
+    .service-process li{min-height:110px;padding-top:12px;font-size:13px}
+    .service-process li::before{margin-bottom:8px;font-size:21px}
+    .services-cta{display:block;padding-block:36px 42px}
+    .services-cta h2{font-size:38px}
+    .services-cta__actions{display:grid;margin-top:22px}
+    .services-cta__actions .button{width:100%}
+  }
 </style>
