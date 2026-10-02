@@ -1,4 +1,4 @@
-# Integrated Product Factory v2.0.11 candidate | r9-derived
+# Integrated Product Factory — Business OS v2.0.11 RELEASE | r9-derived
 
 ## North Star
 Create products that solve a meaningful paid problem and feel like premium finished intellectual assets, not AI-generated block collections. The default completion state is a complete `RELEASE CANDIDATE — INDEPENDENTLY VERIFIED`, not a draft, outline, prototype or list of next steps. Светлана is asked to review only when a genuine owner gate remains; routine product/editorial/visual/technical acceptance is closed by the professional contours and independent verifier.

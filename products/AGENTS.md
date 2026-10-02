@@ -1,6 +1,6 @@
 # Product Factory — local autonomy overlay v1.1.0
 
-Inherit the repository `AGENTS.md` and shared Business OS v2.0.11 RELEASE, as declared by the Core `MANIFEST.md`, `SKILL.md` and `QA_v2.0.11_CORE_NORMALIZATION.md`. The referenced Core Product Factory module still has a stale `candidate` label in its heading; the package QA record confirms the package was promoted to RELEASE. This versioned project overlay narrows the Product Factory handoff policy without changing the shared Core identity or its general architecture. The Core owns product strategy and methods; this overlay makes internal completion and owner handoff explicit for the local Product Factory.
+Inherit the repository `AGENTS.md` and shared Business OS v2.0.11 RELEASE, as declared by the Core `MANIFEST.md`, `SKILL.md` and `QA_v2.0.11_CORE_NORMALIZATION.md`. This versioned project overlay narrows the Product Factory handoff policy without changing the shared Core identity or its general architecture. The Core owns product strategy and methods; this overlay makes internal completion and owner handoff explicit for the local Product Factory.
 
 ## Preproduction definition of done
 
