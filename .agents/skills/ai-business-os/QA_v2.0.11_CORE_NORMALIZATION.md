@@ -1,6 +1,6 @@
 # v2.0.11 Core Normalization — Release QA record
 
-Status: **RELEASE; Architect runtime gate and independent Review Chair acceptance PASS; final Core cleanup/write-back QA pending**
+Status: **RELEASE; Architect runtime gate, independent Review Chair acceptance and final Core cleanup QA PASS; live Business System write-back pending**
 Date: 2026-10-02
 Base: exact verified r9 archive SHA-256 `322d3dcce936f444b0b5e7547985c97b58b36139bb98b307c3c3eaf7a5857458`
 Release build: `2026-10-02 core-normalization-v2.0.11-release`
@@ -26,7 +26,7 @@ This candidate adds only the missing integration gates found during the capabili
 - PyYAML is unavailable in the bundled runtime; validator's documented YAML syntax-only checks are used. No dependency was installed.
 - The exact v2.0.11 candidate ZIP and clean-unzip verification are produced separately in the run's local evidence/output area; their path, SHA-256 and test result are recorded in its sidecar manifest.
 - Fresh Product Factory runtime: CWD `products`, root Core inheritance, Product Factory overlay, repo-scoped v2.0.11 discovery and live Business System access confirmed. Architect preflight was applied before one bounded source-audit next-step card; no product files were created or edited.
-- Independent Review Chair challenge: PASS for Architect runtime acceptance only; reviewer confirmed live rows 83 and 101 plus the linked current-product/research folders, and explicitly did not credit the underlying research audit as completed. Live write-back remains pending final Core cleanup QA.
+- Independent Review Chair challenge: PASS for Architect runtime acceptance only; reviewer confirmed live rows 83 and 101 plus the linked current-product/research folders, and explicitly did not credit the underlying research audit as completed. Live write-back is the remaining authorized completion step after final Core QA PASS.
 
 ## Release decision
 

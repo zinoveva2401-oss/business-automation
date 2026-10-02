@@ -9,7 +9,7 @@ class CoreNormalizationContracts(unittest.TestCase):
     def test_release_identity_and_runtime_acceptance_are_explicit(self):
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("PACKAGE VERSION: v2.0.11 RELEASE", skill)
-        self.assertIn("PACKAGE RELEASE GATES = RUNTIME ACCEPTANCE VERIFIED; FINAL CORE QA PENDING", skill)
+        self.assertIn("PACKAGE RELEASE GATES = RUNTIME ACCEPTANCE VERIFIED; FINAL CORE QA PASS; LIVE BUSINESS SYSTEM WRITEBACK PENDING", skill)
         self.assertIn("PLATFORM INSTALL TELEMETRY = NOT VERIFIED", skill)
 
     def test_architect_is_conditional_and_has_no_tool_option(self):

@@ -143,7 +143,7 @@ Business OS сам обязан:
 8. Для MAIN/блокера, которые могли измениться во внешней среде (GitHub, deploy, сайт, automation, payment, CRM, домен), перед планом дня проверь фактический live source, если доступ есть или Светлана сообщает, что исполнитель уже завершил шаг. Не повторяй старый blocker только потому, что `00_ШТАБ` не успел переписаться.
 9. Только затем открой профильный source of truth задачи.
 
-**Runtime self-identity:** пакет обязан различать **semantic version** и **release channel**. Этот build объявляет `PACKAGE VERSION: v2.0.11 RELEASE — self-declared from active Skill instructions`. Сообщай раздельно: `PACKAGE VERSION = v2.0.11 RELEASE (self-declared)` / `PACKAGE RELEASE GATES = RUNTIME ACCEPTANCE VERIFIED; FINAL CORE QA PENDING` / `PLATFORM INSTALL TELEMETRY = NOT VERIFIED`.
+**Runtime self-identity:** пакет обязан различать **semantic version** и **release channel**. Этот build объявляет `PACKAGE VERSION: v2.0.11 RELEASE — self-declared from active Skill instructions`. Сообщай раздельно: `PACKAGE VERSION = v2.0.11 RELEASE (self-declared)` / `PACKAGE RELEASE GATES = RUNTIME ACCEPTANCE VERIFIED; FINAL CORE QA PASS; LIVE BUSINESS SYSTEM WRITEBACK PENDING` / `PLATFORM INSTALL TELEMETRY = NOT VERIFIED`.
 
 **Anti-reinstall rule:** не переустанавливай **тот же exact package identity/channel/build** только из-за устаревшей строки Control Center. `v2.0.10 RELEASE` и `v2.0.11 RELEASE` — разные semantic-version identities. Этот repo-scoped release заменяет отключённый user-scoped r5 после подтверждённого readback активной версии. Если exact identity не видна, пометь `INSTALL STATE UNCERTAIN` и не отправляй владельца переустанавливать пакет без доказательства.
 
