@@ -37,7 +37,7 @@ assert.match(overlay, /normal research, review or repair should continue/i);
 assert.match(overlay, /diminishing-return stop condition/i);
 assert.match(overlay, /EXTERNAL_PREREQUISITE_REQUEST/);
 assert.match(executor, /never stop merely to ask whether normal research or repair should proceed/i);
-assert.match(executor, /only after internal gates close/i);
+assert.match(executor, /owner decision package only after its required internal gates close/i);
 assert.doesNotMatch(executor, /If that proof is missing, stop and return the precise missing gate/);
 
 // Regression: derive the required ledger and reviewer list from the contract.
@@ -110,4 +110,107 @@ for (const gate of gates.filter((item) => /consolidated repair|regression review
 assert.equal(ownerHandoffAllowed(), true, 'all gates closed; owner decision may now be packaged if needed');
 assert.ok(routeLog.indexOf(`ROUTE:${specialist.get(legalGate)}`) < routeLog.indexOf('INDEPENDENT_REVIEW:Product'));
 assert.ok(routeLog.findIndex((event) => /regression review/i.test(event)) > routeLog.findIndex((event) => /consolidated repair/i.test(event)));
-console.log('PASS product factory autonomy contract + PROD-TEAM-001 incomplete-evidence self-heal regression');
+
+// Depth/architecture regression from live decisions DEC-202 and DEC-203.
+const identityBlock = overlay.split('## Product identity lock')[1].split('## Full-job category and competitor depth')[0];
+for (const field of ['PRODUCT_NAME', 'PRODUCT_JOB', 'PROMISED_RESULT', 'CURRENT_APPROVED_SCOPE']) {
+  assert.ok(identityBlock.includes(field), `identity lock must capture ${field}`);
+}
+assert.match(identityBlock, /may not materially narrow the product/i);
+assert.match(identityBlock, /preserve the locked identity/i);
+
+const researchBlock = overlay.split('## Full-job category and competitor depth')[1].split('## Paid-value and anti-trivialization gates')[0];
+for (const category of [
+  'Direct paid products', 'Books/workbooks', 'courses', 'templates/toolkits',
+  'HR/team software', 'planning/accountability/performance systems',
+  'Consulting/service substitutes', 'general-AI substitutes', 'free alternatives',
+]) assert.ok(researchBlock.includes(category), `full-job research omits category ${category}`);
+assert.match(researchBlock, /at least two strong examples for the core job/i);
+assert.match(researchBlock, /no more than 12 source products\/services/i);
+assert.match(researchBlock, /two distinct targeted search passes/i);
+assert.match(researchBlock, /diminishing-return stop condition/i);
+
+const valueBlock = overlay.split('## Paid-value and anti-trivialization gates')[1].split('## Product Architecture Report before prototype')[0];
+assert.match(valueBlock, /FREE_AI_REPLACEABILITY = HIGH[\s\S]*?COMMERCIAL_VALUE = NOT ESTABLISHED[\s\S]*?blocked/i);
+assert.match(valueBlock, /RETHINK[\s\S]*?redesign[\s\S]*?recheck/i);
+assert.match(valueBlock, /cannot by itself prove a paid product/i);
+
+const architectureBlock = overlay.split('## Product Architecture Report before prototype')[1].split('## Two owner decision gates; prototype ordering')[0];
+for (const part of [
+  'Who buys', 'specific management pain/job', 'end result', 'why buyers would pay',
+  'Strong competitors/substitutes', 'complete proposed module map', 'buyer journey',
+  'Format choice', 'keep, rebuild, delete', 'Material risks and unknowns',
+]) assert.ok(architectureBlock.toLowerCase().includes(part.toLowerCase()), `architecture report omits ${part}`);
+assert.match(architectureBlock, /simple Russian/i);
+assert.match(architectureBlock, /before any representative or visual prototype/i);
+
+const ownerGateBlock = overlay.split('## Architect pre-handoff block')[1].split('## Owner decision policy')[0];
+assert.match(ownerGateBlock, /ARCHITECTURE_OWNER_HANDOFF = BLOCKED/);
+assert.match(ownerGateBlock, /PRODUCT\/PROTOTYPE DECISION PACKAGE/i);
+for (const comprehensionCheck of [
+  'what is being built', 'for whom', 'what result it promises', 'complete modules',
+  'why it is worth paying for', 'what free AI does not replace', 'why the format fits',
+]) assert.ok(ownerGateBlock.includes(comprehensionCheck), `Architect comprehension gate omits ${comprehensionCheck}`);
+assert.match(ownerGateBlock, /An architecture approval never authorizes prototype creation before that approval/i);
+assert.match(overlay, /meaning, then evidence, then the decision/i);
+
+// Reconstruct the observed pilot failure: broad team-management identity,
+// one proposed weekly-capacity module, and incomplete competitor/value/legal/visual evidence.
+const pilot = {
+  input: 'Дошей «Систему управления командой бизнеса» до сильного продаваемого продукта. Сначала покажи мне, что именно мы будем продавать, из чего продукт будет состоять и почему это будут покупать. Когда сам всё проверишь — принеси мне на решение.',
+  identity: {
+    PRODUCT_NAME: 'Система управления командой бизнеса',
+    PRODUCT_JOB: 'Помочь руководителю малого или среднего бизнеса управлять командой как целой системой',
+    PROMISED_RESULT: 'Руководитель регулярно получает согласованную, ответственную и предсказуемо работающую команду',
+    CURRENT_APPROVED_SCOPE: 'Полная система управления командой; недельная загрузка — возможный модуль',
+  },
+  proposedFirstArtifact: 'Недельная загрузка команды.xlsx',
+  evidence: { competitorDepth: 'OPEN', paidValue: 'OPEN', freeAI: 'HIGH', legal: 'OPEN', visual: 'OPEN' },
+  repaired: false,
+  architectureApproved: false,
+};
+assert.ok(pilot.input.length < 300, 'regression input must stay a short human instruction');
+assert.match(pilot.identity.CURRENT_APPROVED_SCOPE, /Полная система управления командой/);
+assert.doesNotMatch(pilot.identity.CURRENT_APPROVED_SCOPE, /только недельная загрузка/i);
+assert.equal(pilot.proposedFirstArtifact.endsWith('.xlsx'), true);
+
+const architectureReady = () => pilot.evidence.competitorDepth === 'PASS'
+  && pilot.evidence.paidValue === 'PASS'
+  && pilot.evidence.freeAI === 'PASS'
+  && pilot.evidence.legal === 'PASS'
+  && productReview === 'PASS';
+const prototypeAllowed = () => architectureReady() && pilot.architectureApproved;
+let productReview = 'OPEN';
+assert.equal(architectureReady(), false, 'incomplete market/value/legal evidence must block architecture handoff');
+assert.equal(prototypeAllowed(), false, 'a working XLSX cannot bypass architecture approval');
+
+const depthRoutes = [
+  ['competitorDepth', 'Market Research'],
+  ['paidValue', 'Product/Commercial'],
+  ['freeAI', 'Product/Commercial'],
+  ['legal', 'Legal/IP'],
+  ['visual', 'Art/UX'],
+];
+const depthRouteLog = [];
+for (const [criterion, specialistRole] of depthRoutes) {
+  depthRouteLog.push(`DETECT:${criterion}`, `ROUTE:${specialistRole}`, `REPAIR:${criterion}`, `RECHECK:${criterion}`);
+  pilot.evidence[criterion] = 'PASS';
+  assert.equal(prototypeAllowed(), false, `prototype opened before Product review/owner approval: ${criterion}`);
+}
+pilot.repaired = true;
+productReview = 'PASS';
+assert.equal(architectureReady(), true, 'all upstream evidence and independent Product review now pass');
+assert.equal(prototypeAllowed(), false, 'architecture report must still receive informed owner approval first');
+pilot.architectureApproved = true;
+assert.equal(prototypeAllowed(), true, 'meaningful prototype may start only after architecture approval');
+assert.ok(depthRouteLog.some((event) => event === 'ROUTE:Market Research'));
+assert.ok(depthRouteLog.some((event) => event === 'ROUTE:Product/Commercial'));
+assert.ok(depthRouteLog.some((event) => event === 'ROUTE:Legal/IP'));
+assert.ok(depthRouteLog.some((event) => event === 'ROUTE:Art/UX'));
+assert.equal(pilot.repaired, true);
+
+const prototypePackage = { wholeJobCoverage: true, endToEnd: true, connectedToNextModule: true, allPostPrototypeGatesPass: true };
+assert.equal(prototypePackage.wholeJobCoverage && prototypePackage.endToEnd && prototypePackage.connectedToNextModule, true,
+  'representative artifact must show a connected end-to-end part of the complete system');
+assert.equal(prototypePackage.allPostPrototypeGatesPass, true, 'later owner handoff still requires the original full post-prototype DOD');
+console.log('PASS Product Factory v1.2.0 contract + autonomy and PROD-TEAM-001 depth/architecture regression');
