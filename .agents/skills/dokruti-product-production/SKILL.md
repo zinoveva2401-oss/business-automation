@@ -1,46 +1,19 @@
 ---
 name: dokruti-product-production
-description: Route substantial DOKRUTI product, service, productization, and commercial-format work from raw input to a buyer-valid blueprint, executable artifact when appropriate, and evidence-based product review.
+description: Execute the locally selected Product Factory production stage after shared Business OS strategy, source, format, prototype and owner gates have passed.
 ---
 
-# DOKRUTI product production
+# DOKRUTI product production executor
 
-Use for a new product, service, productized workflow, digital tool, offer, or material change to an existing product. Do not use for a tiny copy/CSS fix or for content-only production.
+For substantial product work, route first through the shared Core at `.agents/skills/ai-business-os/references/product-factory.md`. That module owns business strategy, canonical sources, buyer/value analysis, market and donor research, format choice, commercial decisions, the real-content prototype gate, owner approvals and product acceptance. Do not restate or override those decisions here.
 
-## Source and owner gates
+This project-local Skill supplies only execution routing:
 
-Start with the owner intent and live sources, not an old repo brief:
+1. Restore the exact approved product/task source and inspect the existing target files before editing.
+2. Confirm the shared Business OS has authorized this stage and frozen its inputs, target format, scope, exclusions and acceptance. If that proof is missing, stop and return the precise missing gate.
+3. For coded or interactive output, follow `docs/PRODUCT_EXECUTION.md` and use the product's approved design/technical source. Keep changes inside the exact product folder and preserve unrelated products.
+4. Produce the requested artifact in its native format. Do not impose an ebook, PDF, spreadsheet, web app or other default.
+5. Run only the applicable checks for the approved stage: content integrity, functionality/formulas, UX/accessibility, visual render, legal/privacy/IP, packaging and regression. Inspect the actual final artifact and report evidence, limitations and any open owner decision.
+6. Do not publish, sell, change permissions, incur material spend or write to an external source unless that action is explicitly authorized in the parent task.
 
-`RAW INPUT → OWNER INTENT EXTRACTION → LIVE SOURCE RESTORE → BUYER / PAIN → COMMERCIAL ROUTE GATE → EVIDENCE / MARKET / DONOR CHECK WHEN NEEDED → VALUE BLUEPRINT → FREE-AI / FREE-ALTERNATIVE SUBSTITUTION TEST → PRICE-WORTHINESS / EFFORT / RISK → ROUTE DECISION`
-
-Required source access map: `LOCAL REPO`, `GITHUB`, `LIVE DRIVE/SHEETS`, `BROWSER/WEB`, `OWNER/BUSINESS OS SNAPSHOT`, with date and limitations. Read the current `COMM-ARCH-001 | Коммерческая архитектура | MASTER`, `Бизнес-система` (`00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, `08_СТРАТЕГИЯ`), and exact current Product/Design source after the product format is chosen. Never copy private source contents, IDs, prices, queues, credentials, or stale SKU claims into the repository.
-
-The commercial architecture is frozen, but dynamic prices, legal/payment/platform conditions, partner terms, and sellability remain live gates. Do not reopen the research decision unless the owner explicitly changes direction or a repeated evidence defect requires it.
-
-## Commercial route gate
-
-Use the eight frozen route labels from COMM-ARCH: own digital product; standardized own service/implementation; affiliate/referral; direct advertiser/sponsor; DOKRUTI partner/referral program; media/platform monetization; supplier/contractor/lead-gen; corporate IP/licensing/research. Choose a route only when it is pain-first, factually ready, legally compatible, and has a measurable next action. Unsupported or unfinished routes become `HOLD`, never implied as active.
-
-The current commercial core is the small-business owner and the pains of management/processes, team, and sales. Marketing, customers, assortment/procurement, and AI/automation are content or demand-test domains unless a live source confirms a product route. Existing services must be checked before proposing another service; a fourth service requires an owner gate.
-
-## Product format and free-substitution test
-
-Choose the smallest useful format: workbook/practical assignments, Telegram sprint, toolkit of tables/templates/instructions, diagnostic/checklist, implementation/setup/training, partner tool with real fit, team/corporate package, research/benchmark, workshop, or another source-backed format. Do not turn every problem into SaaS, an app, a dashboard, a course, coaching, or a backend.
-
-Before pricing or build, test whether a free AI tool, spreadsheet, existing template, public source, or a simple manual workflow already solves the job. A paid product is justified only by a material gain in structure, evidence, implementation speed, reliability, accountability, integration, or decision quality. Record the substitution result and the residual buyer value.
-
-## Blueprint and execution
-
-The value blueprint must state buyer, pain/JTBD, promised outcome, inputs, steps, output/delivery, first-value moment, risks, proof, price-worthiness hypothesis, measurement, support/refund boundary, legal/data/rights assumptions, and next action. For coded/digital work use `docs/PRODUCT_EXECUTION.md` and then the current product design source; for services use a bounded service passport; for content, partner, B2B, media, HOLD, or NO-BUILD routes do not force a code artifact.
-
-For every substantial non-trivial product, coded or non-coded as relevant, the product-content gate is mandatory before format/build:
-
-`PRODUCT CONTENT BLUEPRINT → WHOLE LIVE METHODOLOGY / CONTENT / TEXT → CONTENT + METHODOLOGY FREEZE → FORMAT CHALLENGE → UX / VISUAL SPECIFICATION → PRODUCTION / PACKAGE / BUILD → BUYER + COMMERCIAL + DELIVERY QA → SPECIALIST REVIEW → CONSOLIDATED REPAIR → RELEASE CANDIDATE`
-
-Do not jump from the blueprint directly to a selected format or build. The whole live methodology/content/text must be restored, challenged, frozen, and translated into the chosen format before production begins.
-
-Check the user route `ВХОД → ДЕЙСТВИЕ → ОБРАБОТКА → РЕЗУЛЬТАТ → ПОНИМАНИЕ → РЕКОМЕНДАЦИЯ → СЛЕДУЮЩЕЕ ДЕЙСТВИЕ`, edge data, errors, privacy, export/save, delivery continuity, refund/support, and measurable events where applicable.
-
-## Review and handoff
-
-Required specialist passes are `product-growth-critic`, `visual-critic` when the product has a material visual surface, `technical-auditor` when it is coded/integrated, and `review-chair`. Reviews are sequential in the same owner chat by default. Record `artifact_truth`, `buyer/value_fit`, exact artifact path/SHA, evidence, and PASS/FAIL/UNKNOWN. Do not call a product READY on build success, a price hypothesis, or a self-authored PASS.
+The Product Factory project is scoped to `products/`. Do not create Site, Content, Automation or Client Factory projects here. Future `CLIENT_WORK` must use the shared Core's conditional isolation boundary and the client's authorized project/state; never mix client and DOKRUTI data, brand, files, credentials or access.

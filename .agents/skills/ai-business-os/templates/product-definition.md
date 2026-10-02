@@ -1,0 +1,34 @@
+# Product Definition Gate
+
+- Pain / job:
+- Audience:
+- Research intent completed?:
+- Direct-peer definition:
+- Concrete competitor/product donors reviewed:
+- Customer voice evidence:
+- Current alternatives:
+- Evidence of demand / sales proxies:
+- Unknowns that remain:
+- Desired customer result:
+- Strong competitor mechanics to adapt:
+- Competitor weaknesses/complaints to fix:
+- DOKRUTI synthesis:
+- Why materially better/easier/more complete:
+- Proposed format:
+- Why this format:
+- Owner manual-load / scalability:
+- Economics LOW/BASE/HIGH:
+- Distribution/sale path:
+- Genuine owner decisions required (if any):
+- Immutable acceptance:
+- Final customer path:
+- Visual delivery plan:
+
+- Artifact/job map (each file → unique customer job):
+- One primary working environment/tool:
+- First Value Moment (target user action/result):
+- Editorial/reader-experience contract needed?:
+- Publication-design/e-book contract needed?:
+- Design-thinking/visual-system contract needed?:
+- Product-experience/artifact-architecture contract needed?:
+- Buyer comprehension test plan:

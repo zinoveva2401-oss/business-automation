@@ -1,0 +1,33 @@
+# Release Checklist
+
+- [ ] Original requirement ledger complete
+- [ ] No acceptance item deferred to a future plan
+- [ ] Evidence/facts verified
+- [ ] Professional/methodology PASS
+- [ ] Human language/narrative PASS on final text (continuity + AI-smell + read-through)
+- [ ] Universal format-native presentation + actual-render PASS for meaningful owner/customer/public artifacts
+- [ ] Publication design / sustained-reading PASS if long-form
+- [ ] Artifact rationalization PASS (no unjustified duplicate files/formats)
+- [ ] Buyer comprehension PASS (cold user understands what/first step/value)
+- [ ] Marketing/commercial PASS
+- [ ] Finance/economics PASS
+- [ ] Art/UX PASS on actual final/near-final outputs if applicable
+- [ ] Independent visual critic PASS for substantial new/redesigned visual system
+- [ ] Legal/tax/IP PASS if applicable
+- [ ] Technical/final files PASS
+- [ ] RELEASE MANIFEST matches actual files/URLs/versions if product
+- [ ] Full customer path tested if product
+- [ ] Version/name consistency PASS
+- [ ] Red Team PASS after repair
+- [ ] Regression PASS on final candidate
+- [ ] Live regressions did not force unsafe/public/financial side effects solely for test coverage; genuine blocked paths have evidence + exact NEXT ACTION
+- [ ] Independent verifier PASS (`FAIL=0`, `UNKNOWN=0`)
+- [ ] Critical = 0
+- [ ] Major = 0
+- [ ] Write-back PASS or explicitly blocked
+- [ ] Owner review only for genuine owner gate
+
+- [ ] Requirement traceability map: each material promise/REQ → exact file/location/behavior → evidence
+- [ ] Exact final ZIP/package clean-unzip path integrity PASS; all relative links/filenames resolve literally, no Unicode/escape corruption/orphans
+- [ ] Client delivery permissions/ownership PASS; no unnecessary public write access; canonical artifact cannot be silently mutated by buyer/third party
+- [ ] Current Brand/Product Design source confirmed; final artifact/render scanned for legacy brand/tokens/labels/palette/template drift

@@ -3,7 +3,7 @@
 Статус: Действующий runtime-контракт
 Версия: 1.0
 Проект: `Докрути`
-Последняя live-проверка этого manifest: 23.09.2026 (Europe/Moscow)
+Последняя live-проверка этого manifest: 02.10.2026 (Europe/Moscow)
 
 Этот файл хранит маршрутизацию, а не копию бизнес-логики. Google Drive/Sheets — canonical. GitHub и локальный репозиторий не имеют права отменять более новое подтверждённое live-состояние.
 
@@ -31,7 +31,14 @@
 - Role: current state, work queue, decisions, site technical contour, references.
 - Access: read-only for Codex unless a separate owner-authorized write is explicitly required.
 - Lookup: use the authorized Google Drive/Sheets connector and the exact source name `Бизнес-система`.
-- Verified 23.09.2026: the authorized connector exposes tabs `00_ШТАБ`, `02_РАБОТА`, `06_РЕШЕНИЯ`, `08_СТРАТЕГИЯ`, `10_САЙТ_ТЕХКОНТУР`, and `12_САЙТ_МАТРИЦА`. `00_ШТАБ` identifies the active system task as AI-PRODUCTION-SKILLS-001 and says the commercial architecture is frozen; `10_САЙТ_ТЕХКОНТУР` remains the publication/runtime contract.
+- Verified 02.10.2026: the authorized connector exposes the current Business System tabs. `DOKRUTI-CORE-001`, `PROD-TEAM-001` and `DEC-200` were read live for the current normalization run. Resolve active run state and decisions from those live objects at task time; this manifest stores no private spreadsheet ID, URL or business row contents.
+
+### Shared Codex Core
+
+- Repo-scoped skill path: `.agents/skills/ai-business-os/SKILL.md`.
+- v2.0.10 r9 verified release archive SHA-256: `322d3dcce936f444b0b5e7547985c97b58b36139bb98b307c3c3eaf7a5857458`.
+- Current repo package lineage and release state are identified in that package's `MANIFEST.md`; do not claim a fresh-session install until runtime discovery has been read back.
+- The Architect/Supervisor entry conditionally routes to existing Business OS modules. Product Factory is in `references/product-factory.md`; the capability registry in `docs/ai/CAPABILITY_REGISTRY.md` is a dated environment observation, not the business source of truth.
 
 ### Long-lived sources
 

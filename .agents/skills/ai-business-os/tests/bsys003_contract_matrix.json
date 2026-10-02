@@ -1,0 +1,369 @@
+{
+  "1": {
+    "name": "Verified handoff enforcement",
+    "checks": [
+      [
+        "references/task-specification-delegation.md",
+        "SPEC LINT"
+      ],
+      [
+        "templates/execution-packet.md",
+        "SPEC LINT: PASS / FAIL"
+      ]
+    ]
+  },
+  "2": {
+    "name": "Architecture/taxonomy lock",
+    "checks": [
+      [
+        "references/task-specification-delegation.md",
+        "Architecture / taxonomy lock"
+      ]
+    ]
+  },
+  "3": {
+    "name": "Whole-artifact context preservation",
+    "checks": [
+      [
+        "references/product-factory.md",
+        "first/middle/end parity"
+      ],
+      [
+        "references/execution-memory.md",
+        "never drop acceptance criteria"
+      ]
+    ]
+  },
+  "4": {
+    "name": "Domain-first product research",
+    "checks": [
+      [
+        "references/product-factory.md",
+        "Domain landscape to saturation"
+      ]
+    ]
+  },
+  "5": {
+    "name": "Human-writing quality gap",
+    "checks": [
+      [
+        "references/editorial-reader-experience.md",
+        "AI-smell lint"
+      ],
+      [
+        "references/editorial-reader-experience.md",
+        "full read-through pass"
+      ]
+    ]
+  },
+  "6": {
+    "name": "Sysadmin safe-change guardrail",
+    "checks": [
+      [
+        "references/reliability-security-local-it.md",
+        "Safe-change guardrail"
+      ]
+    ]
+  },
+  "7": {
+    "name": "PowerShell preflight",
+    "checks": [
+      [
+        "references/reliability-security-local-it.md",
+        "PowerShell / copy-paste preflight"
+      ]
+    ]
+  },
+  "8": {
+    "name": "Audit vs repair lock",
+    "checks": [
+      [
+        "references/execution-memory.md",
+        "Audit ≠ repair"
+      ]
+    ]
+  },
+  "9": {
+    "name": "State reuse/no-repeat",
+    "checks": [
+      [
+        "references/execution-memory.md",
+        "State reuse / no-repeat"
+      ]
+    ]
+  },
+  "10": {
+    "name": "Version/UI evidence lock",
+    "checks": [
+      [
+        "references/reliability-security-local-it.md",
+        "Version / UI evidence lock"
+      ]
+    ]
+  },
+  "11": {
+    "name": "Visual acceptance/render evidence",
+    "checks": [
+      [
+        "references/universal-output-design.md",
+        "actual render"
+      ]
+    ]
+  },
+  "12": {
+    "name": "Canonical artifact placement",
+    "checks": [
+      [
+        "references/task-specification-delegation.md",
+        "Canonical artifact placement"
+      ],
+      [
+        "references/product-factory.md",
+        "Canonical product root"
+      ]
+    ]
+  },
+  "13": {
+    "name": "Work product factory end-to-end",
+    "checks": [
+      [
+        "references/work-production-controller.md",
+        "New product command contract"
+      ],
+      [
+        "references/work-production-controller.md",
+        "Independent verification of the actual client/SEND ONLY package"
+      ]
+    ]
+  },
+  "14": {
+    "name": "Large-file memory safety",
+    "checks": [
+      [
+        "references/reliability-security-local-it.md",
+        "Large-file inspection safety"
+      ]
+    ]
+  },
+  "15": {
+    "name": "Independent release verification",
+    "checks": [
+      [
+        "references/product-factory.md",
+        "Independent release verification"
+      ],
+      [
+        "references/qa-redteam-release.md",
+        "independently checked"
+      ]
+    ]
+  },
+  "16": {
+    "name": "Brand source/artifact lint",
+    "checks": [
+      [
+        "references/qa-redteam-release.md",
+        "Brand source / artifact lint"
+      ]
+    ]
+  },
+  "17": {
+    "name": "Cross-component book-workbook traceability",
+    "checks": [
+      [
+        "references/product-factory.md",
+        "book↔tool traceability"
+      ]
+    ]
+  },
+  "18": {
+    "name": "Russian-first user language",
+    "checks": [
+      [
+        "SKILL.md",
+        "естественном русском языке"
+      ]
+    ]
+  },
+  "19": {
+    "name": "Independent release architect/traceability",
+    "checks": [
+      [
+        "references/qa-redteam-release.md",
+        "Requirement traceability / independent release architect"
+      ]
+    ]
+  },
+  "20": {
+    "name": "Release path/name integrity",
+    "checks": [
+      [
+        "references/product-factory.md",
+        "Unicode/escaped-name corruption"
+      ]
+    ]
+  },
+  "21": {
+    "name": "Release permission/immutability",
+    "checks": [
+      [
+        "references/product-factory.md",
+        "anyone=writer"
+      ]
+    ]
+  },
+  "22": {
+    "name": "Visual system not token swap",
+    "checks": [
+      [
+        "references/universal-output-design.md",
+        "Token/palette replacement is not visual-system verification"
+      ]
+    ]
+  },
+  "23": {
+    "name": "Content reader-value/publication gate",
+    "checks": [
+      [
+        "references/marketing-content-engine.md",
+        "generic AI prompt could replace"
+      ],
+      [
+        "references/marketing-content-engine.md",
+        "Independent publication gate"
+      ]
+    ]
+  },
+  "24": {
+    "name": "Production Dispatcher/parent run",
+    "checks": [
+      [
+        "references/production-dispatcher-runtime.md",
+        "Parent RUN"
+      ],
+      [
+        "references/production-dispatcher-runtime.md",
+        "SPEC FAIL → delegation prohibited"
+      ]
+    ]
+  },
+  "25": {
+    "name": "Product Content Blueprint",
+    "checks": [
+      [
+        "references/product-factory.md",
+        "PRODUCT CONTENT BLUEPRINT"
+      ]
+    ]
+  },
+  "26": {
+    "name": "Live schema/no hardcoded migration",
+    "checks": [
+      [
+        "references/business-system-state-contract.md",
+        "no hardcoded future migration"
+      ]
+    ]
+  },
+  "27": {
+    "name": "RUN-STAGE-EVENT traceability",
+    "checks": [
+      [
+        "references/business-system-state-contract.md",
+        "RUN-ID/STAGE-ID/EVENT-ID"
+      ]
+    ]
+  },
+  "28": {
+    "name": "Watchdog/idempotency/loop safety",
+    "checks": [
+      [
+        "references/technology-automation.md",
+        "idempotency/dedupe"
+      ],
+      [
+        "scripts/runtime_watchdog.py",
+        "duplicate event"
+      ]
+    ]
+  },
+  "29": {
+    "name": "State transition commit",
+    "checks": [
+      [
+        "references/business-system-state-contract.md",
+        "State-transition commit"
+      ]
+    ]
+  },
+  "30": {
+    "name": "Candidate vs release vs runtime",
+    "checks": [
+      [
+        "SKILL.md",
+        "CANDIDATE ≠ RELEASE ≠ RUNTIME VERIFIED"
+      ]
+    ]
+  },
+  "31": {
+    "name": "Strategic Intelligence/Opportunity Gate",
+    "checks": [
+      [
+        "references/strategic-intelligence-opportunity.md",
+        "Opportunity Card"
+      ]
+    ]
+  },
+  "32": {
+    "name": "Growth/distribution loop",
+    "checks": [
+      [
+        "references/growth-distribution.md",
+        "Channel job and baseline"
+      ],
+      [
+        "references/growth-distribution.md",
+        "Funnel handoff"
+      ]
+    ]
+  },
+  "33": {
+    "name": "Sales/money/delivery loop",
+    "checks": [
+      [
+        "references/sales-crm-attribution.md",
+        "READY-TO-SELL gate"
+      ],
+      [
+        "references/sales-crm-attribution.md",
+        "PAYMENT SUCCESS + DELIVERY FAIL = Critical incident"
+      ]
+    ]
+  },
+  "34": {
+    "name": "Priority engine/owner load",
+    "checks": [
+      [
+        "references/strategic-intelligence-opportunity.md",
+        "Priority Engine"
+      ],
+      [
+        "references/production-dispatcher-runtime.md",
+        "Routine editorial, visual, technical and QA decisions are not owner gates"
+      ]
+    ]
+  },
+  "35": {
+    "name": "Dynamic tool snapshot/capability preflight",
+    "checks": [
+      [
+        "references/ai-capability-benchmark.md",
+        "Do not hardcode today's model names"
+      ],
+      [
+        "references/production-dispatcher-runtime.md",
+        "Capability preflight"
+      ]
+    ]
+  }
+}

@@ -10,6 +10,14 @@ Codex — самостоятельная production Second Brain среда пр
 
 Основной автономный quality loop описан в [`SECOND_BRAIN_REVIEW_BOARD.md`](SECOND_BRAIN_REVIEW_BOARD.md). Для high-risk/irreversible/runtime задач дополнительно действует [`COMPLETION_GATE.md`](COMPLETION_GATE.md). Главный producer не может сам принять существенный результат.
 
+## 1.2 Shared Business OS and conditional Architect/Supervisor
+
+The shared, repo-scoped Business OS at `.agents/skills/ai-business-os/SKILL.md` owns DOKRUTI priorities, canonical-source routing, role logic and domain quality contracts. `AGENTS.md` and domain files route into it; they do not restate its business logic. The Architect/Supervisor is an internal Business OS control module, not a separate project, Skill, memory or source of truth.
+
+Before meaningful execution, load [`../../.agents/skills/ai-business-os/references/architect-supervisor-gate.md`](../../.agents/skills/ai-business-os/references/architect-supervisor-gate.md). It selects only relevant source, domain, tool and QA modules. Use [`CAPABILITY_REGISTRY.md`](CAPABILITY_REGISTRY.md) for a dated tool/access snapshot and recheck dynamic availability for the actual task.
+
+For Product Factory work, the canonical logic is [`../.agents/skills/ai-business-os/references/product-factory.md`](../../.agents/skills/ai-business-os/references/product-factory.md); `products/AGENTS.md` adds local executor steps only. Future client work reuses the Core with isolated client state, brand, data, files and access as defined in the conditional client boundary module; do not copy the Business OS per client.
+
 ## 1.1 Executable lifecycle
 
 `INTAKE → SOURCE RESTORE → CAPABILITY PREFLIGHT → CURRENT INTELLIGENCE WHEN NEEDED → WEAK-SPEC REVIEW → PRE-PRODUCTION PROOF → PLAN/OPTIONS → IMPLEMENT/PRODUCE → REAL RESULT → OBJECTIVE EVIDENCE → SEQUENTIAL SPECIALIST PASSES IN SAME CHAT → REVIEW CHAIR → ONE CONSOLIDATED REPAIR → ONE RE-REVIEW → REGRESSION → DELIVERY IF TRACKED DELTA AND NOT READ-ONLY (COMMIT → PUSH → REMOTE READBACK → SHA MATCH) → EXTERNAL COMPLETION GATE ONLY WHEN REQUIRED`

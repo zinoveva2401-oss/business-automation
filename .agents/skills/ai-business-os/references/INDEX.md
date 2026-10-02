@@ -1,0 +1,74 @@
+# Module Index | Business OS v2.0.11 candidate (r9-derived)
+
+Используй минимально достаточные модули.
+
+- `executive-control-layer.md` — owner-facing derived control view: NOW, run/stage, decisions, money, product/content/growth/sales readiness, freshness without duplicate truth.
+- `business-system-state-contract.md` — Control Center, одна таблица, связи, write-back, concurrency.
+- `production-dispatcher-runtime.md` — parent RUN/STAGE state machine, transitions, repair, owner gates, idempotency, recovery and candidate/release rules.
+- `architect-supervisor-gate.md` — conditional Architect/Supervisor preflight, minimum capability routing, anti-loop, artifact inspection, domain QA and confirmed write-back.
+- `client-work-boundary.md` — dormant future `DOKRUTI_INTERNAL` / `CLIENT_WORK` state, brand, data, files and access isolation; no Client Factory.
+- `strategic-intelligence-opportunity.md` — pain/opportunity evidence, global scouting, format/commercial fit, cheap experiments and Priority Engine before factories.
+- `growth-distribution.md` — channel baseline, current platform intelligence, target math, channel program, native distribution, winner/loser decisions, community/VOC, attribution and SCALE/FIX/KILL/AUTOMATE.
+- `growth-execution-operating-system.md` — r9 FINAL: target→reach→follow→return→money math, media programming, winner amplifier, loser repair, creative fatigue, retention/reactivation, community/referral, CRO and subscription operating loop.
+- `artifact-outcome-executor-graduation.md` — outcome-level exams for actual DOKRUTI artifacts, executor task-class scorecards/demotion and design-before-code visual freeze.
+- `automation-observability-external-capabilities.md` — workflow telemetry/failure classes plus safe adoption of Figma/web/video/analytics/scheduler/automation/marketing capability candidates without vendor lock-in.
+- `creative-content-production.md` — raw idea → strongest creative route, hooks, founder shoot card, producer/editor chain, covers/thumbnails, result amplifier and 45-angle creative QA.
+- `content-owner-transaction.md` — r8 single owner-facing content transaction: short command → existing queue selection → current donor mechanics → actual text+media → internal QA → one approval package → approved write-back → Publisher → analytics learning.
+- `channel-experience-packaging.md` — platform-native channel roles, avatar/bio/cover/thumbnail/pinned entry/bots/current interface/algorithm evidence and multi-channel coherence.
+- `learning-promotion-loop.md` — evidence-based self-improvement: where learnings live, when they may enter stable Skill, regression and external self-learning-tool guardrails.
+- `director-brain-foresight.md` — директорский режим: сильное возражение, premortem, 1/3/10-step consequences, 6–24-месячный горизонт, rescue слабой идеи.
+- `quick-command-palette.md` — семантические быстрые команды, которые система предлагает/выбирает сама: майнд-карты, схемы, 3D, взрыв-схемы, дашборды, наружка, раскадровки, текст и др.
+- `product-value-integrity.md` — Product Factory: смысловая сохранность, плотность ценности, AHA, free-AI replaceability, long-book integrity.
+- `russian-language-gate.md` — блокирующий русскоязычный owner/customer/public шлюз.
+- `founder-future-self-lab.md` — grounded Future-Self/Identity Design: blind spots, speech, habits, professional persona, calendar evidence without magical claims.
+- `live-portfolio-proof.md` — proof-before-teach and portfolio-grade standard for DOKRUTI public assets/future services.
+- `knowledge-capital-product-mining.md` — solved work → reusable method/case/skill/product/service hypothesis with dedupe-first write-back.
+- `platform-intelligence-operations.md` — one current card per platform: official rules + own analytics + experiments + algorithms/features/current setup.
+- `site-studio-grade-standard.md` — premium studio-grade site: meaningful motion, buyer-centered About, conversion completion states, FAQ/trust/performance.
+- `model-economics-routing.md` — strong baseline then cheaper model/reasoning where acceptance holds; split thinking from rendering.
+- `expert-council.md` — роли и триггеры внутреннего консилиума.
+- `execution-memory.md` — длинные задачи, traceability, task budget, context preservation.
+- `task-specification-delegation.md` — компилятор ТЗ: текущее состояние, atomic/stage/full-pipeline granularity, scope lock, exact data, decision rights, SPEC LINT и output diff.
+- `work-production-controller.md` — жёсткий production/completion contract для Work: research, продукты, execution state, independent verifier, release manifest.
+- `tool-router.md` — ChatGPT / Work / Codex / коннекторы / subagents.
+- `founder-os-thought-leadership.md` — мышление владельца, христианская рамка, привычки, публичная речь и контент.
+- `finance-capital.md` — капитал, CFO, финансовый прогноз, unit economics, founder capacity.
+- `legal-accounting-ip-ru.md` — российское право, бухгалтерия/налоги, IP/бренд, escalation к реальному специалисту.
+- `global-intelligence-radar.md` — ежедневный международный/денежный/технологический радар.
+- `global-creative-product-intelligence.md` — r9 глобальная creative/product разведка: Source Universe, geo scouting, 7 donor types, viral mining, velocity, Localization Arbitrage, audience language, cross-industry transfer, 10–30 DOKRUTI adaptations, money routes, experiments, learning.
+- `research-competitive-intelligence.md` — конкуренты, продукты, operator practices, provenance, parsers.
+- `product-factory.md` — format-neutral product cycle, real-content P10.75 prototype and owner direction gate, narrative, visual, release.
+- `editorial-reader-experience.md` — человеческий язык, long-form narrative, непрерывное чтение, AI-smell/read-through QA.
+- `universal-output-design.md` — профессиональная форматно-нативная подача любого owner/customer/public артефакта: посты, документы, таблицы, презентации, сайты, продукты, схемы; реальный render QA.
+- `publication-design-ebook.md` — специализированная верстка длинного чтения: типографика, HTML/PDF/DOCX e-book, semantic layout, anti-cardification.
+- `design-thinking-visual-system.md` — визуальное исследование, концепты, композиция, anti-template, независимая арт-критика.
+- `product-experience-artifact-architecture.md` — архитектура клиентского комплекта, format-follows-function, workbook/dashboard UX, artifact rationalization.
+- `marketing-content-engine.md` — marketing matrix, content factory, копирайтинг, SEO/AEO, distribution.
+- `art-video-visual-futures.md` — арт-дирекция, UX, visual futures, видео.
+- `media-production-quality.md` — профессиональное видео/motion/audio: pacing, sound, captions, safe-zones, exports, source hygiene, independent media QA.
+- `revenue-partnerships-b2b.md` — revenue radar, affiliate, licenses, white label, B2B creative commerce.
+- `experiments-analytics.md` — тесты, метрики, аналитика, learn/adopt/drop.
+- `technology-automation.md` — automation, security/data, skill capability architecture.
+- `qa-redteam-release.md` — независимый QA/Red Team и release criteria.
+- `sales-crm-attribution.md` — продажи, CRM-границы, customer success, source→sale attribution.
+- `operations-delivery.md` — COO, операционная доставка, подрядчики, capacity, исключения.
+- `ai-capability-benchmark.md` — модель/инструмент benchmark, стоимость, no-install-for-curiosity.
+- `reliability-security-local-it.md` — мониторинг, scheduled jobs, backup, secrets, prompt injection, локальный IT.
+- `multi-agent-orchestration.md` — контракт реальных subagents, merge, concurrency, budgets.
+- `skill-governance-versioning.md` — сохранение ядра, version/migration/rollback, update triggers.
+- `LEGACY_CORE_MAP.md` — карта сохранения сильных правил Business OS v1.2.
+- `strategy-portfolio.md` — CEO/стратегия, портфель активов и stop-list.
+- `internal-business-analyst.md` — внутренний performance-анализ, bottlenecks, WIP/rework/resources.
+- `web-digital-asset.md` — сайт как owned asset, SEO/CRO/performance/accessibility/QA.
+- `people-hr-learning.md` — HR/organization/learning, labor-law gate.
+
+- Runtime executable reference: `../scripts/runtime_watchdog.py` — portable event/watchdog core; transport/provider adapters stay external and capability-checked.
+
+- `owner-context-diagnostic.md` — no-invention rule: retrieve first, diagnose missing owner facts, ask only decision-relevant questions, never fabricate Svetlana/profile/audience facts.
+- `owner-workspace-architecture.md` — derived owner interfaces: executive/content/commercial/audience/product/knowledge/case/learning views without duplicate truth.
+- `capability-expansion-radar.md` — current Skills/Plugins/apps/models/parsers/other AI scouting from proven capability gaps with security/cost/rollback/benchmark.
+
+- `sales-demand-generation-autopilot.md` — лидогенерация/источники клиентов/outbound/ответы/безопасный автопилот.
+- `raw-footage-editing-trend-bank.md` — живое сырьё, транскрипт-монтаж, чистка речи, банк монтажных механик и trend cards.
+- `content-personality-creator-mix.md` — профессионал+creator+founder+build-in-public без контентной скуки.
+- `personal-ai-life-sysadmin-advisor.md` — личный AI-советник, обучение семьи, камера, устройства, системная автоматизация.
