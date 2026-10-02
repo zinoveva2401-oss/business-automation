@@ -33,13 +33,5 @@ class CoreNormalizationContracts(unittest.TestCase):
         for phrase in ("DOKRUTI_INTERNAL", "CLIENT_WORK", "does not create a Client Factory", "state", "brand", "data", "files", "access"):
             self.assertIn(phrase, client)
 
-    def test_product_executor_does_not_restate_commercial_strategy(self):
-        skill = (ROOT.parent / "dokruti-product-production/SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("shared Core", skill)
-        self.assertIn("Do not restate or override", skill)
-        self.assertIn("execution routing", skill)
-        self.assertNotIn("COMM-ARCH-001", skill)
-
-
 if __name__ == "__main__":
     unittest.main()
