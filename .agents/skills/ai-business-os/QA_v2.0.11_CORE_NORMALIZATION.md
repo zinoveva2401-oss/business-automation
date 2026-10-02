@@ -30,4 +30,4 @@ This candidate adds only the missing integration gates found during the capabili
 
 ## Release decision
 
-The v2.0.11 package was promoted to RELEASE after the fresh Product Factory runtime acceptance and independent Review Chair PASS. DOKRUTI-CORE-001 remains unverified in the live Business System until exact cleanup, remote readback and final Core QA are complete. The original candidate ZIP remains a review artifact; the repository package is RELEASE.
+The v2.0.11 package was promoted to RELEASE after the fresh Product Factory runtime acceptance and independent Review Chair PASS. Final Core cleanup and remote readback are verified; the live DOKRUTI-CORE-001 row remains pending the authorized write-back that follows independent Core QA. The original candidate ZIP remains a review artifact; the repository package is RELEASE.
