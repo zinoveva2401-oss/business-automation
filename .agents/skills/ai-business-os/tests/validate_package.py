@@ -56,7 +56,7 @@ if skill.startswith('---\n'):
 else:
     errors.append('SKILL.md missing YAML frontmatter')
 required_phrases=[
-    'DOKRUTI | BUSINESS OS v2.0.11 RELEASE CANDIDATE (r9-derived)',
+    'DOKRUTI | BUSINESS OS v2.0.11 RELEASE (r9-derived)',
     'PENDING WRITE-BACK',
     'Marketing Matrix',
     'Founder OS',
@@ -113,9 +113,9 @@ if re.search(r'после утвержд[её]нной миграции.*13_КО
     errors.append('automatic Content System migration leak')
 
 
-if 'PACKAGE VERSION: v2.0.11 RELEASE CANDIDATE' not in skill or 'PACKAGE VERSION = v2.0.11 RELEASE CANDIDATE' not in skill:
-    errors.append('runtime self-identity does not match v2.0.11 RELEASE CANDIDATE')
-if 'PACKAGE BUILD:** `2026-10-02 core-normalization-v2.0.11`' not in skill:
+if 'PACKAGE VERSION: v2.0.11 RELEASE' not in skill or 'PACKAGE VERSION = v2.0.11 RELEASE' not in skill:
+    errors.append('runtime self-identity does not match v2.0.11 RELEASE')
+if 'PACKAGE BUILD:** `2026-10-02 core-normalization-v2.0.11-release`' not in skill:
     errors.append('runtime self-identity missing exact candidate build')
 
 # Core normalization and Product Factory owner gates.

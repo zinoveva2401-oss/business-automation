@@ -1,9 +1,9 @@
-# v2.0.11 Core Normalization — QA record
+# v2.0.11 Core Normalization — Release QA record
 
-Status: **RELEASE CANDIDATE; runtime and independent acceptance pending**
+Status: **RELEASE; Architect runtime gate and independent Review Chair acceptance PASS; final Core cleanup/write-back QA pending**
 Date: 2026-10-02
 Base: exact verified r9 archive SHA-256 `322d3dcce936f444b0b5e7547985c97b58b36139bb98b307c3c3eaf7a5857458`
-Candidate build: `2026-10-02 core-normalization-v2.0.11`
+Release build: `2026-10-02 core-normalization-v2.0.11-release`
 
 ## Scope
 
@@ -25,9 +25,9 @@ This candidate adds only the missing integration gates found during the capabili
 - New `tests/test_v211_core_gates.py` covers candidate identity, conditional Architect routing, prototype/owner gate, format neutrality and client isolation. The repo-local `dokruti-product-production` Skill was separately compared and reduced to executor procedures; it is not a dependency of the standalone Core package.
 - PyYAML is unavailable in the bundled runtime; validator's documented YAML syntax-only checks are used. No dependency was installed.
 - The exact v2.0.11 candidate ZIP and clean-unzip verification are produced separately in the run's local evidence/output area; their path, SHA-256 and test result are recorded in its sidecar manifest.
-- Fresh-session Product Factory project smoke has not been run. The current Codex session cannot prove a new project discovers this package.
-- Independent Business OS QA and live write-back have not been completed.
+- Fresh Product Factory runtime: CWD `products`, root Core inheritance, Product Factory overlay, repo-scoped v2.0.11 discovery and live Business System access confirmed. Architect preflight was applied before one bounded source-audit next-step card; no product files were created or edited.
+- Independent Review Chair challenge: PASS for Architect runtime acceptance only; reviewer confirmed live rows 83 and 101 plus the linked current-product/research folders, and explicitly did not credit the underlying research audit as completed. Live write-back remains pending final Core cleanup QA.
 
 ## Release decision
 
-Do not call this candidate RELEASE, runtime-installed, externally verified or eligible for live state write-back until the fresh-session smoke and independent review pass. The candidate ZIP is a review artifact; it is not a released package.
+The v2.0.11 package was promoted to RELEASE after the fresh Product Factory runtime acceptance and independent Review Chair PASS. DOKRUTI-CORE-001 remains unverified in the live Business System until exact cleanup, remote readback and final Core QA are complete. The original candidate ZIP remains a review artifact; the repository package is RELEASE.

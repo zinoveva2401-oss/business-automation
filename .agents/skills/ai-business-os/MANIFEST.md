@@ -1,17 +1,19 @@
-# DOKRUTI Business OS v2.0.11 RELEASE CANDIDATE | Manifest
+# DOKRUTI Business OS v2.0.11 RELEASE | Manifest
 
-Build: 2026-10-02 core-normalization-v2.0.11
+Build: 2026-10-02 core-normalization-v2.0.11-release
 Base: exact locally verified v2.0.10 r9 archive; archive remains unchanged.
 Previous candidate build in same r9 lineage: 2026-09-23 global-creative-product-intelligence-r9 (superseded pre-install; preserved for regression lineage).
 
-Status: RELEASE CANDIDATE. Static/package regressions may pass locally; fresh-session Product Factory smoke, independent QA, release archive identity and any live write-back remain separate gates. Do not claim release, installation or runtime verification until those readbacks exist.
+Status: RELEASE. Fresh Product Factory Architect runtime acceptance and independent Review Chair review passed on 2026-10-02. Final Core cleanup, remote readback and live Business System write-back remain tracked in the QA record.
 
-## v2.0.11 candidate change log — Core normalization
+## v2.0.11 change log — Core normalization
 
 - Adds a conditional Runtime Architect / Execution Supervisor entry that routes into existing domain modules, permits `NO ADDITIONAL TOOL REQUIRED`, controls cost/scope/source/branch/data boundaries and limits identical failed repair attempts.
 - Makes Product Factory P10.75 a blocking real-content prototype and owner approval gate before full production. The factory remains format-neutral and quality is not capped by a temporary launch price.
 - Adds a dormant `DOKRUTI_INTERNAL` / `CLIENT_WORK` isolation contract without creating a Client Factory.
-- Adds package contracts and QA trace for these exact changes. This is a versioned candidate derived from r9; the canonical r9 ZIP is preserved byte-for-byte.
+- Adds package contracts and QA trace for these exact changes. This release is derived from r9; the canonical r9 ZIP is preserved byte-for-byte.
+
+Release promotion 2026-10-02: the fresh Product Factory context executed the conditional Architect/Supervisor preflight on live Business System and Drive evidence. One bounded next-step card passed an independent Review Chair challenge. No complete PROD-TEAM-001 production was started.
 
 Design goals:
 - one installed Skill, modular internal competencies;

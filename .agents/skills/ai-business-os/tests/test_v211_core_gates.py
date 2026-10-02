@@ -6,10 +6,10 @@ ROOT = Path(__file__).resolve().parents[1]
 
 
 class CoreNormalizationContracts(unittest.TestCase):
-    def test_candidate_identity_is_not_release_or_runtime_verification(self):
+    def test_release_identity_and_runtime_acceptance_are_explicit(self):
         skill = (ROOT / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("PACKAGE VERSION: v2.0.11 RELEASE CANDIDATE", skill)
-        self.assertIn("PACKAGE RELEASE GATES = NOT VERIFIED", skill)
+        self.assertIn("PACKAGE VERSION: v2.0.11 RELEASE", skill)
+        self.assertIn("PACKAGE RELEASE GATES = RUNTIME ACCEPTANCE VERIFIED; FINAL CORE QA PENDING", skill)
         self.assertIn("PLATFORM INSTALL TELEMETRY = NOT VERIFIED", skill)
 
     def test_architect_is_conditional_and_has_no_tool_option(self):

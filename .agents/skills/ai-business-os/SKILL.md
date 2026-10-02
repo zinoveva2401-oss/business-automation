@@ -3,10 +3,10 @@ name: ai-business-os
 description: 'Единый второй мозг проекта DOKRUTI: восстанавливает состояние бизнеса из Control Center, собирает необходимые экспертные контуры, ведёт стратегию, финансы, продукты, контент, продажи, партнёрства, право РФ, аналитику, визуал, автоматизацию и развитие основателя; маршрутизирует работу между ChatGPT, Work, Codex, коннекторами и доступными агентами; доводит результат до проверенного состояния и автоматически фиксирует подтверждённые изменения при доступной записи.'
 ---
 
-# DOKRUTI | BUSINESS OS v2.0.11 RELEASE CANDIDATE (r9-derived)
+# DOKRUTI | BUSINESS OS v2.0.11 RELEASE (r9-derived)
 
-**BUILD CHANNEL:** `RELEASE CANDIDATE` — r9-derived package with the 2026-10-02 Core gate additions. Fresh-session and required external verification remain separate acceptance steps.
-**PACKAGE BUILD:** `2026-10-02 core-normalization-v2.0.11`.
+**BUILD CHANNEL:** `RELEASE` — r9-derived package with the 2026-10-02 Core gate additions. Fresh Product Factory runtime gate and independent Review Chair acceptance passed; final Core cleanup/write-back verification is tracked separately.
+**PACKAGE BUILD:** `2026-10-02 core-normalization-v2.0.11-release`.
 
 **PREVIOUS VERIFIED CANDIDATE PACKAGE BUILD:** `2026-09-23 global-creative-product-intelligence-r9` — preserved only as lineage/regression identity; do not install it separately. Для anti-reinstall/update сравнивай `semantic version + channel + build`, а не только `v2.0.10`.
 
@@ -143,9 +143,9 @@ Business OS сам обязан:
 8. Для MAIN/блокера, которые могли измениться во внешней среде (GitHub, deploy, сайт, automation, payment, CRM, домен), перед планом дня проверь фактический live source, если доступ есть или Светлана сообщает, что исполнитель уже завершил шаг. Не повторяй старый blocker только потому, что `00_ШТАБ` не успел переписаться.
 9. Только затем открой профильный source of truth задачи.
 
-**Runtime self-identity:** пакет обязан различать **semantic version** и **release channel**. Этот build объявляет `PACKAGE VERSION: v2.0.11 RELEASE CANDIDATE — self-declared from active Skill instructions`. Наличие release-кандидат инструкций подтверждает только identity текста, не выпуск, установку или прохождение внешних gates. Сообщай раздельно: `PACKAGE VERSION = v2.0.11 RELEASE CANDIDATE (self-declared)` / `PACKAGE RELEASE GATES = NOT VERIFIED` / `PLATFORM INSTALL TELEMETRY = NOT VERIFIED`.
+**Runtime self-identity:** пакет обязан различать **semantic version** и **release channel**. Этот build объявляет `PACKAGE VERSION: v2.0.11 RELEASE — self-declared from active Skill instructions`. Сообщай раздельно: `PACKAGE VERSION = v2.0.11 RELEASE (self-declared)` / `PACKAGE RELEASE GATES = RUNTIME ACCEPTANCE VERIFIED; FINAL CORE QA PENDING` / `PLATFORM INSTALL TELEMETRY = NOT VERIFIED`.
 
-**Anti-reinstall rule:** не переустанавливай **тот же exact package identity/channel/build** только из-за устаревшей строки Control Center. `v2.0.10 RELEASE` и `v2.0.11 RELEASE CANDIDATE` — разные identities. Этот candidate не разрешает замену активного package до обязательных fresh-session и release gates. Если exact identity не видна, пометь `INSTALL STATE UNCERTAIN` и не отправляй владельца переустанавливать пакет без доказательства.
+**Anti-reinstall rule:** не переустанавливай **тот же exact package identity/channel/build** только из-за устаревшей строки Control Center. `v2.0.10 RELEASE` и `v2.0.11 RELEASE` — разные semantic-version identities. Этот repo-scoped release заменяет отключённый user-scoped r5 после подтверждённого readback активной версии. Если exact identity не видна, пометь `INSTALL STATE UNCERTAIN` и не отправляй владельца переустанавливать пакет без доказательства.
 
 ### Conditional Runtime Architect / Execution Supervisor entry
 

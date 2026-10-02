@@ -19,8 +19,8 @@ def forbid(rel, *phrases):
         if p in s: errors.append(f'{rel}: forbidden {p}')
 
 # Release identity and candidate/release distinction.
-need('SKILL.md', '# DOKRUTI | BUSINESS OS v2.0.11 RELEASE CANDIDATE (r9-derived)', 'PACKAGE VERSION: v2.0.11 RELEASE CANDIDATE', 'PACKAGE BUILD:** `2026-10-02 core-normalization-v2.0.11`', 'CANDIDATE ≠ RELEASE ≠ RUNTIME VERIFIED')
-need('MANIFEST.md', 'Status: RELEASE CANDIDATE', 'exact locally verified v2.0.10 r9 archive', 'Release promotion r1')
+need('SKILL.md', '# DOKRUTI | BUSINESS OS v2.0.11 RELEASE (r9-derived)', 'PACKAGE VERSION: v2.0.11 RELEASE', 'PACKAGE BUILD:** `2026-10-02 core-normalization-v2.0.11-release`', 'CANDIDATE ≠ RELEASE ≠ RUNTIME VERIFIED')
+need('MANIFEST.md', 'Status: RELEASE', 'exact locally verified v2.0.10 r9 archive', 'Release promotion r1')
 
 # Dispatcher/state contracts.
 need('references/production-dispatcher-runtime.md',
@@ -83,7 +83,7 @@ else:
 
 # Cross-contract contradictions caught in pre-release audit.
 forbid('SKILL.md', 'Content Factory делает SITE MASTER', 'OWNER APPROVED FOR TEST', 'RELEASE CANDIDATE — OWNER REVIEW')
-need('SKILL.md', 'v2.0.11 RELEASE CANDIDATE', 'Директорский слой управления / Executive Control Layer')
+need('SKILL.md', 'v2.0.11 RELEASE', 'Директорский слой управления / Executive Control Layer')
 need('references/product-factory.md', 'RELEASE CANDIDATE — INDEPENDENTLY VERIFIED')
 need('references/experiments-analytics.md', 'approval_basis = POLICY / OWNER')
 need('references/global-intelligence-radar.md', 'signal alone must not create owner micromanagement')

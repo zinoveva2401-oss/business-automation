@@ -15,8 +15,8 @@ def forbid(rel,*phrases):
     for p in phrases:
         if p in s: errors.append(f'{rel}: forbidden {p}')
 
-# Historical v2.0.10 lineage remains documented; active identity belongs to v2.0.11 candidate.
-need('SKILL.md','DOKRUTI | BUSINESS OS v2.0.11 RELEASE CANDIDATE','PACKAGE VERSION: v2.0.11 RELEASE CANDIDATE')
+# Historical v2.0.10 lineage remains documented; active identity belongs to v2.0.11 release.
+need('SKILL.md','DOKRUTI | BUSINESS OS v2.0.11 RELEASE','PACKAGE VERSION: v2.0.11 RELEASE')
 need('MANIFEST.md','Base: exact locally verified v2.0.10 r9 archive','global-creative-product-intelligence-r9','v2.0.10 creative-orchestration hardening')
 
 # Executable reference model for dedupe/update-in-place
