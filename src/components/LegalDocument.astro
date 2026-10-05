@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+interface Props { title: string; description: string }
+const { title, description } = Astro.props;
+---
+<BaseLayout title={title} description={description} noindex>
+  <section class="legal-document">
+    <div class="container legal-document__container">
+      <nav class="legal-breadcrumbs" aria-label="Хлебные крошки">
+        <a href="/">Главная</a><span aria-hidden="true">/</span><span>Документы</span>
+      </nav>
+      <p class="legal-date">Редакция от 5 октября 2026 года</p>
+      <h1>{title}</h1>
+      <p class="legal-operator">Оператор: Светлана Тарасова. Контакт по вопросам персональных данных: <a href="mailto:As24011982@yandex.ru">As24011982@yandex.ru</a>.</p>
+      <div class="legal-copy"><slot /></div>
+    </div>
+  </section>
+</BaseLayout>
+<style>
+  .legal-document{padding-block:clamp(42px,6vw,82px);background:#fff}
+  .legal-document__container{max-width:960px}
+  .legal-breadcrumbs{display:flex;gap:10px;align-items:center;margin-bottom:28px;color:var(--muted);font-size:13px}
+  .legal-breadcrumbs a{text-decoration:none}
+  .legal-date{margin:0 0 12px;color:var(--muted);font-size:13px}
+  .legal-document h1{max-width:880px;margin:0;font-size:clamp(38px,5vw,64px);line-height:1.02}
+  .legal-operator{max-width:780px;margin:24px 0 0;font-size:16px}
+  .legal-copy{max-width:780px;margin-top:30px;font-size:16px;line-height:1.7}
+  .legal-copy h2{margin:32px 0 10px;font-size:clamp(24px,3vw,32px);line-height:1.15}
+  .legal-copy p{margin:0 0 14px}
+  .legal-copy ul{margin:0 0 18px;padding-left:22px}
+  .legal-copy li+li{margin-top:6px}
+  .legal-copy a{color:inherit}
+  @media(max-width:600px){.legal-document{padding-block:34px 54px}.legal-breadcrumbs{margin-bottom:20px}.legal-document h1{font-size:38px}.legal-operator,.legal-copy{font-size:15px}}
+</style>

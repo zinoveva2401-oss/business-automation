@@ -9,7 +9,6 @@ export const readingChannels = [
   { id: 'vc', label: 'VC.ru', href: 'https://vc.ru/id5659262', reason: '' },
 ] as const;
 export const questionChannels = [
-  { id: 'telegram-personal', label: 'Telegram', href: 'https://t.me/Cvetlana2401', reason: 'Написать Светлане о своей задаче.' },
   { id: 'max-personal', label: 'MAX', href: 'https://max.ru/u/f9LHodD0cOI3kOAFuFlFv0E5gzchvPbqueGHIJMaGzLlQRuLbbA6G9GEI3k', reason: '' },
   { id: 'email', label: 'Email', href: 'mailto:As24011982@yandex.ru', address: 'As24011982@yandex.ru', reason: '' },
 ] as const;
