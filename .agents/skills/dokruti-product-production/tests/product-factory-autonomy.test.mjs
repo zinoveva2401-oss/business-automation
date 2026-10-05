@@ -111,13 +111,89 @@ assert.equal(ownerHandoffAllowed(), true, 'all gates closed; owner decision may 
 assert.ok(routeLog.indexOf(`ROUTE:${specialist.get(legalGate)}`) < routeLog.indexOf('INDEPENDENT_REVIEW:Product'));
 assert.ok(routeLog.findIndex((event) => /regression review/i.test(event)) > routeLog.findIndex((event) => /consolidated repair/i.test(event)));
 
-// Depth/architecture regression from live decisions DEC-202 and DEC-203.
-const identityBlock = overlay.split('## Product identity lock')[1].split('## Full-job category and competitor depth')[0];
+// Promise guard: no owner-approved promise in the current pilot source means TO_DEFINE.
+const identityBlock = overlay.split('## Product identity lock and promise guard')[1].split('## Full-job category and competitor depth')[0];
 for (const field of ['PRODUCT_NAME', 'PRODUCT_JOB', 'PROMISED_RESULT', 'CURRENT_APPROVED_SCOPE']) {
   assert.ok(identityBlock.includes(field), `identity lock must capture ${field}`);
 }
+assert.match(identityBlock, /PROMISED_RESULT = TO_DEFINE/);
+assert.match(identityBlock, /do not infer one from a broad job/i);
+assert.match(identityBlock, /may propose a recommended promise/i);
 assert.match(identityBlock, /may not materially narrow the product/i);
 assert.match(identityBlock, /preserve the locked identity/i);
+
+const typeBlock = overlay.split('## Generic product-type classifier and approved PROD-TEAM-001 identity')[1].split('## Product identity lock and promise guard')[0];
+const productTypes = [
+  'KNOWLEDGE_PRODUCT', 'OPERATIONAL_TOOLKIT', 'WORKBOOK', 'DIAGNOSTIC_DECISION_PRODUCT',
+  'CALCULATOR', 'COURSE_TRAINING', 'REFERENCE_LIBRARY', 'APPLICATION_SOFTWARE', 'HYBRID_PRODUCT',
+];
+for (const type of productTypes) {
+  assert.ok(typeBlock.includes(`\`${type}\``), `generic classifier omits ${type}`);
+}
+const classifierRows = typeBlock.split('\n').filter((line) => /^\| `/.test(line));
+assert.equal(classifierRows.length, 9, 'classifier must define every required product type');
+for (const row of classifierRows) {
+  const columns = row.split('|').slice(1, -1).map((column) => column.trim());
+  assert.equal(columns.length, 7, 'every classifier type must define all six decision dimensions');
+  assert.ok(columns.slice(1).every((column) => column.length > 0), 'classifier dimension must not be blank');
+}
+for (const classifierDimension of [
+  'Primary buyer value', 'Research logic', 'Direct competitor set', 'Architecture logic',
+  'Representative prototype', 'Quality / QA standard',
+]) assert.ok(typeBlock.includes(classifierDimension), `classifier omits ${classifierDimension}`);
+const classifierExamples = [
+  { job: 'learn a management discipline and apply methods', primary: 'KNOWLEDGE_PRODUCT', supporting: [] },
+  { job: 'calculate a margin from numeric inputs', primary: 'CALCULATOR', supporting: [] },
+  { job: 'assess signals and choose an evidence-based next step', primary: 'DIAGNOSTIC_DECISION_PRODUCT', supporting: [] },
+  { job: 'complete a recurring workflow in software', primary: 'APPLICATION_SOFTWARE', supporting: [] },
+  { job: 'learn a discipline using a guide and repeat-use workbook', primary: 'KNOWLEDGE_PRODUCT', supporting: ['WORKBOOK', 'OPERATIONAL_TOOLKIT'] },
+];
+for (const example of classifierExamples) {
+  assert.ok(productTypes.includes(example.primary), `invalid primary type for ${example.job}`);
+  assert.ok(example.supporting.every((type) => productTypes.includes(type)), `invalid supporting type for ${example.job}`);
+}
+assert.notEqual(classifierExamples[0].primary, classifierExamples[1].primary);
+assert.notEqual(classifierExamples[1].primary, classifierExamples[2].primary);
+assert.notEqual(classifierExamples[2].primary, classifierExamples[3].primary);
+assert.equal(classifierExamples[4].primary, 'KNOWLEDGE_PRODUCT');
+assert.deepEqual(classifierExamples[4].supporting, ['WORKBOOK', 'OPERATIONAL_TOOLKIT']);
+assert.match(typeBlock, /`PRIMARY_TYPE = KNOWLEDGE_PRODUCT`; `SUPPORTING_TYPES = WORKBOOK \+ OPERATIONAL_TOOLKIT`/);
+assert.match(typeBlock, /e-book is the knowledge carrier; the XLSX is a supporting working instrument/i);
+assert.match(typeBlock, /not a situational consultant route/i);
+
+// Workbook/tool value gate: all six questions need useful answers and at least one practical gain; chapter/tab mapping alone fails.
+const workbookGateBlock = overlay.split('## Workbook/tool component value gate')[1].split('## Architecture value logic, buyer/WTP validation and anti-trivialization')[0];
+for (const criterion of [
+  'What management or business decision', 'How often is the buyer realistically likely to use it',
+  'Why is a working tool better here than reading', 'trivially available for free',
+  'What additional value', 'Does it save time, reduce errors, improve consistency',
+]) assert.ok(workbookGateBlock.includes(criterion), `workbook gate omits ${criterion}`);
+assert.match(workbookGateBlock, /one chapter = one spreadsheet tab.*never passes/i);
+assert.match(workbookGateBlock, /architecture report lists only components that pass/i);
+const workbookComponentPasses = (answers) => [
+  'decision', 'frequency', 'betterThanReading', 'freeAlternative', 'addedValue',
+].every((key) => typeof answers[key] === 'string' && answers[key].trim().length > 0)
+  && typeof answers.practicalGain === 'object'
+  && ['savesTime', 'reducesErrors', 'improvesConsistency', 'supportsRepeatUse']
+    .some((key) => answers.practicalGain[key] === true)
+  && answers.addedValue !== 'none';
+const usefulWorkbookTool = {
+  decision: 'Choose which staffing gap to address first',
+  frequency: 'Revisit quarterly and after a team change',
+  betterThanReading: 'Combines comparable inputs into one decision view',
+  freeAlternative: 'A blank template exists, but it does not normalize examples or flag missing inputs',
+  addedValue: 'Filled-in examples, common scales and missing-data warnings',
+  practicalGain: { savesTime: true, reducesErrors: true, improvesConsistency: true, supportsRepeatUse: true },
+};
+const chapterEqualsTab = {
+  decision: '', frequency: '', betterThanReading: '',
+  freeAlternative: '', addedValue: 'none',
+  practicalGain: { savesTime: false, reducesErrors: false, improvesConsistency: false, supportsRepeatUse: false },
+};
+assert.equal(workbookComponentPasses(usefulWorkbookTool), true);
+assert.equal(workbookComponentPasses(chapterEqualsTab), false, 'one chapter = one spreadsheet tab must not pass automatically');
+const trivialFreeDuplicate = { ...usefulWorkbookTool, addedValue: 'none' };
+assert.equal(workbookComponentPasses(trivialFreeDuplicate), false, 'an ordinary free duplicate with no added value must fail');
 
 const researchBlock = overlay.split('## Full-job category and competitor depth')[1].split('## Knowledge-product depth and practical value')[0];
 for (const category of [
@@ -132,14 +208,15 @@ assert.match(researchBlock, /actual delivery\/package/i);
 assert.match(researchBlock, /Never bypass paid access, copy protected content/i);
 assert.match(researchBlock, /do not let them replace the direct digital-product comparison/i);
 
-const typeBlock = overlay.split('## Product type and approved PROD-TEAM-001 identity')[1].split('## Full-job category and competitor depth')[0];
-assert.match(typeBlock, /KNOWLEDGE_PRODUCT/);
-assert.match(typeBlock, /e-book is the knowledge carrier; the XLSX is a supporting working instrument/i);
-assert.match(typeBlock, /not a situational consultant route/i);
 assert.match(typeBlock, /small- and medium-business managers/i);
 
-const valueBlock = overlay.split('## Paid-value and anti-trivialization gates')[1].split('## Product Architecture Report before prototype')[0];
-assert.match(valueBlock, /FREE_AI_REPLACEABILITY = HIGH[\s\S]*?COMMERCIAL_VALUE = NOT ESTABLISHED[\s\S]*?blocked/i);
+const valueBlock = overlay.split('## Architecture value logic, buyer\/WTP validation and anti-trivialization')[1].split('## Product Architecture Report before prototype')[0];
+assert.match(valueBlock, /ARCHITECTURE_VALUE_LOGIC/);
+assert.match(valueBlock, /REAL_BUYER_WTP/);
+assert.match(valueBlock, /REAL_BUYER_WTP = UNKNOWN.*does not block showing the complete architecture report/i);
+assert.match(valueBlock, /blocks `FULL_PRODUCTION` and `RELEASE`/i);
+assert.match(valueBlock, /Это проверенная по рынку архитектурная гипотеза\. Готовность конкретных покупателей платить ещё проверяется\./);
+assert.match(valueBlock, /FREE_AI_REPLACEABILITY = HIGH[\s\S]*?blocks the architecture handoff/i);
 assert.match(valueBlock, /RETHINK[\s\S]*?redesign[\s\S]*?recheck/i);
 assert.match(valueBlock, /cannot by itself prove a paid product/i);
 
@@ -166,7 +243,7 @@ assert.match(portfolioBlock, /do not flatten or omit valuable knowledge/i);
 
 const architectureBlock = overlay.split('## Product Architecture Report before prototype')[1].split('## Two owner decision gates; prototype ordering')[0];
 for (const part of [
-  'Who buys', 'complete job and specific problem', 'result promised to the buyer', 'why buyers would pay',
+  'Who buys', 'complete job and specific problem', 'PROMISED_RESULT = TO_DEFINE', 'ARCHITECTURE_VALUE_LOGIC', 'REAL_BUYER_WTP',
   'discipline map', 'genuinely needs to know', 'Direct comparable self-serve digital products', 'complete proposed module map', 'buyer journey',
   'Product-portfolio recommendation', 'Format choice', 'From Svetlana', 'keep, add, rebuild, exclude/remove', 'Material risks and unknowns',
 ]) assert.ok(architectureBlock.toLowerCase().includes(part.toLowerCase()), `architecture report omits ${part}`);
@@ -178,9 +255,11 @@ assert.match(architectureBlock, /filled example/i);
 const ownerGateBlock = overlay.split('## Architect pre-handoff block')[1].split('## Owner decision policy')[0];
 assert.match(ownerGateBlock, /ARCHITECTURE_OWNER_HANDOFF = BLOCKED/);
 assert.match(ownerGateBlock, /PRODUCT\/PROTOTYPE DECISION PACKAGE/i);
+assert.match(ownerGateBlock, /REAL_BUYER_WTP = UNKNOWN.*does not block this package/i);
+assert.match(ownerGateBlock, /`FULL_PRODUCTION`.*`RELEASE` blocked/i);
 for (const comprehensionCheck of [
-  'what is being built', 'for whom', 'what result it promises', 'complete modules',
-  'what the buyer will learn and be able to use', 'why it is worth paying for',
+  'what is being built', 'for whom', 'whether the promise is approved or `TO_DEFINE`', 'complete modules',
+  'what the buyer will learn and be able to use', 'why it could be worth paying for',
   'what free AI does not replace', 'one product or a series', 'why the format fits',
   'which precise direction decision is needed',
 ]) assert.ok(ownerGateBlock.includes(comprehensionCheck), `Architect comprehension gate omits ${comprehensionCheck}`);
@@ -197,13 +276,14 @@ const pilot = {
     PRODUCT_TYPE: 'KNOWLEDGE_PRODUCT',
     PRODUCT_NAME: 'Система управления командой бизнеса',
     PRODUCT_JOB: 'Научить руководителя малого или среднего бизнеса управлять командой как целой профессиональной дисциплиной',
-    PROMISED_RESULT: 'Руководитель регулярно получает согласованную, ответственную и предсказуемо работающую команду',
+    PROMISED_RESULT: 'TO_DEFINE',
     CURRENT_APPROVED_SCOPE: 'Глубокий самостоятельный образовательный продукт: книга передаёт знания; XLSX даёт готовые рабочие инструменты; недельная загрузка — возможный модуль',
   },
   proposedFirstArtifact: 'Недельная загрузка команды.xlsx',
-  evidence: { identityLock: 'PASS', buyerProblem: 'OPEN', disciplineLandscape: 'OPEN', directProducts: 'OPEN', actualPackages: 'OPEN', knowledgeDepth: 'OPEN', portfolioChoice: 'OPEN', formatFit: 'OPEN', paidValue: 'OPEN', freeAI: 'HIGH', legal: 'OPEN' },
+  evidence: { identityLock: 'PASS', buyerProblem: 'OPEN', disciplineLandscape: 'OPEN', directProducts: 'OPEN', actualPackages: 'OPEN', knowledgeDepth: 'OPEN', portfolioChoice: 'OPEN', formatFit: 'OPEN', architectureValueLogic: 'OPEN', realBuyerWtp: 'UNKNOWN', freeAI: 'HIGH', legal: 'OPEN' },
   architectureReport: { parts: Array(11).fill(false), simpleRussian: false },
   ownerComprehension: Array(11).fill(false),
+  needsTranslator: true,
   repaired: false,
   architectureApproved: false,
   prototypeCreated: false,
@@ -213,6 +293,8 @@ assert.match(pilot.identity.CURRENT_APPROVED_SCOPE, /Глубокий самос
 assert.doesNotMatch(pilot.identity.CURRENT_APPROVED_SCOPE, /только недельная загрузка/i);
 assert.equal(pilot.proposedFirstArtifact.endsWith('.xlsx'), true);
 assert.equal(pilot.identity.PRODUCT_TYPE, 'KNOWLEDGE_PRODUCT');
+assert.equal(pilot.identity.PROMISED_RESULT, 'TO_DEFINE', 'an unapproved result must not be invented');
+assert.doesNotMatch(pilot.identity.PROMISED_RESULT, /предсказуемо работающую команду/i);
 assert.match(pilot.identity.PRODUCT_JOB, /профессиональной дисциплиной/);
 assert.doesNotMatch(pilot.identity.PRODUCT_JOB, /ситуац|диагностир|маршрут действий/i);
 
@@ -244,7 +326,7 @@ const architectureReady = () => pilot.evidence.disciplineLandscape === 'PASS'
   && pilot.evidence.knowledgeDepth === 'PASS'
   && pilot.evidence.portfolioChoice === 'PASS'
   && pilot.evidence.formatFit === 'PASS'
-  && pilot.evidence.paidValue === 'PASS'
+  && pilot.evidence.architectureValueLogic === 'PASS'
   && pilot.evidence.freeAI === 'PASS'
   && pilot.evidence.legal === 'PASS'
   && productReview === 'PASS'
@@ -255,7 +337,8 @@ const architectureReportReady = () => pilot.architectureReport.parts.length === 
   && pilot.architectureReport.parts.every(Boolean)
   && pilot.architectureReport.simpleRussian;
 const ownerUnderstandsArchitecture = () => pilot.ownerComprehension.length === 11
-  && pilot.ownerComprehension.every(Boolean);
+  && pilot.ownerComprehension.every(Boolean)
+  && !pilot.needsTranslator;
 const architectureOwnerPackageAllowed = () => architectureReady()
   && architectureReportReady()
   && ownerUnderstandsArchitecture();
@@ -276,7 +359,7 @@ const depthRoutes = [
   ['knowledgeDepth', 'Editorial/Instructional Design'],
   ['portfolioChoice', 'Product/Commercial'],
   ['formatFit', 'Product/Commercial'],
-  ['paidValue', 'Product/Commercial'],
+  ['architectureValueLogic', 'Product/Commercial'],
   ['freeAI', 'Product/Commercial'],
   ['legal', 'Legal/IP'],
   ['visual', 'Art/UX'],
@@ -302,11 +385,20 @@ assert.equal(architectureOwnerPackageAllowed(), false, 'plain-language requireme
 pilot.architectureReport.simpleRussian = true;
 assert.equal(architectureOwnerPackageAllowed(), false, 'owner-comprehension questions remain open');
 pilot.ownerComprehension.fill(true);
+assert.equal(architectureOwnerPackageAllowed(), false, 'the owner must not need another AI/chat to translate');
+pilot.needsTranslator = false;
+pilot.evidence.architectureValueLogic = 'PASS';
+pilot.evidence.realBuyerWtp = 'UNKNOWN';
 assert.equal(architectureOwnerPackageAllowed(), true, 'only a complete understandable report can be handed over for architecture approval');
+assert.equal(pilot.evidence.realBuyerWtp, 'UNKNOWN', 'the architecture package must preserve the actual buyer/WTP uncertainty');
 assert.equal(prototypeAllowed(), false, 'architecture report must still receive informed owner approval first');
 pilot.architectureApproved = true;
 pilot.prototypeCreated = true;
 assert.equal(prototypeAllowed(), true, 'meaningful prototype may start only after architecture approval');
+const fullProductionAllowed = () => pilot.architectureApproved && pilot.evidence.realBuyerWtp === 'PASS';
+assert.equal(fullProductionAllowed(), false, 'architecture approval and prototype validation do not prove actual buyer willingness to pay');
+pilot.evidence.realBuyerWtp = 'PASS';
+assert.equal(fullProductionAllowed(), true, 'full production may proceed only after buyer/WTP validation passes');
 assert.ok(depthRouteLog.some((event) => event === 'ROUTE:Market Research'));
 assert.ok(depthRouteLog.some((event) => event === 'ROUTE:Product/Commercial'));
 assert.ok(depthRouteLog.some((event) => event === 'ROUTE:Editorial/Instructional Design'));
@@ -341,4 +433,4 @@ for (const [gate, status] of postPrototypeGates) {
 }
 assert.equal(finalOwnerHandoffAllowed(), true, 'final owner decision package is allowed only after all post-prototype gates pass');
 assert.ok(postPrototypeRouteLog.findIndex((event) => event === 'REPAIR:consolidated repair') < postPrototypeRouteLog.findIndex((event) => event === 'DETECT:regression review after repair'));
-console.log('PASS Product Factory v1.3.0 contract + autonomy, knowledge-depth and PROD-TEAM-001 regression');
+console.log('PASS Product Factory v1.3.1 contract + DEC-204 sequencing, product classifier, promise guard, workbook value gate, DEC-205/206 and autonomy regression');
