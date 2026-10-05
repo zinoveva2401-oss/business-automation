@@ -5,7 +5,7 @@ export const readingChannels = [
   { id: 'vk', label: 'VK', href: VK_COMMUNITY_URL, reason: '' },
   { id: 'dzen', label: 'Дзен', href: 'https://dzen.ru/user/j0k4kngnxzw8m5tlmxy8gvho3im?share_to=link', reason: '' },
   { id: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/svetlana.24011982/', reason: '' },
-  { id: 'max', label: 'MAX', href: 'https://max.ru/se13981398_biz', reason: '' },
+  { id: 'max', label: 'MAX', href: 'https://max.ru/channel_dokruti_biz', reason: '' },
   { id: 'vc', label: 'VC.ru', href: 'https://vc.ru/id5659262', reason: '' },
 ] as const;
 export const questionChannels = [
