@@ -138,7 +138,15 @@ test('representative end-to-end Content Factory run persists and resumes across 
 
 test('front door routes expert depth to Business OS without copying it into execution contracts',()=>{
  const map=fs.readFileSync(path.join(root,'references/business-os-routing.md'),'utf8');
- for(const ref of ['strategic-intelligence-opportunity.md','growth-distribution.md','growth-execution-operating-system.md','creative-content-production.md','editorial-reader-experience.md','channel-experience-packaging.md','content-owner-transaction.md','production-dispatcher-runtime.md','business-system-state-contract.md','content-personality-creator-mix.md','experiments-analytics.md','legal-accounting-ip-ru.md'])assert.ok(map.includes(ref),ref);
+ const coreSkill=path.resolve(root,'..','ai-business-os');
+ assert.ok(fs.existsSync(path.join(coreSkill,'SKILL.md')),'shared Business OS entrypoint must resolve in the inherited Core');
+ assert.equal(fs.existsSync(path.join(root,'references','ai-business-os')),false,'Content Factory must not contain a copied Business OS');
+ const routingTable=map.split('## Portfolio isolation')[0];
+ const rows=routingTable.split(/\r?\n/).filter(line=>line.startsWith('|')&&!line.startsWith('| ---')&&!line.includes('Глубокий владелец'));
+ const refs=new Set();
+ for(const line of rows){const ownerCell=line.split('|')[2]??'';for(const match of ownerCell.matchAll(/`([^`]+\.md)`/g))refs.add(match[1]);}
+ assert.ok(refs.size>0,'routing must declare shared owner modules');
+ for(const ref of refs)assert.ok(fs.existsSync(path.join(coreSkill,'references',ref)),`unresolved shared Core reference ${ref}`);
  const skill=fs.readFileSync(path.join(root,'SKILL.md'),'utf8');assert.ok(skill.includes('business-os-routing.md'));assert.ok(skill.includes('demand-intake.md'));
  const metadata=fs.readFileSync(path.join(root,'agents/openai.yaml'),'utf8');assert.match(metadata,/default_prompt:/);assert.match(metadata,/durable Content System checkpoint writeback/);assert.match(metadata,/scope-aware batch owner authorization/);
 });
