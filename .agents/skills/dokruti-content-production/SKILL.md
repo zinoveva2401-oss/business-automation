@@ -1,34 +1,35 @@
 ---
 name: dokruti-content-production
-description: Route substantial DOKRUTI article, editorial, media, channel, and content-to-money work from raw input to a master-first content package with source, rights, channel, and specialist QA.
+description: Единый front door полного цикла Content Factory DOKRUTI: актуальные источники, стратегия, master, native channel adaptations, права, QA, публикация и обучение.
 ---
+# DOKRUTI Content Factory Core
 
-# DOKRUTI content production
+Этот существующий canonical skill — единственная входная точка существенной контентной работы DOKRUTI. Он исполняет доменные контуры shared Business OS и не создаёт параллельный источник состояния.
 
-Use for a substantial article, editorial package, social/channel series, video/content adaptation, content factory task, or content-to-money route. Do not use for a tiny typo or renderer-only patch.
+## Порядок работы
+1. Восстанови задачу из прямого запроса владельца. Через docs/ai/SOURCE_MANIFEST.md прочитай только применимые текущие строки «Бизнес-система» и вкладки «Контент-система | DOKRUTI | 2026»; добавь связанные брендовые, продуктовые, коммерческие и правовые источники. Repo хранит процессы, но не live-очередь, цены, статусы, личные данные или credentials.
+2. Выбери маршрут в references/strategy.md и marketing.md. Для меняющихся трендов, platform mechanics, SERP, конкурентов, закона/API проведи датированное исследование в trend.md и research.md; не запускай нерелевантные lanes.
+3. Создай один master: аудитория, задача, тезис, доказательства, payoff, next action. Продумай hook/story через hooks-story.md, создай форматный master и отредактируй через human-editor.md.
+4. Подключай только нужные контуры: art.md, video.md, seo-aeo.md, affiliate.md, legal-ip.md. Affiliate всегда проходит research, disclosure/legal и QA.
+5. Для каждого канала создай самостоятельную версию по channels.md и профилю в references/channels/; не копируй master дословно.
+6. Примени publishing.md, owner-gates.md, content-qa.md, qa.md. Черновик и send response не подтверждают публикацию: нужен platform readback.
+7. После значимой стадии сохрани checkpoint согласно state-recovery.md. После сбоя возобновляйся с последнего доказанного checkpoint; неоднозначный внешний side effect сначала сверяй, чтобы избежать дубля.
+8. Свежие метрики и обучение обработай в analytics.md; при отсутствии write access укажи PENDING WRITE-BACK.
 
-## Master-first production route
+## Маршруты
+- Обычный пост: strategy → research по необходимости → hook/master → editor → channel profile → QA.
+- Тренд: trend scout → fact check → strategy → brief → нужный production lane.
+- Видео: strategy/research → story → pre-production → ingest/paper edit → first cut → critic/revision → playable second cut. Capability не доказывает качество экспорта.
+- SEO/AEO: intent/SERP research → brief → master → editor/claims → renderer QA.
+- Affiliate/commerce: audience need → evidence/alternatives → legal/disclosure → owner gate по необходимости → native draft → QA.
+- Publishing/analytics: проверяй capability, полномочия, privacy, idempotency и live readback.
 
-`RAW INPUT → OWNER INTENT → PAIN / AUDIENCE / BUSINESS GOAL → CURRENT PRODUCT/SERVICE TRUTH → FACT / EVIDENCE CHECK → CONTENT ROLE → MASTER FORMAT → MASTER CONTENT → EDITORIAL/HUMAN LANGUAGE → VISUAL/MEDIA DECISION → SEO/DISCOVERY WHERE APPLICABLE → NATIVE CHANNEL ADAPTATIONS → CTA / COMMERCIAL FIT → METRIC → RIGHTS/LEGAL/AI-DATA QA → SPECIALIST REVIEW → CONSOLIDATED REPAIR → FINAL CONTENT PACKAGE`
+## Факты и контракты
+Приоритет: direct owner intent → live Business System/Drive → свежие первичные внешние источники → approved master → channel adaptation → historical material. Для меняющегося факта храни source/date. UNKNOWN нельзя утверждать как факт. Не придумывай аудиторию, личный опыт и voice владельца.
 
-Master-first means one complete source asset is made before native channel adaptations. Do not begin with a pile of platform variants or let a channel format dictate the truth of the master.
+Восемь сущностей описаны JSON Schema Draft 2020-12 в schemas/. Pure runtime runtime/content-factory-runtime.mjs проверяет lanes, state transitions, checkpoints/resume, owner gates и source freshness без зависимостей. Запуск тестов: node --test .agents/skills/dokruti-content-production/tests/*.test.mjs.
 
-## Live sources and truth
+## Модули
+Marketing marketing.md; Strategy strategy.md; Trend trend.md; Research research.md; Human Editor human-editor.md; Hooks hooks-story.md; Art art.md; Video video.md; SEO/AEO seo-aeo.md; Affiliate affiliate.md; Channels channels.md; Publishing publishing.md; Analytics analytics.md; Legal/IP legal-ip.md; Recovery state-recovery.md; Owner Gates owner-gates.md; QA qa.md и content-qa.md.
 
-Read the current `Контент-система | DOKRUTI | 2026` through the authorized connector, especially its content matrix, production gate, plan/output, SEO/article, and channel/funnel tabs as applicable. Restore product/service truth from `COMM-ARCH-001 | Коммерческая архитектура | MASTER` and current `Бизнес-система` before adding any commercial block. Use `docs/ARTICLE_IMPORT.md` as the integration contract for a ready article; it is not the whole factory.
-
-Record `LOCAL REPO`, `GITHUB`, `LIVE DRIVE/SHEETS`, `BROWSER/WEB`, and `OWNER/BUSINESS OS SNAPSHOT` access with date and limitation. Never use a stale repo snapshot as current price, SKU, partner, service, platform, or legal truth. If evidence is missing, label the claim `UNKNOWN` and remove or hold it.
-
-## Content and commercial rules
-
-Define audience, pain/JTBD, content role, hook, format, payoff, discovery intent where relevant, reason to subscribe/follow, measurable next step, and channel fit. Human editorial meaning beats generic AI phrasing, listicle filler, fake authority, unsupported metrics, or borrowed case studies.
-
-Commercial content is optional and pain-first. Show only verified active own offers, services, partners, advertisers, or sponsors with fit, disclosure, legal status, dates, and target. Do not insert unfinished SKU, stale retail data, unverified partner, or commission-first CTA. Publication is a separate external action and is never implied by producing the package.
-
-## Media, visual, SEO and rights gates
-
-Choose `REUSE`, `EDIT`, `GENERATE NEW`, or `NO IMAGE` for material visuals; record semantic role, provenance, rights, crop/quality, and fallback. For video/audio, preserve transcript/paper edit, rights, captions, voice/music status, master/delivery metadata, and real visual/audio inspection. For SEO/discovery, use current intent/source checks without promising rankings. Preserve article author meaning, metadata, schema, links, responsive presentation, and route contracts.
-
-## Review and handoff
-
-Run relevant `research-scout`/current-source, `visual-critic`, `media-critic`, `product-growth-critic`, `technical-auditor`, and `review-chair` passes sequentially in the same owner chat. Record exact master/adaptation artifact paths and hashes, evidence, rights/legal/AI-data status, claim ledger, and PASS/FAIL/UNKNOWN. A draft is not a final content package until consolidated repair and rerender/recheck are complete.
+Обязательны source restore, state/factual integrity и общий QA; запускай только соответствующие production lanes. В конфликте приоритет у владельца и live canonical. Недоступный источник = UNKNOWN, неподтверждённая запись = PENDING WRITE-BACK.

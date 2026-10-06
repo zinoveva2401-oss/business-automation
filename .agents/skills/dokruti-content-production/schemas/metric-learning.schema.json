@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/metric-learning.schema.json",
+  "title": "MetricLearning",
+  "type": "object",
+  "required": [
+    "learning_id",
+    "publication_id",
+    "metric",
+    "value",
+    "unit",
+    "window",
+    "source_ref",
+    "observed_at",
+    "quality",
+    "interpretation",
+    "next_experiment"
+  ],
+  "properties": {
+    "learning_id": {
+      "type": "string"
+    },
+    "publication_id": {
+      "type": "string"
+    },
+    "metric": {
+      "type": "string"
+    },
+    "value": {
+      "type": [
+        "number",
+        "null"
+      ]
+    },
+    "unit": {
+      "type": "string"
+    },
+    "window": {
+      "type": "object",
+      "required": [
+        "start",
+        "end",
+        "timezone"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timezone": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "source_ref": {
+      "type": "string"
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "quality": {
+      "enum": [
+        "VERIFIED",
+        "PARTIAL",
+        "UNKNOWN",
+        "INVALID"
+      ]
+    },
+    "interpretation": {
+      "type": "string"
+    },
+    "next_experiment": {
+      "type": "string"
+    },
+    "writeback_status": {
+      "enum": [
+        "PENDING",
+        "CONFIRMED",
+        "NOT_REQUIRED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

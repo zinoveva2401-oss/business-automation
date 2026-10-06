@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/master-content.schema.json",
+  "title": "MasterContent",
+  "type": "object",
+  "required": [
+    "master_id",
+    "revision",
+    "format",
+    "audience",
+    "job_to_be_done",
+    "thesis",
+    "body_ref",
+    "claim_ledger",
+    "source_refs",
+    "status",
+    "created_at"
+  ],
+  "properties": {
+    "master_id": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "format": {
+      "type": "string"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "job_to_be_done": {
+      "type": "string"
+    },
+    "thesis": {
+      "type": "string"
+    },
+    "body_ref": {
+      "type": "string"
+    },
+    "claim_ledger": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      },
+      "minItems": 1
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "status": {
+      "enum": [
+        "BRIEF",
+        "DRAFT",
+        "EDITED",
+        "APPROVED",
+        "RETIRED"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "claim": {
+      "type": "object",
+      "required": [
+        "claim_id",
+        "text",
+        "status"
+      ],
+      "properties": {
+        "claim_id": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "SUPPORTED",
+            "QUALIFIED",
+            "UNKNOWN",
+            "CONTRADICTED"
+          ]
+        },
+        "source_ref": {
+          "type": "string"
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "permitted_wording": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

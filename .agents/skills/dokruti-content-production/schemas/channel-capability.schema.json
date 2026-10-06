@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/channel-capability.schema.json",
+  "title": "ChannelCapability",
+  "type": "object",
+  "required": [
+    "channel",
+    "checked_at",
+    "scope",
+    "capabilities",
+    "evidence_refs",
+    "status",
+    "expiry"
+  ],
+  "properties": {
+    "channel": {
+      "type": "string"
+    },
+    "checked_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scope": {
+      "type": "string"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "read",
+          "draft",
+          "publish",
+          "schedule",
+          "media_upload",
+          "analytics",
+          "moderate"
+        ]
+      }
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "status": {
+      "enum": [
+        "VERIFIED",
+        "PARTIAL",
+        "UNAVAILABLE",
+        "UNKNOWN"
+      ]
+    },
+    "expiry": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
