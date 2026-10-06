@@ -29,6 +29,13 @@ Status: active shared repository guidance. Google Drive and the current Business
 - Verify the actual result. Apply relevant technical/product/editorial/security checks and the `docs/ai/SECOND_BRAIN_REVIEW_BOARD.md` plus `docs/ai/COMPLETION_GATE.md` when their task criteria apply. A self-report, build or file-presence check alone is not proof.
 - For tracked changes outside read-only work, review the exact diff, run relevant checks, commit only the allowlist, push when authorized/required, then read back the remote SHA.
 
+## Domain branch inheritance guard
+
+- Before creating or refreshing any DOKRUTI domain branch/worktree, read the latest VERIFIED canonical Core SHA and status from the live Business System, then confirm that exact commit exists in the repository.
+- Create the domain branch directly from that verified Core SHA. A GitHub default branch name alone is never a valid base. Record the Core source/status, base SHA, and git merge-base --is-ancestor <VERIFIED_CORE_SHA> HEAD result before implementation.
+- If the GitHub default does not contain the latest VERIFIED Core commit as an ancestor, stop branch creation and implementation until the default/canonical relationship is reconciled and remotely read back. Never silently fall back to stale main or rewrite history to conceal divergence.
+- Domain branches are technical isolation and execution overlays over the one shared Business OS. Do not copy or fork the shared brain into a domain executor.
+
 ## Handoff
 
 Report in clear Russian: what changed, exact evidence, current Git/remote state and remaining blockers. Do not claim `VERIFIED` while a required fresh-session, independent or external-source check remains open.
