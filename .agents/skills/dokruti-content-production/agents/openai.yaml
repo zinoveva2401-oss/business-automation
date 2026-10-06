@@ -1,7 +1,7 @@
 interface:
   display_name: "DOKRUTI Content Production"
   short_description: "Master-first editorial and channel production"
-  default_prompt: "Use $dokruti-content-production to route substantial DOKRUTI content through live Content System sources, master-first production, rights/AI-data QA, channel adaptation, and sequential review."
+  default_prompt: "Use $dokruti-content-production as the DOKRUTI Content Factory front door. Route domain depth to the existing Business OS references; execute source-backed demand intake, portfolio-scoped master-first production, native channel adaptation, scope-aware batch owner authorization, durable Content System checkpoint writeback, publication reconciliation, QA, and analytics learning."
 
 policy:
   allow_implicit_invocation: true

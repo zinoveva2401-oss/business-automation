@@ -4,7 +4,7 @@
 Покажи пользовательскую ценность, критерии выбора, ограничения и явное рекламное раскрытие. Product link, ERID, labels и deadlines проверь по актуальным campaign terms и official source.
 
 ## Capability and publication contract
-Проверь owner access, campaign brief, product eligibility, формат, срок и текущий ERID/disclosure workflow. Не полагайся на сохранённые временные правила. Не используй запрещённые redirect/tracker.
+Перед каждой кампанией перечитай live approval/eligibility, owner access, campaign brief, продукт, срок, bonus/дедлайн и текущий ERID/disclosure workflow по official source. Разрешённые destination берутся только из актуального owner-approved campaign state; не начинай работу ради включения неразрешённого канала и не пытайся сделать MAX eligible. Не полагайся на сохранённые временные правила и не копируй текущие approval statuses в Git. Не используй запрещённые redirect/tracker.
 
 ## Fallback and recovery
 Материал не доказывает campaign entry/moderation. Храни campaign instruction/approval; после отправки читай cabinet status.
