@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/trend-signal.schema.json",
+  "title": "TrendSignal",
+  "type": "object",
+  "required": [
+    "signal_id",
+    "observation",
+    "source_refs",
+    "observed_at",
+    "valid_until",
+    "signal_type",
+    "confidence",
+    "status"
+  ],
+  "properties": {
+    "signal_id": {
+      "type": "string"
+    },
+    "observation": {
+      "type": "string"
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "signal_type": {
+      "enum": [
+        "FACT",
+        "OBSERVED_PATTERN",
+        "INFERENCE",
+        "RECOMMENDATION"
+      ]
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "status": {
+      "enum": [
+        "NEW",
+        "VALIDATED",
+        "TEST",
+        "PARKED",
+        "EXPIRED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

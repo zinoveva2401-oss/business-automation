@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/video-job.schema.json",
+  "title": "VideoJob",
+  "type": "object",
+  "required": [
+    "video_job_id",
+    "master_id",
+    "stage",
+    "story_ref",
+    "asset_manifest",
+    "rights_status",
+    "revision",
+    "checkpoints",
+    "deliverables"
+  ],
+  "properties": {
+    "video_job_id": {
+      "type": "string"
+    },
+    "master_id": {
+      "type": "string"
+    },
+    "stage": {
+      "enum": [
+        "BRIEF",
+        "PREPRODUCTION",
+        "INGEST",
+        "PAPER_EDIT",
+        "FIRST_CUT",
+        "REVIEW",
+        "SECOND_CUT",
+        "EXPORTED",
+        "PUBLISHED",
+        "BLOCKED"
+      ]
+    },
+    "story_ref": {
+      "type": "string"
+    },
+    "asset_manifest": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "asset_ref",
+          "rights_status"
+        ],
+        "properties": {
+          "asset_ref": {
+            "type": "string"
+          },
+          "rights_status": {
+            "enum": [
+              "CLEARED",
+              "RESTRICTED",
+              "UNKNOWN"
+            ]
+          },
+          "source_ref": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "rights_status": {
+      "enum": [
+        "CLEARED",
+        "RESTRICTED",
+        "UNKNOWN"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "deliverables": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path_ref",
+          "sha256",
+          "verified"
+        ],
+        "properties": {
+          "path_ref": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[A-Fa-f0-9]{64}$"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "inspection_ref": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

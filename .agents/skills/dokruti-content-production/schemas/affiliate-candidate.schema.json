@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/affiliate-candidate.schema.json",
+  "title": "AffiliateCandidate",
+  "type": "object",
+  "required": [
+    "candidate_id",
+    "product_ref",
+    "audience_job",
+    "evidence_refs",
+    "disclosure",
+    "eligibility_status",
+    "legal_status",
+    "owner_gate",
+    "status"
+  ],
+  "properties": {
+    "candidate_id": {
+      "type": "string"
+    },
+    "product_ref": {
+      "type": "string"
+    },
+    "audience_job": {
+      "type": "string"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "disclosure": {
+      "type": "object",
+      "required": [
+        "required",
+        "placement",
+        "text"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "placement": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "eligibility_status": {
+      "enum": [
+        "VERIFIED",
+        "UNKNOWN",
+        "INELIGIBLE"
+      ]
+    },
+    "legal_status": {
+      "enum": [
+        "PASS",
+        "HOLD",
+        "UNKNOWN"
+      ]
+    },
+    "owner_gate": {
+      "enum": [
+        "NOT_REQUIRED",
+        "REQUIRED",
+        "APPROVED"
+      ]
+    },
+    "status": {
+      "enum": [
+        "CANDIDATE",
+        "READY",
+        "HOLD",
+        "PUBLISHED",
+        "REJECTED"
+      ]
+    }
+  },
+  "additionalProperties": false
+}

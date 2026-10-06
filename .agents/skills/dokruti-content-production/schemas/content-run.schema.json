@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/content-run.schema.json",
+  "title": "ContentRun",
+  "type": "object",
+  "required": [
+    "run_id",
+    "request_fingerprint",
+    "status",
+    "stage",
+    "revision",
+    "created_at",
+    "updated_at",
+    "lanes",
+    "checkpoints",
+    "blockers",
+    "owner_gates",
+    "idempotency_keys",
+    "writeback_status"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "request_fingerprint": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "READY",
+        "RUNNING",
+        "BLOCKED",
+        "FAILED",
+        "COMPLETE"
+      ]
+    },
+    "stage": {
+      "enum": [
+        "intake",
+        "source_restore",
+        "strategy",
+        "research",
+        "master",
+        "editorial",
+        "adaptation",
+        "qa",
+        "approval",
+        "publication",
+        "analytics",
+        "complete"
+      ]
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lanes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "checkpoints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/checkpoint"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "owner_gates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gate"
+      }
+    },
+    "idempotency_keys": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "writeback_status": {
+      "enum": [
+        "NOT_REQUIRED",
+        "PENDING",
+        "CONFIRMED",
+        "UNKNOWN"
+      ]
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "owner_gate_required": {
+      "type": "boolean"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "checkpoint": {
+      "type": "object",
+      "required": [
+        "checkpoint_id",
+        "stage",
+        "completed_at",
+        "evidence_refs"
+      ],
+      "properties": {
+        "checkpoint_id": {
+          "type": "string"
+        },
+        "stage": {
+          "type": "string"
+        },
+        "completed_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "input_hash": {
+          "type": "string"
+        },
+        "output_hash": {
+          "type": "string"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 1
+        },
+        "next_stage": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "gate": {
+      "type": "object",
+      "required": [
+        "gate_id",
+        "status",
+        "scope"
+      ],
+      "properties": {
+        "gate_id": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "REQUIRED",
+            "APPROVED",
+            "DECLINED",
+            "EXPIRED"
+          ]
+        },
+        "scope": {
+          "type": "string"
+        },
+        "decided_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidence_ref": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

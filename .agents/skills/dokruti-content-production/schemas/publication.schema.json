@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dokruti.ru/schemas/content-factory/publication.schema.json",
+  "title": "Publication",
+  "type": "object",
+  "required": [
+    "publication_id",
+    "master_id",
+    "master_revision",
+    "channel",
+    "adaptation_ref",
+    "content_hash",
+    "status",
+    "idempotency_key",
+    "capability_evidence",
+    "created_at"
+  ],
+  "properties": {
+    "publication_id": {
+      "type": "string"
+    },
+    "master_id": {
+      "type": "string"
+    },
+    "master_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "channel": {
+      "type": "string"
+    },
+    "adaptation_ref": {
+      "type": "string"
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "status": {
+      "enum": [
+        "DRAFT",
+        "READY",
+        "SCHEDULED",
+        "SENDING",
+        "PUBLISHED",
+        "FAILED",
+        "UNKNOWN",
+        "CANCELLED"
+      ]
+    },
+    "idempotency_key": {
+      "type": "string"
+    },
+    "capability_evidence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "external_id": {
+      "type": "string"
+    },
+    "public_url": {
+      "type": "string",
+      "format": "uri"
+    },
+    "published_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "additionalProperties": false
+}
