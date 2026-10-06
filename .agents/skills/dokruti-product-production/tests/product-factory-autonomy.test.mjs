@@ -437,8 +437,10 @@ for (const [gate, status] of postPrototypeGates) {
 }
 assert.equal(finalOwnerHandoffAllowed(), true, 'final owner decision package is allowed only after all post-prototype gates pass');
 assert.ok(postPrototypeRouteLog.findIndex((event) => event === 'REPAIR:consolidated repair') < postPrototypeRouteLog.findIndex((event) => event === 'DETECT:regression review after repair'));
-// Reader-experience contract and focused adaptive regressions for the actual DEC-209 failure.
-assert.match(overlay, /overlay v1\.4\.0/);
+// Reader-experience contract and focused evidence/behavior regressions for v1.4.1.
+assert.match(overlay, /overlay v1\.4\.1/);
+assert.match(executor, /overlay v1\.4\.1/);
+assert.match(overlay, /DEC-209 is the PROD-TEAM-001 prototype production standard and failure context/i);
 const readerGateBlock = overlay.split('## Adaptive teaching and reader-experience gates')[1].split('## Product size and portfolio decision')[0];
 for (const gate of [
   'ADAPTIVE_CONTENT_STRUCTURE_GATE', 'HUMAN_LANGUAGE_ALL_COMPONENTS', 'READER_FLOW_QA',
@@ -454,47 +456,63 @@ assert.match(readerGateBlock, /if removing bullets\/checklists leaves no meaning
 assert.match(readerGateBlock, /Never invent Svetlana's experience/i);
 assert.match(readerGateBlock, /only the buyer-facing artifact, target audience and buyer job—not architecture rationale, research notes, author explanations or leading QA answers/i);
 assert.match(readerGateBlock, /no forced bridge paragraphs/i);
+assert.match(readerGateBlock, /Executable text heuristics may flag known structural risks only/i);
 
-// Fixture assessor applies explicit contract criteria; it is a focused regression rubric,
-// not a replacement for independent human editorial/reader review of a real product.
-const imperative = /^(?:Выберите|Назовите|Проверьте|Назначьте|Запишите|Уточните|Зафиксируйте|Разделите|Спросите)(?=\s|$)/i;
-const causalMarker = /потому что|поэтому|в результате|тогда станет|это помогает|иначе|из-за/i;
-const assessTeachingFixture = (text) => {
-  const sentences = text.split(/[.!?]+/).map((part) => part.trim()).filter(Boolean);
-  const imperativeCount = sentences.filter((sentence) => imperative.test(sentence)).length;
-  const hasContext = /когда|представьте|в ситуации|при этом|заказ|команд/i.test(text);
-  const explainsCause = causalMarker.test(text);
-  const mechanicalCadence = sentences.length >= 4 && imperativeCount >= 3 && !explainsCause;
-  const plainWords = !/\b(?:операционализация|интерпретируемость|эскалационный|декомпозиция)\b/i.test(text)
-    ? 'PASS' : 'FAIL';
-  const readerFlow = hasContext && explainsCause && !mechanicalCadence ? 'PASS' : 'FAIL';
-  const instructionalDepth = explainsCause && !mechanicalCadence ? 'PASS' : 'FAIL';
-  return { sentenceCount: sentences.length, imperativeCount, hasContext, explainsCause, mechanicalCadence, plainWords, readerFlow, instructionalDepth };
+// Machine checks detect known structural risks; editorial quality still requires independent artifact review.
+const assessKnownStructuralRisk = (text) => ({
+  commandOnly: /^(?:(?:Выберите|Назовите|Проверьте|Назначьте|Запишите|Уточните|Зафиксируйте|Разделите|Спросите)(?=\s|[.!?])[^.!?]*[.!?]\s*){3,}$/i.test(text.trim()),
+  editorialStatus: 'REQUIRES_INDEPENDENT_ARTIFACT_REVIEW',
+});
+
+// A — Exact short excerpt supplied from the actual DEC-209 prototype, delegation section.
+// Provenance evidence: the v1.4.1 owner task brief quotes this exact sequence and names the delegation section;
+// no line range or standalone file locator was supplied in the brief. Do not attribute it to BOOK_SOURCE_FINAL.md.
+const observedNegative = 'Назовите результат и срок. Назовите критерий качества.';
+const observedNegativeProvenance = {
+  label: 'actual DEC-209 prototype excerpt',
+  source: 'Owner attachment ef162d95-3cda-4787-8cf2-73006ace6fc1, heading "1. FIX NEGATIVE FIXTURE PROVENANCE", quoted excerpt under "delegation section"',
+  section: 'delegation section',
+  exactExcerpt: 'Назовите результат и срок. Назовите критерий качества.',
 };
+const hasTraceablePrototypeProvenance = (fixture) => Boolean(
+  /actual .*prototype excerpt/i.test(fixture.label || '') && fixture.source?.trim() && fixture.section?.trim()
+  && fixture.exactExcerpt?.trim() && fixture.text?.includes(fixture.exactExcerpt),
+);
+assert.equal(hasTraceablePrototypeProvenance({ ...observedNegativeProvenance, text: observedNegative }), true);
+assert.equal(hasTraceablePrototypeProvenance({ label: 'actual prototype excerpt', text: observedNegative }), false,
+  'an actual-prototype label without source/section/exact quoted match is rejected');
+assert.equal(assessKnownStructuralRisk(observedNegative).editorialStatus, 'REQUIRES_INDEPENDENT_ARTIFACT_REVIEW');
+assert.equal(assessKnownStructuralRisk('Когда срок срывается, назовите результат, потому что поставка задержана.').editorialStatus, 'REQUIRES_INDEPENDENT_ARTIFACT_REVIEW',
+  'context and causal markers never auto-pass editorial quality');
 
-// A — Authentic short excerpt from the DEC-209 prototype.
-// Source: live Drive / BOOK_SOURCE_FINAL.md, section "Первый цикл на семь дней", line 837:
-// https://drive.google.com/file/d/1963mYK-1rvZS_hfk335u8XjCRT3befEj/view
-// The fixture is intentionally short; the full buyer artifact is not copied into this test.
-const observedNegative = 'Выберите одну возвращающуюся работу. Назовите результат и владельца. Проверьте ресурс и границу решения. Назначьте дату факта.';
-assert.match(observedNegative, /Выберите одну возвращающуюся работу.*Назовите результат и владельца.*Проверьте ресурс.*Назначьте дату факта/);
-const negativeAssessment = assessTeachingFixture(observedNegative);
-assert.equal(negativeAssessment.plainWords, 'PASS');
-assert.equal(negativeAssessment.readerFlow, 'FAIL', 'short imperatives without orientation or causal explanation fail reader flow');
-assert.equal(negativeAssessment.instructionalDepth, 'FAIL', 'steps without causal explanation do not teach the method');
-assert.equal(negativeAssessment.imperativeCount, 4);
+// B — Semantic value: duplication fails; a reference with a new application/limit passes.
+const compareSectionValue = (first, second) => ['method', 'example', 'limit', 'application'].some((key) =>
+  second.contributions[key] && second.contributions[key] !== first.contributions[key]) ? 'PASS' : 'FAIL';
+const ruleA = { rule: 'Поручение считается ясным, если назван результат и срок.', contributions: { method: '', example: '', limit: '', application: '' } };
+const ruleBRestated = { rule: 'В задаче должны быть понятны ожидаемый итог и дата.', contributions: { method: '', example: '', limit: '', application: '' } };
+assert.equal(compareSectionValue(ruleA, ruleBRestated), 'FAIL', 'same semantic decision rule and no new contribution is duplication');
+const ruleBExtended = { rule: 'Срок из первого раздела кратко напомнили.', contributions: { method: '', example: '', limit: 'Для аварийной работы срок фиксируют диапазоном с условием пересмотра.', application: 'В сезонном пике дату пересматривают после подтверждения поставки.' } };
+assert.equal(compareSectionValue(ruleA, ruleBExtended), 'PASS', 'new application and limit make reinforcement useful');
 
-// Small synthetic teaching example, not the only style permitted by the contract.
-const positiveFixture = 'Учебный пример: в мастерской один заказ каждую неделю возвращается на переделку. Пока руководитель не называет готовый результат и владельца, никто не может понять, хватает ли материала и кто вправе изменить срок. Поэтому выберите эту повторяющуюся работу, назовите результат и владельца, проверьте ресурс и границу решения. Назначьте дату проверки: так станет видно, изменилось ли выполнение или стало яснее, где работа застревает.';
-const positiveAssessment = assessTeachingFixture(positiveFixture);
-assert.equal(positiveAssessment.plainWords, 'PASS');
-assert.equal(positiveAssessment.readerFlow, 'PASS');
-assert.equal(positiveAssessment.instructionalDepth, 'PASS');
-assert.ok(positiveAssessment.hasContext && positiveAssessment.explainsCause);
-for (const sameMethodElement of [
-  'повторяющуюся работу', 'результат и владельца', 'ресурс и границу решения', 'дату проверки',
-]) assert.ok(positiveFixture.includes(sameMethodElement), `positive fixture changes the DEC-209 method: ${sameMethodElement}`);
-assert.ok(negativeAssessment.readerFlow !== positiveAssessment.readerFlow, 'the same rubric must distinguish the dry and causal samples');
+// C — Example realism: substance can be expressed in varied prose, without a fixed template.
+const assessExample = (example) => {
+  const unsupportedPersonalClaim = /личный опыт Светланы|в моей практике Светланы/i.test(example.claim || '') && !example.authorizedEvidence;
+  const requiredSubstance = ['actors', 'situation', 'constraint', 'decision', 'weakAction', 'consequence', 'strongerAction', 'whyStronger'];
+  return unsupportedPersonalClaim || requiredSubstance.some((key) => !example[key]?.trim()) ? 'FAIL' : 'PASS';
+};
+assert.equal(assessExample({ label: 'Пример', situation: 'В магазине задержали заказ.' }), 'FAIL', 'decorative example lacks decision, constraint, consequence and action');
+assert.equal(assessExample({ claim: 'Личный опыт Светланы', actors: 'руководитель', situation: 'x', constraint: 'x', decision: 'x', weakAction: 'x', consequence: 'x', strongerAction: 'x', whyStronger: 'x' }), 'FAIL', 'unsupported personal experience fails');
+assert.equal(assessExample({ label: 'Учебный составной пример', actors: 'владелец мастерской и диспетчер', situation: 'два заказа на одну смену', constraint: 'один мастер и нет подтверждения материала', decision: 'уточнить поставку до обещания срока', weakAction: 'обещать обе даты сразу', consequence: 'оба клиента получают срыв без предупреждения', strongerAction: 'сверить ресурс и сообщить подтверждённый срок', whyStronger: 'решение учитывает реальную мощность и снижает риск ложного обещания' }), 'PASS');
+
+// D — Whole-product sequence checks semantic dependencies without forcing transition paragraphs.
+const assessTransition = (next) => next.unexplainedPrerequisite || next.onlyRepeatsPrior ? 'FAIL'
+  : next.buildsOnExplainedConcept || next.justifiedTaskChange || next.independentLookup ? 'PASS' : 'FAIL';
+assert.equal(assessTransition({ genericBridge: 'Теперь перейдём к следующей главе' }), 'FAIL');
+assert.equal(assessTransition({ unexplainedPrerequisite: true }), 'FAIL');
+assert.equal(assessTransition({ onlyRepeatsPrior: true }), 'FAIL');
+assert.equal(assessTransition({ buildsOnExplainedConcept: true }), 'PASS');
+assert.equal(assessTransition({ justifiedTaskChange: true, reason: 'переход от планирования к обучению сотрудника' }), 'PASS');
+assert.equal(assessTransition({ independentLookup: true, navigation: 'отдельная справочная таблица с индексом' }), 'PASS');
 
 // B — Infer a procedural/decision structure from the home-textile buyer job; research remains a prerequisite to scope.
 const textileInput = 'Хочу создать практический цифровой продукт для человека, который хочет открыть в России свой бренд постельного белья / домашнего текстиля и продавать на маркетплейсах, через интернет-магазин или розницу. Не про создание швейного производства.';
@@ -520,37 +538,61 @@ assert.doesNotMatch(readerGateBlock, /Home textile launch product must include e
 const requiredToolAnswers = ['purpose', 'situation', 'inputs', 'dataSource', 'result', 'decision', 'omissions', 'nonUseBoundary', 'completeExample', 'firstSession'];
 const toolFixture = { formulasCorrect: true, answers: {
   purpose: 'Plan the next staffing decision', situation: 'When two deadlines compete', inputs: 'Tasks and available hours',
-  dataSource: '', result: '', decision: '', omissions: '', nonUseBoundary: '', completeExample: '', firstSession: '',
+  dataSource: 'the input field', result: 'the number shown', decision: 'decide', omissions: 'other factors', nonUseBoundary: 'not for unusual cases', completeExample: 'example', firstSession: 'open file',
 } };
-const toolComprehension = requiredToolAnswers.every((key) => typeof toolFixture.answers[key] === 'string' && toolFixture.answers[key].trim().length > 0)
-  ? 'PASS' : 'FAIL';
+const hasToolMeaning = (a) => Boolean(
+  /from|source|journal|calendar|CRM|table/i.test(a.dataSource)
+  && /means|shows|result|difference|remaining|exceed/i.test(a.result)
+  && /choose|decide|postpone|assign|compare|change|move|arrange/i.test(a.decision)
+  && /not|exclude|does not|outside/i.test(a.nonUseBoundary)
+  && /use|enter|open|record|start|begin/i.test(a.firstSession)
+  && requiredToolAnswers.every((key) => typeof a[key] === 'string' && a[key].trim().length > 0),
+);
+const toolComprehension = hasToolMeaning(toolFixture.answers) ? 'PASS' : 'FAIL';
 assert.equal(toolFixture.formulasCorrect, true);
-assert.equal(toolComprehension, 'FAIL', 'correct formulas do not compensate for missing cold-reader answers');
-const completeToolFixture = Object.fromEntries(requiredToolAnswers.map((key) => [key, `clear buyer answer for ${key}`]));
-assert.equal(requiredToolAnswers.every((key) => completeToolFixture[key].trim().length > 0), true);
+assert.equal(toolComprehension, 'FAIL', 'correct formulas and non-empty vague answers do not explain data source, result, decision or non-use');
+const completeToolFixture = { purpose: 'Plan capacity for next week', situation: 'Before confirming overlapping client deadlines', inputs: 'Orders, due dates and available staff hours', dataSource: 'take orders from the order log and capacity from the shift calendar', result: 'remaining hours below zero means the plan exceeds available capacity', decision: 'move a lower-priority deadline or arrange extra capacity before promising dates', omissions: 'does not account for unrecorded absence or supplier delay', nonUseBoundary: 'not for emergency scheduling or when hours are unknown', completeExample: 'three orders require 18 hours; calendar has 14, so four hours are uncovered', firstSession: 'open the current order log and calendar, enter this week’s open orders and compare remaining hours' };
+assert.equal(hasToolMeaning(completeToolFixture), true, 'positive fixture demonstrates situation → source → input → interpretation → decision → limit → first session');
 
-// Cold-reader review closes only with an independent reviewer and the full report, never producer self-certification.
-const coldReaderFields = ['whatItTeaches', 'whatWasLearned', 'confusion', 'mechanicalPassages', 'logicJumps', 'repetition',
-  'exampleClarity', 'toolComprehension', 'actionNowPossible', 'remainingGuesswork'];
-const coldReaderGate = (review) => review.reviewer !== 'producer'
-  && coldReaderFields.every((field) => typeof review[field] === 'string' && review[field].trim().length > 0);
-const producerReview = Object.fromEntries(coldReaderFields.map((field) => [field, 'producer says it is clear']));
-producerReview.reviewer = 'producer';
+// Cold-reader report requires artifact/version, reviewer isolation and substantive located observations.
+const coldReaderFields = ['whatItTeaches', 'whatWasLearned', 'clearOrConfusingPassage', 'mechanicalFlowObservation', 'logicAndRepetition',
+  'exampleComprehension', 'toolComprehension', 'actionNowPossible', 'remainingGuesswork', 'attentionFatigue', 'voluntaryContinue'];
+const isPlaceholder = (s) => /^(?:PASS|everything is clear|independent reader report: confusion|confusion|clear|n\/a)$/i.test((s || '').trim());
+const coldReaderGate = (review) => /^sha256:[a-f0-9]{64}$/i.test(review.artifactHash || '') && review.version && review.targetReader && review.buyerJob
+  && review.reviewer !== review.producer && review.reviewContextId !== review.producerContextId
+  && review.isolationEvidence && review.packetOnlyArtifactAudienceJob === true
+  && coldReaderFields.every((field) => typeof review[field] === 'string' && review[field].trim().length > 12 && !isPlaceholder(review[field]));
+const producerReview = Object.fromEntries(coldReaderFields.map((field) => [field, 'Подробное наблюдение производителя о разделе и выводе читателя.']));
+Object.assign(producerReview, { artifactHash: `sha256:${'a'.repeat(64)}`, version: 'prototype v1', targetReader: 'owner with team', buyerJob: 'manage work handoffs', reviewer: 'producer', producer: 'producer', reviewContextId: 'same-context', producerContextId: 'same-context', isolationEvidence: 'same producer wrote and reviewed', packetOnlyArtifactAudienceJob: false });
 assert.equal(coldReaderGate(producerReview), false);
-const independentReaderReview = Object.fromEntries(coldReaderFields.map((field) => [field, `independent reader report: ${field}`]));
-independentReaderReview.reviewer = 'cold-reader';
+const independentReaderReview = {
+  artifactHash: `sha256:${'b'.repeat(64)}`, version: 'prototype r3', targetReader: 'owner of a 12-person service business', buyerJob: 'delegate work without losing control of timing and quality', reviewer: 'routed-reader-17', producer: 'author-02', reviewContextId: 'cold-reader-context-17', producerContextId: 'author-context-02', isolationEvidence: 'separate reviewer context; no shared author chat or rationale', packetOnlyArtifactAudienceJob: true,
+  whatItTeaches: 'The section teaches how to make a delegated task checkable before work starts.',
+  whatWasLearned: 'I should name the result, quality bar, authority boundary, dependencies and review date.',
+  clearOrConfusingPassage: 'Delegation section, paragraph 2: the quality criterion example made the expected finish concrete.',
+  mechanicalFlowObservation: 'The six imperative sentences in the opening list felt like a checklist before the reason was explained.',
+  logicAndRepetition: 'No repeated rule found in this excerpt; the sequence moves from outcome to agreement.',
+  exampleComprehension: 'The example is about a real handoff; I understood who may change the deadline.',
+  toolComprehension: 'No working tool appears in this reviewed excerpt; not applicable because the inspected section contains no tool.',
+  actionNowPossible: 'Before my next handoff I can state the quality criterion and review date.',
+  remainingGuesswork: 'I still need an example of how much authority to grant a junior employee.',
+  attentionFatigue: 'Attention dipped at the fourth command because the list had no short explanation between steps.',
+  voluntaryContinue: 'Yes; I want the later section on authority levels because it would help with that unresolved question.',
+};
 assert.equal(coldReaderGate(independentReaderReview), true);
+assert.equal(coldReaderGate({ ...independentReaderReview, artifactHash: 'sha256:dec209sample' }), false, 'artifact hash must be a concrete SHA-256 value');
+assert.equal(coldReaderGate({ ...independentReaderReview, clearOrConfusingPassage: 'PASS' }), false, 'placeholders cannot close cold-reader QA');
+assert.equal(coldReaderGate({ ...independentReaderReview, reviewer: 'new-reader-label', reviewContextId: 'author-context-02', isolationEvidence: 'relabelled producer review' }), false, 'a relabelled same-context view does not establish independence');
 
 // D — Simple Russian command fragments remain a reader-flow failure under the same criteria.
 const simpleCommandSequence = 'Назовите. Проверьте. Зафиксируйте. Уточните. Назначьте.';
-const simpleAssessment = assessTeachingFixture(simpleCommandSequence);
-assert.equal(simpleAssessment.plainWords, 'PASS');
-assert.equal(simpleAssessment.readerFlow, 'FAIL');
-assert.equal(simpleAssessment.instructionalDepth, 'FAIL');
+const simpleAssessment = assessKnownStructuralRisk(simpleCommandSequence);
+assert.equal(simpleAssessment.commandOnly, true);
+assert.equal(simpleAssessment.editorialStatus, 'REQUIRES_INDEPENDENT_ARTIFACT_REVIEW');
 
 for (const specialistRole of ['Product Strategy', 'Instructional Design', 'Editorial/Reader Experience', 'QA Red-Team']) {
   assert.ok(overlay.includes(specialistRole), `applicable independent QA role missing: ${specialistRole}`);
 }
 assert.match(executor, /independent cold-reader QA/i);
 assert.match(executor, /Formula\/function correctness alone does not pass/i);
-console.log('PASS Product Factory v1.4.0 autonomy, adaptive teaching, human language, reader flow, instructional depth, examples, tool comprehension, cold-reader, transitions and product-type regressions');
+console.log('PASS Product Factory v1.4.1 autonomy, provenance, semantic value, realistic examples, transitions, tool comprehension, cold-reader evidence, editorial boundary and product-type regressions');
