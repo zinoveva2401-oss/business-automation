@@ -7,6 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {routeRequest,createContentRun,addCheckpoint,transitionRun,failRun,blockRun,resumeRun,factDisposition,assertNativeAdaptation,authorizeOwnerBatch,matchesOwnerAuthorization} from '../runtime/content-factory-runtime.mjs';
 import {createContentSystemStateStore} from '../runtime/content-system-state-store.mjs';
 import {toTelegramPublisherInput,fromTelegramPublisherReceipt} from '../runtime/telegram-contract-adapter.mjs';
+import {createVideoProductionPlan} from '../runtime/video-production-pipeline.mjs';
 import {validFixtures,invalidFixtures,telegramIntegrationContract} from './fixtures/contracts.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
@@ -19,7 +20,7 @@ const H='a'.repeat(64);
 test('valid and invalid fixtures are validated against every Draft 2020-12 schema',()=>{
  const ajv=new Ajv2020({allErrors:true,strict:false,validateFormats:false});
  const names=fs.readdirSync(path.join(root,'schemas')).filter(x=>x.endsWith('.schema.json')).map(x=>x.replace('.schema.json','')).sort();
- assert.equal(names.length,8);
+ assert.equal(names.length,9);
  for(const name of names){
   const schema=json(path.join(root,'schemas',`${name}.schema.json`));
   assert.equal(schema.$schema,'https://json-schema.org/draft/2020-12/schema');
@@ -29,6 +30,7 @@ test('valid and invalid fixtures are validated against every Draft 2020-12 schem
   assert.equal(validate(valid),true,`${name} valid fixture: ${ajv.errorsText(validate.errors)}`);
   assert.equal(validate(invalid),false,`${name} invalid fixture unexpectedly passed`);
   if(name==='content-run')assert.equal(validate(createContentRun({runId:'runtime-run',requestFingerprint:'fp',now:NOW})),true,`runtime ContentRun: ${ajv.errorsText(validate.errors)}`);
+  if(name==='video-production-plan')assert.equal(validate(createVideoProductionPlan({videoJobId:'generated-plan',masterId:'m-1',topic:'verified topic',angle:'useful angle',script:{hook:'Hook',setup:'Setup',payoff:'Payoff',cta:'CTA'},platforms:['max'],createdAt:NOW})),true,`runtime video plan: ${ajv.errorsText(validate.errors)}`);
  }
 });
 

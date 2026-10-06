@@ -33,3 +33,6 @@ description: "Единый front door полного цикла Content Factory 
 Business OS ownership: business-os-routing.md. Demand: demand-intake.md. Marketing marketing.md; Strategy strategy.md; Trend trend.md; Research research.md; Human Editor human-editor.md; Hooks hooks-story.md; Art art.md; Video video.md; SEO/AEO seo-aeo.md; Affiliate affiliate.md; Channels channels.md; Publishing publishing.md; Analytics analytics.md; Legal/IP legal-ip.md; Recovery state-recovery.md; Owner Gates owner-gates.md; QA qa.md и content-qa.md; branch handoff — integration-hygiene.md.
 
 Обязательны source restore, state/factual integrity и общий QA; запускай только соответствующие production lanes. В конфликте приоритет у владельца и live canonical. Недоступный источник = UNKNOWN, неподтверждённая запись = PENDING WRITE-BACK.
+
+## Параллельные каналы и видео (fresh preflight 2026-10-06)
+Для текущих доказательств доступов MAX, VK, Дзена, vc.ru и Instagram используй `references/channels/capability-preflight-2026-10-06.md`. Текущая video production-процедура исполняется через `runtime/video-production-pipeline.mjs`; она строит plan из approved master, запрашивает owner footage только при обязательности и не выдаёт draft за export/publication.
