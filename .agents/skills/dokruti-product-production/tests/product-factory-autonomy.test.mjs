@@ -18,7 +18,9 @@ const expectedGates = [
   'Representative prototype',
   'Technical QA',
   'Visual and UX QA',
-  'Independent Product, Market, Editorial, Commercial, Legal/IP, UX, Technical and Red-Team reviews',
+  'Independent Product Strategy, Market, Instructional Design, Editorial/Reader Experience, Commercial, Legal/IP, UX, Technical and QA Red-Team review',
+  'Applicable reader-experience gates',
+  'Tool comprehension',
   'One consolidated repair',
   'regression review after repair',
 ];
@@ -54,12 +56,14 @@ const marketGate = openGate(/market, competitor and substitute/i);
 const valueGate = openGate(/commercial and value/i);
 const legalGate = openGate(/legal, ip and claims/i);
 const visualGate = openGate(/visual and ux/i);
-const reviewGate = gates.find((item) => /independent product, market, editorial/i.test(item));
+const reviewGate = gates.find((item) => /independent product strategy, market, instructional design/i.test(item));
 assert.ok(reviewGate, 'independent review gate must be present');
 const reviewerList = reviewGate.match(/Independent (.+) reviews/)[1]
   .replace(/ and /, ', ')
   .split(', ');
-assert.deepEqual(reviewerList, ['Product', 'Market', 'Editorial', 'Commercial', 'Legal/IP', 'UX', 'Technical', 'Red-Team']);
+for (const role of ['Product Strategy', 'Market', 'Instructional Design', 'Editorial/Reader Experience', 'Commercial', 'Legal/IP', 'UX', 'Technical', 'QA Red-Team']) {
+  assert.ok(reviewerList.includes(role), `independent review omits ${role}`);
+}
 const reviewerStatus = new Map(reviewerList.map((role) => [role, 'OPEN']));
 for (const gate of gates.filter((item) => /consolidated repair|regression review/i.test(item))) {
   gateLedger.get(gate).status = 'OPEN';
@@ -108,7 +112,7 @@ for (const gate of gates.filter((item) => /consolidated repair|regression review
 }
 
 assert.equal(ownerHandoffAllowed(), true, 'all gates closed; owner decision may now be packaged if needed');
-assert.ok(routeLog.indexOf(`ROUTE:${specialist.get(legalGate)}`) < routeLog.indexOf('INDEPENDENT_REVIEW:Product'));
+assert.ok(routeLog.indexOf(`ROUTE:${specialist.get(legalGate)}`) < routeLog.indexOf('INDEPENDENT_REVIEW:Product Strategy'));
 assert.ok(routeLog.findIndex((event) => /regression review/i.test(event)) > routeLog.findIndex((event) => /consolidated repair/i.test(event)));
 
 // Promise guard: no owner-approved promise in the current pilot source means TO_DEFINE.
@@ -433,4 +437,120 @@ for (const [gate, status] of postPrototypeGates) {
 }
 assert.equal(finalOwnerHandoffAllowed(), true, 'final owner decision package is allowed only after all post-prototype gates pass');
 assert.ok(postPrototypeRouteLog.findIndex((event) => event === 'REPAIR:consolidated repair') < postPrototypeRouteLog.findIndex((event) => event === 'DETECT:regression review after repair'));
-console.log('PASS Product Factory v1.3.1 contract + DEC-204 sequencing, product classifier, promise guard, workbook value gate, DEC-205/206 and autonomy regression');
+// Reader-experience contract and focused adaptive regressions for the actual DEC-209 failure.
+assert.match(overlay, /overlay v1\.4\.0/);
+const readerGateBlock = overlay.split('## Adaptive teaching and reader-experience gates')[1].split('## Product size and portfolio decision')[0];
+for (const gate of [
+  'ADAPTIVE_CONTENT_STRUCTURE_GATE', 'HUMAN_LANGUAGE_ALL_COMPONENTS', 'READER_FLOW_QA',
+  'INSTRUCTIONAL_DEPTH_QA', 'DISTINCT_VALUE_PER_SECTION_GATE', 'EXAMPLE_REALISM_GUARD',
+  'TOOL_COMPREHENSION_QA', 'COLD_READER_QA', 'WHOLE_PRODUCT_TRANSITION_QA',
+]) assert.ok(readerGateBlock.includes(gate), `missing reader-experience gate: ${gate}`);
+for (const element of [
+  'diagrams', 'field names', 'warnings', 'table headings', 'workbook onboarding/status',
+  'calculations', 'next steps', 'errors and limitations',
+]) assert.ok(readerGateBlock.includes(element), `human language omits buyer-facing component: ${element}`);
+assert.match(overlay, /Do not make every chapter follow one fixed progression/i);
+assert.match(readerGateBlock, /if removing bullets\/checklists leaves no meaningful explanation, fail/i);
+assert.match(readerGateBlock, /Never invent Svetlana's experience/i);
+assert.match(readerGateBlock, /only the buyer-facing artifact, target audience and buyer job—not architecture rationale, research notes, author explanations or leading QA answers/i);
+assert.match(readerGateBlock, /no forced bridge paragraphs/i);
+
+// Fixture assessor applies explicit contract criteria; it is a focused regression rubric,
+// not a replacement for independent human editorial/reader review of a real product.
+const imperative = /^(?:Выберите|Назовите|Проверьте|Назначьте|Запишите|Уточните|Зафиксируйте|Разделите|Спросите)(?=\s|$)/i;
+const causalMarker = /потому что|поэтому|в результате|тогда станет|это помогает|иначе|из-за/i;
+const assessTeachingFixture = (text) => {
+  const sentences = text.split(/[.!?]+/).map((part) => part.trim()).filter(Boolean);
+  const imperativeCount = sentences.filter((sentence) => imperative.test(sentence)).length;
+  const hasContext = /когда|представьте|в ситуации|при этом|заказ|команд/i.test(text);
+  const explainsCause = causalMarker.test(text);
+  const mechanicalCadence = sentences.length >= 4 && imperativeCount >= 3 && !explainsCause;
+  const plainWords = !/\b(?:операционализация|интерпретируемость|эскалационный|декомпозиция)\b/i.test(text)
+    ? 'PASS' : 'FAIL';
+  const readerFlow = hasContext && explainsCause && !mechanicalCadence ? 'PASS' : 'FAIL';
+  const instructionalDepth = explainsCause && !mechanicalCadence ? 'PASS' : 'FAIL';
+  return { sentenceCount: sentences.length, imperativeCount, hasContext, explainsCause, mechanicalCadence, plainWords, readerFlow, instructionalDepth };
+};
+
+// A — Authentic short excerpt from the DEC-209 prototype.
+// Source: live Drive / BOOK_SOURCE_FINAL.md, section "Первый цикл на семь дней", line 837:
+// https://drive.google.com/file/d/1963mYK-1rvZS_hfk335u8XjCRT3befEj/view
+// The fixture is intentionally short; the full buyer artifact is not copied into this test.
+const observedNegative = 'Выберите одну возвращающуюся работу. Назовите результат и владельца. Проверьте ресурс и границу решения. Назначьте дату факта.';
+assert.match(observedNegative, /Выберите одну возвращающуюся работу.*Назовите результат и владельца.*Проверьте ресурс.*Назначьте дату факта/);
+const negativeAssessment = assessTeachingFixture(observedNegative);
+assert.equal(negativeAssessment.plainWords, 'PASS');
+assert.equal(negativeAssessment.readerFlow, 'FAIL', 'short imperatives without orientation or causal explanation fail reader flow');
+assert.equal(negativeAssessment.instructionalDepth, 'FAIL', 'steps without causal explanation do not teach the method');
+assert.equal(negativeAssessment.imperativeCount, 4);
+
+// Small synthetic teaching example, not the only style permitted by the contract.
+const positiveFixture = 'Учебный пример: в мастерской один заказ каждую неделю возвращается на переделку. Пока руководитель не называет готовый результат и владельца, никто не может понять, хватает ли материала и кто вправе изменить срок. Поэтому выберите эту повторяющуюся работу, назовите результат и владельца, проверьте ресурс и границу решения. Назначьте дату проверки: так станет видно, изменилось ли выполнение или стало яснее, где работа застревает.';
+const positiveAssessment = assessTeachingFixture(positiveFixture);
+assert.equal(positiveAssessment.plainWords, 'PASS');
+assert.equal(positiveAssessment.readerFlow, 'PASS');
+assert.equal(positiveAssessment.instructionalDepth, 'PASS');
+assert.ok(positiveAssessment.hasContext && positiveAssessment.explainsCause);
+for (const sameMethodElement of [
+  'повторяющуюся работу', 'результат и владельца', 'ресурс и границу решения', 'дату проверки',
+]) assert.ok(positiveFixture.includes(sameMethodElement), `positive fixture changes the DEC-209 method: ${sameMethodElement}`);
+assert.ok(negativeAssessment.readerFlow !== positiveAssessment.readerFlow, 'the same rubric must distinguish the dry and causal samples');
+
+// B — Infer a procedural/decision structure from the home-textile buyer job; research remains a prerequisite to scope.
+const textileInput = 'Хочу создать практический цифровой продукт для человека, который хочет открыть в России свой бренд постельного белья / домашнего текстиля и продавать на маркетплейсах, через интернет-магазин или розницу. Не про создание швейного производства.';
+const inferTaskShape = (input) => ({
+  excludedSewingFactory: /не про создание швейного производства/i.test(input),
+  launchSequence: /открыть .*бренд/i.test(input) && /продавать на маркетплейсах|интернет-магазин|розниц/i.test(input),
+  decisionDependencies: /открыть .*бренд/i.test(input) && /продавать/i.test(input),
+});
+const selectAdaptiveStructure = (shape) => shape.launchSequence && shape.decisionDependencies
+  ? { structure: 'decision-and-sequence', rationale: 'the buyer must choose a business model and make dependent launch decisions' }
+  : { structure: 'unresolved-needs-task-analysis', rationale: 'insufficient task-shape evidence' };
+const textileShape = inferTaskShape(textileInput);
+const textileStructure = selectAdaptiveStructure(textileShape);
+const freezeTextileScope = ({ researchComplete, ownerApproved }) => researchComplete && ownerApproved;
+assert.ok(textileShape.excludedSewingFactory && textileShape.launchSequence && textileShape.decisionDependencies);
+assert.equal(textileStructure.structure, 'decision-and-sequence');
+assert.match(textileStructure.rationale, /dependent launch decisions/);
+assert.equal(freezeTextileScope({ researchComplete: false, ownerApproved: false }), false);
+assert.match(readerGateBlock, /These examples never freeze another product's scope or module map/);
+assert.doesNotMatch(readerGateBlock, /Home textile launch product must include every listed topic/);
+
+// C — Derive tool comprehension from the ten required unaided-reader answers.
+const requiredToolAnswers = ['purpose', 'situation', 'inputs', 'dataSource', 'result', 'decision', 'omissions', 'nonUseBoundary', 'completeExample', 'firstSession'];
+const toolFixture = { formulasCorrect: true, answers: {
+  purpose: 'Plan the next staffing decision', situation: 'When two deadlines compete', inputs: 'Tasks and available hours',
+  dataSource: '', result: '', decision: '', omissions: '', nonUseBoundary: '', completeExample: '', firstSession: '',
+} };
+const toolComprehension = requiredToolAnswers.every((key) => typeof toolFixture.answers[key] === 'string' && toolFixture.answers[key].trim().length > 0)
+  ? 'PASS' : 'FAIL';
+assert.equal(toolFixture.formulasCorrect, true);
+assert.equal(toolComprehension, 'FAIL', 'correct formulas do not compensate for missing cold-reader answers');
+const completeToolFixture = Object.fromEntries(requiredToolAnswers.map((key) => [key, `clear buyer answer for ${key}`]));
+assert.equal(requiredToolAnswers.every((key) => completeToolFixture[key].trim().length > 0), true);
+
+// Cold-reader review closes only with an independent reviewer and the full report, never producer self-certification.
+const coldReaderFields = ['whatItTeaches', 'whatWasLearned', 'confusion', 'mechanicalPassages', 'logicJumps', 'repetition',
+  'exampleClarity', 'toolComprehension', 'actionNowPossible', 'remainingGuesswork'];
+const coldReaderGate = (review) => review.reviewer !== 'producer'
+  && coldReaderFields.every((field) => typeof review[field] === 'string' && review[field].trim().length > 0);
+const producerReview = Object.fromEntries(coldReaderFields.map((field) => [field, 'producer says it is clear']));
+producerReview.reviewer = 'producer';
+assert.equal(coldReaderGate(producerReview), false);
+const independentReaderReview = Object.fromEntries(coldReaderFields.map((field) => [field, `independent reader report: ${field}`]));
+independentReaderReview.reviewer = 'cold-reader';
+assert.equal(coldReaderGate(independentReaderReview), true);
+
+// D — Simple Russian command fragments remain a reader-flow failure under the same criteria.
+const simpleCommandSequence = 'Назовите. Проверьте. Зафиксируйте. Уточните. Назначьте.';
+const simpleAssessment = assessTeachingFixture(simpleCommandSequence);
+assert.equal(simpleAssessment.plainWords, 'PASS');
+assert.equal(simpleAssessment.readerFlow, 'FAIL');
+assert.equal(simpleAssessment.instructionalDepth, 'FAIL');
+
+for (const specialistRole of ['Product Strategy', 'Instructional Design', 'Editorial/Reader Experience', 'QA Red-Team']) {
+  assert.ok(overlay.includes(specialistRole), `applicable independent QA role missing: ${specialistRole}`);
+}
+assert.match(executor, /independent cold-reader QA/i);
+assert.match(executor, /Formula\/function correctness alone does not pass/i);
+console.log('PASS Product Factory v1.4.0 autonomy, adaptive teaching, human language, reader flow, instructional depth, examples, tool comprehension, cold-reader, transitions and product-type regressions');

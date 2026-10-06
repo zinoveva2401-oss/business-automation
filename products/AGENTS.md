@@ -1,6 +1,6 @@
-# Product Factory — local autonomy, product-depth and knowledge-value overlay v1.3.1
+# Product Factory — local autonomy, product-depth, knowledge-value and reader-experience overlay v1.4.0
 
-Inherit the repository `AGENTS.md` and shared Business OS v2.0.11 RELEASE, as declared by the Core `MANIFEST.md`, `SKILL.md` and `QA_v2.0.11_CORE_NORMALIZATION.md`. This versioned domain overlay implements live owner decisions DEC-202 through DEC-206 by adding product-depth, knowledge-product value and pre-prototype architecture gates without changing the shared Core identity, contract or architecture. It extends overlays v1.1.0, v1.2.0 and v1.3.0; it does not replace their self-heal, review, evidence-budget or handoff protections.
+Inherit the repository `AGENTS.md` and shared Business OS v2.0.11 RELEASE, as declared by the Core `MANIFEST.md`, `SKILL.md` and `QA_v2.0.11_CORE_NORMALIZATION.md`. This versioned domain overlay implements live owner decisions DEC-202 through DEC-206 and DEC-210 by adding product-depth, knowledge-product value, pre-prototype architecture and reader-experience gates without changing the shared Core identity, contract or architecture. It extends overlays v1.1.0, v1.2.0 and v1.3.0; it does not replace their self-heal, review, evidence-budget or handoff protections.
 
 ## Generic product-type classifier and approved PROD-TEAM-001 identity
 
@@ -45,7 +45,31 @@ When classification is `KNOWLEDGE_PRODUCT` or the product promises that buyers w
 
 For each major method or idea, explain in plain language what it is, why it works, when it helps, when it fails or does not fit, and how to apply it. Where relevant, include real examples from different business types, practical scenarios, common mistakes, useful and supportable shortcuts, step-by-step application, ready working tables/templates/calculations/matrices, a filled-in example, and how to adapt the material to the buyer's business. Give exercises the worked support, examples or tools needed to complete them; do not assign “build your own system” after only introducing a concept. Checklists are included only when they genuinely help the task.
 
-The product should teach and support a result: concept → why/how → when it fits → worked examples → ready tool → filled example → adaptation in the buyer's work. Do not replace this with superficial theory, a generic tool hand-off, artificial page count, bureaucratic/methodical prose or dry textbook writing. Do not impose a page ceiling: length follows the depth needed for the result. Cut repetition and filler; do not compress away useful explanation, examples or working tools merely to keep one product short. Review depth and practical support across the whole product, not just its opening section.
+The examples above describe useful support, not a mandatory chapter skeleton. Do not make every chapter follow one fixed progression such as concept → explanation → example → tool. Select a teaching and navigation structure for the product and for each materially different section.
+
+## Adaptive teaching and reader-experience gates
+
+`ADAPTIVE_CONTENT_STRUCTURE_GATE = PASS/FAIL` is mandatory for applicable educational and self-serve products. Before drafting, record why the chosen structure fits the `PRIMARY_TYPE`/`SUPPORTING_TYPES`, buyer job, prior knowledge, task (explanatory, procedural, diagnostic, comparative, calculational, reference or operational), risk of misapplication, practice needed and likely reading pattern (sequential or lookup). Different sections may need different structures. Illustrative options—not templates—include a recognition/explanation/method/practice route for some management topics; decision/prerequisite/sequence/economics/risk/control for some launches; inputs/assumptions/calculation/interpretation/limits for calculators; and navigation/comparison/selection/use for references. The gate fails if one chapter formula is applied automatically or if the choice has no product-specific rationale. These examples never freeze another product's scope or module map.
+
+`HUMAN_LANGUAGE_ALL_COMPONENTS = PASS/FAIL` applies to every buyer-facing element: prose, method names and explanations, diagrams, checklists, exercises, forms and field names, instructions, examples, warnings, table headings, workbook onboarding/status, calculations, next steps, errors and limitations. An intelligent non-specialist must understand it on an ordinary first read and explain the difficult idea back in everyday words. Use clear, concrete Russian; do not make it childish, slangy or primitive. Simple vocabulary alone does not pass the reader-experience gates.
+
+`READER_FLOW_QA = PASS/FAIL` checks whether readers know why a section is here, how ideas lead forward, what a method changes and why, where context/examples make it recognizable, whether the rhythm varies, and whether the artifact reads as a useful practical product rather than an internal SOP. Explain causes and consequences, not just commands. Invite continued reading through specificity, recognition and useful discovery; do not add fictional stories or require entertainment.
+
+`INSTRUCTIONAL_DEPTH_QA = PASS/FAIL` checks each important method for the problem it solves, causal logic, when it is useful/unnecessary/risky, how to recognize the situation, common failure and adaptation. Steps and checklists can support teaching but cannot replace it: if removing bullets/checklists leaves no meaningful explanation, fail.
+
+`DISTINCT_VALUE_PER_SECTION_GATE = PASS/FAIL` requires each meaningful section to add a distinct understanding, distinction, decision rule, method, limit, useful example, tool or application insight. Review across modules before handoff: remove repeated explanation, point back briefly, or add a genuinely new application. Judge semantic value, not page/word count or an artificial “aha per N pages” quota.
+
+`EXAMPLE_REALISM_GUARD = PASS/FAIL` requires enough operational detail to teach the decision, people, constraints, weak action and consequence, and stronger approach. Vary business contexts where that improves transfer. Never invent Svetlana's experience; use it only when authorized source material supports it. Otherwise label the case honestly as учебный, составной, адаптированный or illustrative. Never claim “в моей практике было” without evidence.
+
+`TOOL_COMPREHENSION_QA = PASS/FAIL` applies to each buyer-facing workbook, spreadsheet, calculator, form or other working tool, in addition to technical correctness. A cold reader, without creator explanation, must be able to say: why to open it; when to use it; what to enter; where to get the data; what the result means; what decision follows; what is excluded; when not to use it; how a complete realistic example looks; and how to begin in the first work session. Select only helpful onboarding, examples, inline notes or walkthroughs. Correct formulas with unclear use or interpretation fail.
+
+`COLD_READER_QA = PASS/FAIL` is separate from producer QA. Give an independent reader only the buyer-facing artifact, target audience and buyer job—not architecture rationale, research notes, author explanations or leading QA answers. Ask what it teaches, what they learned, where they were confused, where it felt mechanical or jumped/repeated, whether examples and tools made sense, what they can now do and what still required guessing. Producer self-certification cannot close this gate.
+
+`WHOLE_PRODUCT_TRANSITION_QA = PASS/FAIL` checks adjacent and non-adjacent modules: why the order fits, whether prerequisites arrive before use, whether later sections build rather than restate, whether cross-references work, and whether the reader can see the path. Add a transition only when it carries meaning; no forced bridge paragraphs.
+
+Each gate is recorded as `PASS`, `FAIL`, or `NOT_APPLICABLE` with evidence. Buyer-facing human language is always applicable. Skip any other gate only with a specific reason: apply reader-flow, instructional-depth, value, realism and transition gates to knowledge products; apply adaptive-structure review when the content needs teaching or navigation; apply tool comprehension to every working tool. No one requirement turns every product into fiction, a book, or the same voice/skeleton.
+
+Do not replace this with superficial theory, bureaucratic/methodical prose or dry textbook writing. Do not impose a page ceiling: length follows the depth needed for the buyer's result. This does not excuse repetition, filler, or artificial volume.
 
 Owner-facing and customer-facing teaching uses clear, vivid, natural Russian for an intelligent non-specialist. Explain difficult ideas simply, almost “как ребёнку”, without becoming childish or primitive. Avoid product-management, academic or bureaucratic language unless immediately translated. If Svetlana would need another AI/chat to translate a Product Factory answer, `OWNER_COMMUNICATION_QA = FAIL`; rewrite it before handoff.
 
@@ -128,9 +152,11 @@ The architecture approval is a genuine owner decision allowed before a prototype
 8. Representative prototype made from real product content and rendered, opened or used in its intended medium.
 9. Technical QA.
 10. Visual and UX QA.
-11. Independent Product, Market, Editorial, Commercial, Legal/IP, UX, Technical and Red-Team reviews of the actual prototype/package.
-12. One consolidated repair of correctable review defects.
-13. Fresh recheck of repaired criteria and a regression review after repair.
+11. Applicable reader-experience gates: adaptive structure, human language across all buyer-facing components, reader flow, instructional depth, distinct section value/cross-module duplication, example realism and whole-product transitions.
+12. Tool comprehension for every applicable buyer-facing tool, independently checked by a cold reader.
+13. Independent Product Strategy, Market, Instructional Design, Editorial/Reader Experience, Commercial, Legal/IP, UX, Technical and QA Red-Team reviews of the actual prototype/package; cold-reader QA remains independent of the producer.
+14. One consolidated repair of correctable review defects.
+15. Fresh recheck of repaired criteria and a regression review after repair.
 
 For every gate, record `APPLICABLE / NOT APPLICABLE`, status, source/evidence and date. A skipped gate is valid only as `NOT APPLICABLE` with a specific reason; blank, unknown or incomplete is not closed. If the product is not ready for a representative prototype, continue its missing upstream stages and do not create a premature owner gate.
 
@@ -150,6 +176,10 @@ Route correctable gaps as follows:
 | Comparable product contents/packaging are unknown | Market Research (lawful preview/sample inspection) |
 | Buyer value or commercial logic is weak | Product/Commercial |
 | Knowledge-product teaching depth or practical support is weak | Editorial / Instructional Design |
+| Structure is over-templated, reader flow is mechanical, value repeats, examples lack context or transitions jump | Product Strategy + Instructional Design + Editorial/Reader Experience |
+| Buyer-facing labels, form fields, warnings or tool explanations are unclear | Editorial/Reader Experience + UX |
+| Cold reader cannot explain a tool's inputs, result, decision or limits | UX + Technical + Editorial/Reader Experience |
+| Example presents unsourced owner history as fact | Editorial + Legal/IP |
 | Product may be too large or too small for one offer | Product/Commercial (master vs series comparison) |
 | Text or explanation is weak | Editorial |
 | Visual hierarchy or usability is weak | Art/UX |
