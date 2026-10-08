@@ -30,5 +30,8 @@ jobs:
       - name: Type and content check
         run: npm run check
 
+      - name: Core architecture and owner-boundary contracts
+        run: npm run test:core-contract
+
       - name: Build
         run: npm run build

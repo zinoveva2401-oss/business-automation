@@ -8,7 +8,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const fixtures = path.join(root, 'tests', 'fixtures', 'second-brain');
 const packet = path.join(fixtures, 'repair-acceptance-matrix.json');
-const expectedPacketSha = '7B0EC449DF82AD8AD4F52C9D6D1532AA4498B0D838A96572338312F6FB02B22F';
+const expectedPacketSha = '79E926F9DA598A3FF95499E843BB981CC565120112A438490A173304D3832FC7';
 function runNode(script, args = []) { return execFileSync(process.execPath, [path.join(root, script), ...args], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'], maxBuffer: 8 * 1024 * 1024 }).trim(); }
 function jsonOutput(output) { const start = output.lastIndexOf('\n{'); return JSON.parse(start >= 0 ? output.slice(start + 1) : output); }
 function result(id, status, evidence) { return { id, status, evidence }; }
@@ -18,12 +18,14 @@ function fail(id, evidence) { return result(id, 'FAIL', evidence); }
 function runGate() { return pass('completion-gate-preflight', runNode('scripts/verify-completion-gate.mjs', ['--self-test'])); }
 function runSpec() {
   const packetSha = createHash('sha256').update(fs.readFileSync(packet)).digest('hex').toUpperCase();
+  const architectureNegatives = runNode('scripts/spec-lint-v2.mjs', ['--self-test']);
   const evidenceDir = fs.mkdtempSync(path.join(os.tmpdir(), 'dokruti-harness-'));
   const evidencePath = path.join(evidenceDir, 'preflight.json');
   const preflight = jsonOutput(runNode('scripts/run-spec-lint-preflight.mjs', [packet, evidencePath]));
   return packetSha === expectedPacketSha && preflight.packet_sha256 === expectedPacketSha && preflight.spec_lint?.status === 'PASS'
-    ? pass('spec-lint-preflight', { evidencePath, packetSha, preflight })
-    : fail('spec-lint-preflight', { evidencePath, packetSha, preflight });
+    && architectureNegatives.includes('architecture reuse/core lineage, owner-vs-stale-source, client isolation')
+    ? pass('spec-lint-preflight', { evidencePath, packetSha, preflight, architectureNegatives })
+    : fail('spec-lint-preflight', { evidencePath, packetSha, preflight, architectureNegatives });
 }
 function runConflict() {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dokruti-spec-conflict-'));
@@ -56,7 +58,7 @@ function runVisualContract() {
   return valid ? review('visual-brand-contract', { brand_source: '02_Бренд-система', version: '8.2', reason: 'independent visual/art review remains required' }) : fail('visual-brand-contract', 'current Brand SOT contract mismatch');
 }
 function runSecurity() { return pass('security-baseline', runNode('scripts/security-baseline-scan.mjs', ['--self-test'])); }
-function runMarkers() { const scan = spawnSync('git', ['grep', '-nE', '^(<<<<<<< |>>>>>>> |=======)$', '--', 'AGENTS.md', 'docs', 'scripts', 'tests'], { cwd: root, encoding: 'utf8' }); return scan.status === 1 ? pass('conflict-marker-scan', '0 markers in scoped runtime/test paths') : fail('conflict-marker-scan', `${scan.stdout}\n${scan.stderr}`.trim()); }
+function runMarkers() { const scan = spawnSync('git', ['-c', `safe.directory=${root}`, 'grep', '-nE', '^(<<<<<<< |>>>>>>> |=======)$', '--', 'AGENTS.md', 'docs', 'scripts', 'tests'], { cwd: root, encoding: 'utf8' }); return scan.status === 1 ? pass('conflict-marker-scan', '0 markers in scoped runtime/test paths') : fail('conflict-marker-scan', `${scan.stdout}\n${scan.stderr}`.trim()); }
 function runPolicy() { const files = ['AGENTS.md', 'docs/ai/CODEX_RUNTIME.md', 'docs/ai/COMPLETION_GATE.md', 'docs/ai/HANDOFF_PROTOCOL.md']; const text = files.map((file) => fs.readFileSync(path.join(root, file), 'utf8')).join('\n'); const valid = text.includes('READ-ONLY') && text.includes('remote readback') && text.includes('PUSH !=') && text.includes('tracked-file delta'); return valid ? pass('cross-document-git-policy', 'four contract documents include default tracked-delta delivery and PUSH != MERGE') : fail('cross-document-git-policy', 'required policy terms missing'); }
 function main() {
   const golden = runGolden();

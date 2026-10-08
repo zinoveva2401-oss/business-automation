@@ -33,5 +33,23 @@ class CoreNormalizationContracts(unittest.TestCase):
         for phrase in ("DOKRUTI_INTERNAL", "CLIENT_WORK", "does not create a Client Factory", "state", "brand", "data", "files", "access"):
             self.assertIn(phrase, client)
 
+    def test_architecture_creation_is_blocked_without_reuse_and_core_proof(self):
+        root = ROOT.parents[2]
+        lint = (root / "scripts/spec-lint-v2.mjs").read_text(encoding="utf-8")
+        for phrase in ("architecture.review_missing", "architecture.reuse_conflict", "architecture.owner_gate", "core.blob_drift", "source.conflict_wrong_winner"):
+            self.assertIn(phrase, lint)
+        agents = (root / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("reuse the existing object", agents)
+        self.assertNotIn("This run creates no Site, Content or Automation Codex projects", agents)
+
+    def test_client_work_requires_separate_client_inputs_and_scopes(self):
+        root = ROOT.parents[2]
+        lint = (root / "scripts/spec-lint-v2.mjs").read_text(encoding="utf-8")
+        for phrase in ("client.context_missing", "client.private_source_collision", "client.shared_core_drift", "DOKRUTI_UNPUBLISHED_MATERIAL"):
+            self.assertIn(phrase, lint)
+        client = (ROOT / "references/client-work-boundary.md").read_text(encoding="utf-8")
+        for phrase in ("client_id", "order_id", "colors and fonts", "isolated authorized scope"):
+            self.assertIn(phrase, client)
+
 if __name__ == "__main__":
     unittest.main()

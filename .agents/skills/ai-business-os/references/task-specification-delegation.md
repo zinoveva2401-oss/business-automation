@@ -45,6 +45,8 @@ If canonical data exists, retrieve it before handoff and put the exact values in
 
 Before analysis, matrix work, content/site structure or integration that depends on an already accepted classification, restore the current canonical taxonomy/architecture first. Do not silently rename, merge, split or reclassify accepted segments, product classes, site topics, content pillars or artifact roles because a newer executor prefers another scheme. A taxonomy change requires evidence and, when strategically material, an owner gate.
 
+Before requesting any new project, root/folder, worktree, branch, repository or Skill copy, list the existing canonical objects and prove reuse is blocked by a concrete constraint. Also record the shared-Core SHA/ancestry/blob parity, how accepted Core changes reach active domain branches, and whether the owner must approve the new object. Missing evidence or a reusable object is `NO-GO`: return to the existing root. `SYSTEM`/`DEVELOPMENT`/`INTEGRATION`/`RELEASE` packets must pass `scripts/spec-lint-v2.mjs` with `architecture_review`; the lint failure blocks handoff.
+
 ## 2.2. Canonical artifact placement
 
 Before creating a significant artifact, resolve its canonical product/task root and current master from live Drive/GitHub/Business-System links. `scratch`, sandbox, temporary export or executor-specific folder is not source of truth. By default one product has one canonical root used by all executors; do not create parallel Work/Codex/editor folders that fragment one product. A new root is allowed only after a proven structural gap or explicit migration/replacement decision.
