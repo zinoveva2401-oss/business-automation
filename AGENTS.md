@@ -17,7 +17,7 @@ Status: active shared repository guidance. Google Drive and the current Business
 ## Domain routing
 
 - `products/AGENTS.md` adds Product Factory execution rules on top of this shared Core. For a new or materially rehabilitated product, show a representative real prototype before full production and obtain owner approval for meaningful product, UX, visual or brand choices.
-- Site and content Skills remain conditional to those tasks. This run creates no Site, Content or Automation Codex projects.
+- Site and content Skills remain conditional to those tasks. Reuse the existing in-repository domain roots/projects. Before creating a project, root, folder, worktree, branch, repository or Skill copy, the architecture review in `scripts/spec-lint-v2.mjs` must prove the canonical object, reuse check, concrete blocker, shared-Core preservation/update path and required owner decision. If any proof is missing, stop and reuse the existing object. The existing Content Factory project remains a domain executor over the shared Core.
 - Preserve client state, brand assets, files and access in a client-specific context; use the shared professional Core without copying the Business OS per client.
 - For implementation routes see `docs/ai/PROJECT_MAP.md`, `docs/PRODUCT_EXECUTION.md` and `docs/ai/CODEX_RUNTIME.md` as applicable.
 

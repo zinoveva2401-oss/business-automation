@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "check:staged-media": "node scripts/guard-staged-media.mjs",
+    "test:core-contract": "node scripts/spec-lint-v2.mjs --self-test && node scripts/run-spec-lint-preflight.mjs tests/fixtures/second-brain/repair-acceptance-matrix.json",
     "test:video-exam": "node scripts/second-brain-video-exam.mjs"
   },
   "dependencies": {

@@ -52,6 +52,8 @@ Ledger может быть внутренним; в handoff переноситс
 
 В task packet явно отмечать `LOCAL REPO`, `GITHUB`, `LIVE DRIVE/SHEETS`, `BROWSER/WEB`, `OWNER/BUSINESS OS SNAPSHOT` как `YES/NO`, с датой, способом доступа и ограничением. Если canonical source недоступен, использовать только exact task snapshot с provenance либо вернуть `SOURCE SNAPSHOT REQUIRED`; не подменять источник capability или памятью.
 
+Перед любой новой project/root/folder/worktree/branch/repository/Skill-copy операцией запускаемый preflight обязан включать `architecture_review`: найденные canonical objects, reuse assessment, evidence реального blocker, owner-decision status, verified Core SHA + branch ancestry/blob parity и propagation path. `SYSTEM`, `DEVELOPMENT`, `INTEGRATION` и `RELEASE` без этого блока или с `core.blob_drift`/`architecture.reuse_conflict` не проходят `scripts/spec-lint-v2.mjs` и не переходят к созданию объекта.
+
 ## 4. Production loops
 
 ### Digital/public result
