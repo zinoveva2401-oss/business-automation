@@ -312,16 +312,22 @@ function checkClientPairIsolation(contexts) {
     return { status: 'FAIL', issues: [issue('client.pair_fixture_invalid', 'Pair isolation check requires exactly two synthetic client contexts')] };
   }
   const [a, b] = contexts;
+  for (const context of contexts) checkClientContext('CLIENT_WORK', context, issues);
   for (const [key, label] of [
     ['client_id', 'client identity'], ['order_id', 'order'], ['brand_id', 'brand'],
+    ['brand_guide_source', 'brand guide'],
     ['separate_storage_scope', 'storage'], ['credential_scope', 'credentials'],
   ]) {
     if (!hasText(a?.[key]) || !hasText(b?.[key]) || a[key] === b[key]) {
       issues.push(issue('client.pair_collision', `Two clients share or omit their ${label} boundary`));
     }
   }
-  const sourcesA = new Set(list(a?.private_source_ids));
-  if (list(b?.private_source_ids).some((source) => sourcesA.has(source))) {
+  const privateA = new Set(list(a?.private_source_ids));
+  const privateB = new Set(list(b?.private_source_ids));
+  const authorizedA = new Set(list(a?.authorized_sources));
+  const authorizedB = new Set(list(b?.authorized_sources));
+  if ([...privateA].some((source) => privateB.has(source) || authorizedB.has(source))
+    || [...privateB].some((source) => authorizedA.has(source))) {
     issues.push(issue('client.private_source_collision', 'Private sources must not cross client boundaries'));
   }
   const skillsA = new Set(list(a?.shared_expertise));
@@ -704,6 +710,10 @@ function selfTest() {
   if (mixed.status !== 'FAIL' || !mixed.issues.some((entry) => entry.code === 'client.pair_collision')
     || !mixed.issues.some((entry) => entry.code === 'client.private_source_collision')) {
     throw new Error('SPEC_LINT_SELF_TEST_FAIL: mixed client data was not rejected');
+  }
+  const crossAuthorized = checkClientPairIsolation([clientA, { ...clientB, authorized_sources: ['A brief'] }]);
+  if (crossAuthorized.status !== 'FAIL' || !crossAuthorized.issues.some((entry) => entry.code === 'client.private_source_collision')) {
+    throw new Error('SPEC_LINT_SELF_TEST_FAIL: private source in the other client allowlist was not rejected');
   }
 
   return 'SPEC_LINT_SELF_TEST_PASS: architecture reuse/core lineage, owner-vs-stale-source, client isolation, contradictions, capabilities and owner gates enforced';
