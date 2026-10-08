@@ -183,6 +183,10 @@ function hasArchitectureReview(review, issues, verifyRepository = false) {
   } else if (review.new_object_required && review.reuse_possible) {
     issues.push(issue('architecture.reuse_conflict', 'A new object cannot be approved while the existing canonical object is reusable'));
   }
+  if (Array.isArray(review.canonical_objects_checked) && review.new_object_required === false
+    && review.canonical_objects_checked.some((entry) => entry?.present !== true)) {
+    issues.push(issue('architecture.canonical_object_not_found', 'When reusing the architecture, every declared canonical object must be confirmed present'));
+  }
   if (list(review.requested_objects).length > 0 && review.new_object_required !== true) {
     issues.push(issue('architecture.object_request_not_justified', 'A requested architecture object must be explicitly justified as required'));
   }
@@ -244,7 +248,11 @@ function resolveSourceConflict(evidence) {
   return [...evidence].sort((a, b) => {
     const rank = (SOURCE_AUTHORITY[b?.authority] ?? -1) - (SOURCE_AUTHORITY[a?.authority] ?? -1);
     if (rank !== 0) return rank;
-    return Date.parse(b?.verified_at || '') - Date.parse(a?.verified_at || '');
+    const freshness = Date.parse(b?.verified_at || '') - Date.parse(a?.verified_at || '');
+    if (freshness !== 0) return freshness;
+    const source = String(a?.source_id || '').localeCompare(String(b?.source_id || ''), 'en');
+    if (source !== 0) return source;
+    return JSON.stringify(a?.value ?? null).localeCompare(JSON.stringify(b?.value ?? null), 'en');
   })[0];
 }
 
@@ -295,6 +303,25 @@ function checkClientContext(mode, context, issues) {
   for (const key of ['authorized_sources', 'shared_expertise', 'private_source_ids', 'forbidden_inheritance']) {
     if (!Array.isArray(client[key]) || client[key].length === 0) {
       issues.push(issue('client.list_missing', `CLIENT_WORK requires ${key}`));
+    }
+  }
+  const sourceOwnership = client.source_ownership;
+  if (!sourceOwnership || typeof sourceOwnership !== 'object' || Array.isArray(sourceOwnership)) {
+    issues.push(issue('client.source_ownership_missing', 'CLIENT_WORK requires a source-ID ownership map for the selected client'));
+  } else {
+    for (const sourceId of new Set([...list(client.authorized_sources), ...list(client.private_source_ids)])) {
+      if (!hasText(sourceOwnership[sourceId])) {
+        issues.push(issue('client.source_owner_missing', `No owner is declared for CLIENT_WORK source: ${sourceId}`));
+        continue;
+      }
+      if (sourceOwnership[sourceId] !== client.client_id && sourceOwnership[sourceId] !== 'PUBLIC') {
+        issues.push(issue('client.source_owner_mismatch', `CLIENT_WORK source is owned by another client or scope: ${sourceId}`));
+      }
+    }
+    for (const sourceId of list(client.private_source_ids)) {
+      if (sourceOwnership[sourceId] !== client.client_id) {
+        issues.push(issue('client.private_source_owner_mismatch', `Private source must belong to the selected client: ${sourceId}`));
+      }
     }
   }
   if (client.inherit_dokruti_brand !== false || client.inherit_dokruti_secrets !== false || client.mix_client_data !== false) {
@@ -691,6 +718,7 @@ function selfTest() {
     client_id: 'CLIENT-A', order_id: 'ORDER-A', brand_id: 'BRAND-A',
     brand_guide_source: 'A brand guide', color_source: 'A colors', font_source: 'A fonts',
     authorized_sources: ['A brief'], private_source_ids: ['A brief'], shared_expertise: ['marketing', 'legal'],
+    source_ownership: { 'A brief': 'CLIENT-A', 'B brief': 'CLIENT-B' },
     separate_storage_scope: 'client-a-vault', credential_scope: 'client-a-credentials',
     inherit_dokruti_brand: false, inherit_dokruti_secrets: false, mix_client_data: false,
     forbidden_inheritance: forbiddenInheritance,
@@ -699,6 +727,7 @@ function selfTest() {
     ...clientA, client_id: 'CLIENT-B', order_id: 'ORDER-B', brand_id: 'BRAND-B',
     brand_guide_source: 'B brand guide', color_source: 'B colors', font_source: 'B fonts',
     authorized_sources: ['B brief'], private_source_ids: ['B brief'],
+    source_ownership: { 'A brief': 'CLIENT-A', 'B brief': 'CLIENT-B' },
     separate_storage_scope: 'client-b-vault', credential_scope: 'client-b-credentials',
   };
   const clientPacket = { ...valid, context_mode: 'CLIENT_WORK', client_context: clientA };
@@ -714,6 +743,36 @@ function selfTest() {
   const crossAuthorized = checkClientPairIsolation([clientA, { ...clientB, authorized_sources: ['A brief'] }]);
   if (crossAuthorized.status !== 'FAIL' || !crossAuthorized.issues.some((entry) => entry.code === 'client.private_source_collision')) {
     throw new Error('SPEC_LINT_SELF_TEST_FAIL: private source in the other client allowlist was not rejected');
+  }
+  const packetCrossAuthorized = checkTaskPacket({
+    ...valid,
+    context_mode: 'CLIENT_WORK',
+    client_context: { ...clientB, authorized_sources: ['B brief', 'A brief'] },
+  });
+  if (packetCrossAuthorized.status !== 'FAIL'
+    || !packetCrossAuthorized.issues.some((entry) => entry.code === 'client.source_owner_mismatch')) {
+    throw new Error('SPEC_LINT_SELF_TEST_FAIL: task-packet validation allowed another client\'s private source');
+  }
+
+  const fabricatedCanonical = {
+    ...valid,
+    architecture_review: {
+      ...valid.architecture_review,
+      canonical_objects_checked: [{ name: 'fabricated', present: false, evidence: 'fabricated evidence' }],
+    },
+  };
+  if (!checkTaskPacket(fabricatedCanonical).issues.some((entry) => entry.code === 'architecture.canonical_object_not_found')) {
+    throw new Error('SPEC_LINT_SELF_TEST_FAIL: absent canonical object passed a reuse review');
+  }
+
+  const tiedConflict = [
+    { source_id: 'source-z', authority: 'APPROVED_SOURCE', verified_at: '2026-10-08T10:00:00Z', value: 'z' },
+    { source_id: 'source-a', authority: 'APPROVED_SOURCE', verified_at: '2026-10-08T10:00:00Z', value: 'a' },
+  ];
+  const tiedForward = resolveSourceConflict(tiedConflict);
+  const tiedReverse = resolveSourceConflict([...tiedConflict].reverse());
+  if (tiedForward?.source_id !== tiedReverse?.source_id || tiedForward?.value !== tiedReverse?.value) {
+    throw new Error('SPEC_LINT_SELF_TEST_FAIL: equally ranked source conflicts depend on input order');
   }
 
   return 'SPEC_LINT_SELF_TEST_PASS: architecture reuse/core lineage, owner-vs-stale-source, client isolation, contradictions, capabilities and owner gates enforced';
