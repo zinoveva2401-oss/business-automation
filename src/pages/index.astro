@@ -10,7 +10,7 @@ const featured = articles.find((item) => item.data.id === 'CNT-0026') ?? article
 const supporting = articles.filter((item) => item.data.id !== featured?.data.id).slice(0, 3);
 ---
 
-<BaseLayout title="Докрути — практические решения для малого бизнеса" description="Практические материалы, инструменты и помощь по задачам продаж, ассортимента, клиентов, команды, управления, маркетинга и ИИ.">
+<BaseLayout title="Докрути — практические решения для малого бизнеса" description="Продажи, команда, закупки, клиенты, маркетинг и ИИ. Практический опыт и современные подходы — с учётом реальности российского малого бизнеса.">
   <article class="v4-home">
     <section class="home-opening">
       <figure class="opening-photo">
@@ -20,15 +20,15 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
         <div class="opening-copy">
           <p class="eyebrow">ПРАКТИЧЕСКИЕ РЕШЕНИЯ ДЛЯ МАЛОГО БИЗНЕСА</p>
           <h1>Когда в бизнесе<br class="hero-line-break" /> что-то не сходится —<br class="hero-line-break" /> <em>найдём, где именно.</em></h1>
-          <p class="opening-lead">Продажи, клиенты, команда, процессы, маркетинг, ассортимент и ИИ — от проблемы к следующему понятному действию.</p>
+          <p class="opening-lead">Продажи, команда, закупки, клиенты, маркетинг и ИИ. Практический опыт и современные подходы — с учётом реальности российского малого бизнеса.</p>
           <div class="opening-actions">
             <a class="button button--primary" href="#problems" data-analytics-event="cta_click" data-analytics-cta-id="find_situation" data-analytics-placement="home_hero">Найти свою ситуацию</a>
             <button type="button" class="button button--outline" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу</button>
           </div>
           <div class="opening-proof" aria-label="О Докрути">
-            <span><i class="ti ti-chart-line" aria-hidden="true"></i>Реальный опыт малого бизнеса</span>
-            <span><i class="ti ti-checks" aria-hidden="true"></i>Практика, а не теория</span>
-            <span><i class="ti ti-tool" aria-hidden="true"></i>Современные инструменты</span>
+            <span><i class="ti ti-chart-line" aria-hidden="true"></i>19 лет практического опыта</span>
+            <span><i class="ti ti-checks" aria-hidden="true"></i>Методики и идеи из России и других стран</span>
+            <span><i class="ti ti-tool" aria-hidden="true"></i>Понятные разборы и рабочие инструменты</span>
           </div>
         </div>
       </div>
@@ -37,7 +37,7 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
     <section class="problem-trace" id="problems" aria-labelledby="trace-title">
       <div class="container">
         <div class="trace-heading">
-          <div class="trace-heading-copy"><h2 id="trace-title">Найди свою точку роста</h2><p>Семь ключевых проблем, с которых начинается рост.</p></div>
+          <div class="trace-heading-copy"><h2 id="trace-title">Найди свою точку роста</h2><p>Выберите тему, с которой сейчас сложнее всего. Откроются статьи и материалы, которые помогут разобраться в ситуации.</p></div>
           <p class="trace-instruction">Нажмите на тему — откроется подборка статей, инструментов и решений. <span aria-hidden="true">→</span></p>
         </div>
         <nav class="trace-line" aria-label="Семь направлений">
@@ -55,7 +55,7 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
     <section class="library-spotlight" aria-labelledby="library-title">
       <div class="container">
         <div class="section-heading library-heading">
-          <div><p class="eyebrow">ПОЛЕЗНЫЕ МАТЕРИАЛЫ</p><h2 id="library-title">Разобраться глубже</h2></div>
+          <div><p class="eyebrow">ПОЛЕЗНЫЕ МАТЕРИАЛЫ</p><h2 id="library-title">Разобраться глубже</h2><p>Здесь разбираем реальные ситуации из бизнеса, современные подходы и инструменты. Смотрим не только на то, что советуют, но и на то, когда это действительно может пригодиться.</p></div>
           <a class="all-articles" href="/articles/">Все материалы ↗</a>
         </div>
         {featured && <div class="spotlight-grid">
@@ -70,7 +70,8 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
         <div class="teaser-copy">
           <p class="eyebrow">ИНСТРУМЕНТЫ ДЛЯ РАБОТЫ</p>
           <h2 id="tools-title">Проверить самому</h2>
-          <p>Раздел инструментов готовится. Пока начать можно с материалов в Библиотеке.</p>
+          <p>Не каждую задачу обязательно решать с помощью дорогого специалиста или сложной программы.</p>
+          <p>Здесь будут появляться практические таблицы, шаблоны и инструменты для небольшого бизнеса. Пока раздел готовится, начните с разборов в Библиотеке.</p>
           <a href="/tools/">Смотреть инструменты ↗</a>
         </div>
         <div class="teaser-evidence">
@@ -85,8 +86,11 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
         <div class="founder-copy">
           <p class="eyebrow">КТО СТОИТ ЗА ДОКРУТИ</p>
           <h2 id="founder-title">Светлана Тарасова</h2>
-          <p>Практик в продажах, управлении, маркетинге и бизнес-процессах. В «Докрути» я собираю разборы, инструменты и решения, которые помогают понять, что происходит и что делать дальше.</p>
-          <ul class="founder-steps"><li>Увидеть проблему</li><li>Проверить причину</li><li>Выбрать следующий шаг</li></ul>
+          <p>За 19 лет работы я узнала малый бизнес изнутри — от продаж и закупок до управления людьми и повседневными процессами.</p>
+          <p>Но свой опыт я не считаю единственным источником знаний. Мне интересно, как похожие задачи решают другие компании, какие подходы используют в России и за рубежом и что из этого действительно можно применить в небольшом бизнесе.</p>
+          <p>В «Докрути» я соединяю практику с тем, что продолжаю изучать: современные методики, исследования, цифровые инструменты и ИИ. Разбираю сложное простым языком, сравниваю разные решения и показываю, где они могут быть полезны, а где есть ограничения.</p>
+          <p>Моя цель — чтобы предпринимателю было проще разобраться в своей задаче и найти подходящий способ её решить.</p>
+          <ul class="founder-steps"><li>Опыт и реальные ситуации</li><li>Новые знания и исследования</li><li>Применимость к малому бизнесу</li></ul>
           <a href="/about/">История и подход ↗</a>
         </div>
       </div>
@@ -97,19 +101,20 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
         <div class="section-heading services-heading">
           <div class="services-heading-title"><p class="eyebrow">ФОРМАТЫ РАБОТЫ</p><h2 id="services-title">С чего начать</h2></div>
           <a class="services-all" href="/services/">Все услуги ↗</a>
-          <p>Если нужен не только материал, а разбор вашей ситуации — можно выбрать подходящий формат работы.</p>
+          <p>Иногда достаточно разобраться самостоятельно по статье или с помощью инструмента.<br />А иногда нужен взгляд со стороны на конкретную ситуацию.<br />Для этого есть несколько форматов работы.</p>
         </div>
         <div class="service-cards-v4">
-          <article><span class="service-number">01</span><strong>Разбор одной задачи</strong><small>Когда есть конкретная ситуация и нужно понять, что проверить первым.</small></article>
-          <article><span class="service-number">02</span><strong>Аудит продаж и процессов</strong><small>Когда проблема видна по результату, но причина пока не ясна.</small></article>
-          <article><span class="service-number">03</span><strong>Доработка системы работы</strong><small>Когда после разбора нужно изменить порядок работы, роли или контроль.</small></article>
+          <article><span class="service-number">01</span><strong>Разбор одной задачи</strong><small>Когда есть конкретный вопрос и нужно понять, что происходит, какие причины возможны и с чего начать проверку.</small></article>
+          <article><span class="service-number">02</span><strong>Аудит продаж и процессов</strong><small>Когда результаты не устраивают, проблемы повторяются, но пока непонятно, где именно теряются деньги, время или клиенты.</small></article>
+          <article><span class="service-number">03</span><strong>Доработка системы работы</strong><small>Когда причины уже понятны и нужно наладить процессы, распределить ответственность или изменить порядок работы.</small></article>
         </div>
       </div>
     </section>
 
     <section class="closing-strip">
       <div class="container">
-        <h2>Не уверены, с чего начать?</h2>
+        <div class="closing-copy"><h2>Не уверены, с чего начать?</h2>
+          <p>Опишите, что происходит в Вашем бизнесе. Не нужно заранее знать причину проблемы или подходящую методику. Начать можно с самой ситуации.</p></div>
         <button type="button" class="button button--primary" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу</button>
         <button type="button" class="closing-read" data-open-sheet="read">Где читать Докрути</button>
       </div>
@@ -160,6 +165,12 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
   .service-cards-v4 article strong{grid-column:2;grid-row:1;align-self:center;font:600 19px/1.05 var(--font-editorial)}
   .service-cards-v4 article small{grid-column:2;grid-row:2;align-self:start;color:#555;font-size:11px;line-height:1.4}
   .services-all{display:inline-flex;min-height:44px;align-items:center;margin-top:12px;color:#bd4626;font-size:13px;font-weight:700;text-decoration:none}
+  .home-opening .opening-proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}
+  .home-opening .opening-proof span{min-width:0;font-size:9px}
+  .library-heading>div>p{max-width:720px;margin:8px 0 0;color:#53585c;font-size:14px;line-height:1.45}
+  .closing-copy{flex:1 1 360px;min-width:0}
+  .closing-copy h2{margin:0 0 6px}
+  .closing-copy p{max-width:640px;margin:0;color:#e5e3e0;font-size:13px;line-height:1.4}
   .closing-strip{padding:20px 0}
   .closing-strip>.container{flex-wrap:nowrap;gap:12px}
   .closing-strip h2{font-size:clamp(25px,2.5vw,35px)}
@@ -173,6 +184,8 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
     .service-cards-v4 article strong{font-size:17px}
   }
   @media(max-width:700px){
+    .home-opening .opening-proof{grid-template-columns:1fr 1fr}
+    .closing-copy{flex:0 0 100%}
     .tools-teaser{padding-block:26px}
     .teaser-grid{grid-template-columns:1fr;gap:14px}
     .teaser-copy h2{font-size:35px}
@@ -299,4 +312,11 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
     .tools-teaser .tool-preview{position:relative;inset:auto;flex:0 0 auto;width:100%;height:auto;aspect-ratio:3/1}
     .tools-teaser :global(.tool-preview img){object-fit:contain;object-position:center}
   }
+</style>
+
+<style>
+  /* Keep the longer approved proof copy aligned with the existing hero row. */
+  .home-opening .opening-proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}
+  .home-opening .opening-proof span{min-width:0;font-size:9px}
+  @media(max-width:700px){.home-opening .opening-proof{grid-template-columns:1fr 1fr}}
 </style>
