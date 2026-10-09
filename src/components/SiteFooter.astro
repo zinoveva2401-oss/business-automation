@@ -26,12 +26,4 @@ const isHome = Astro.url.pathname === '/';
   }
   :global(.mobile-action.is-footer-visible),:global(.back-top.is-footer-visible){visibility:hidden;opacity:0;pointer-events:none}
 </style>
-<script>
-  const footer = document.querySelector('.site-footer');
-  if (footer && 'IntersectionObserver' in window) {
-    const floatingControls = document.querySelectorAll('.mobile-action, .back-top');
-    new IntersectionObserver(([entry]) => {
-      floatingControls.forEach(control => control.classList.toggle('is-footer-visible', entry.isIntersecting));
-    }, { threshold: 0 }).observe(footer);
-  }
-</script>
+<script is:inline type="module" src="/assets/footer-controls.js"></script>
