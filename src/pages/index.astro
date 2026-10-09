@@ -23,7 +23,7 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
           <p class="opening-lead">Продажи, команда, закупки, клиенты, маркетинг и ИИ. Практический опыт и современные подходы — с учётом реальности российского малого бизнеса.</p>
           <div class="opening-actions">
             <a class="button button--primary" href="#problems" data-analytics-event="cta_click" data-analytics-cta-id="find_situation" data-analytics-placement="home_hero">Найти свою ситуацию</a>
-            <button type="button" class="button button--outline" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу</button>
+
           </div>
           <div class="opening-proof" aria-label="О Докрути">
             <span><i class="ti ti-chart-line" aria-hidden="true"></i>19 лет практического опыта</span>
@@ -37,7 +37,7 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
     <section class="problem-trace" id="problems" aria-labelledby="trace-title">
       <div class="container">
         <div class="trace-heading">
-          <div class="trace-heading-copy"><h2 id="trace-title">Найди свою точку роста</h2><p>Выберите тему, с которой сейчас сложнее всего. Откроются статьи и материалы, которые помогут разобраться в ситуации.</p></div>
+          <h2 id="trace-title">Найди свою точку роста</h2>
           <p class="trace-instruction">Нажмите на тему — откроется подборка статей, инструментов и решений. <span aria-hidden="true">→</span></p>
         </div>
         <nav class="trace-line" aria-label="Семь направлений">
@@ -86,11 +86,8 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
         <div class="founder-copy">
           <p class="eyebrow">КТО СТОИТ ЗА ДОКРУТИ</p>
           <h2 id="founder-title">Светлана Тарасова</h2>
-          <p>За 19 лет работы я узнала малый бизнес изнутри — от продаж и закупок до управления людьми и повседневными процессами.</p>
-          <p>Но свой опыт я не считаю единственным источником знаний. Мне интересно, как похожие задачи решают другие компании, какие подходы используют в России и за рубежом и что из этого действительно можно применить в небольшом бизнесе.</p>
-          <p>В «Докрути» я соединяю практику с тем, что продолжаю изучать: современные методики, исследования, цифровые инструменты и ИИ. Разбираю сложное простым языком, сравниваю разные решения и показываю, где они могут быть полезны, а где есть ограничения.</p>
-          <p>Моя цель — чтобы предпринимателю было проще разобраться в своей задаче и найти подходящий способ её решить.</p>
-          <ul class="founder-steps"><li>Опыт и реальные ситуации</li><li>Новые знания и исследования</li><li>Применимость к малому бизнесу</li></ul>
+          <p>За годы работы в малом бизнесе я не раз видела, как собственникам приходится разбираться во всём самим: в продажах, закупках, сотрудниках, рекламе и цифрах. Так появилась идея «Докрути» — платформы, где практический опыт соединяется с новыми знаниями и подходами.</p>
+          <p>Здесь я изучаю и сравниваю российские и зарубежные методики, исследования и цифровые инструменты. Простым языком разбираю, что из этого можно применить в небольшом российском бизнесе, что нужно изменить под его возможности, а что вообще не подойдёт.</p>
           <a href="/about/">История и подход ↗</a>
         </div>
       </div>
@@ -116,7 +113,7 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
         <div class="closing-copy"><h2>Не уверены, с чего начать?</h2>
           <p>Опишите, что происходит в Вашем бизнесе. Не нужно заранее знать причину проблемы или подходящую методику. Начать можно с самой ситуации.</p></div>
         <button type="button" class="button button--primary" data-open-sheet="ask" data-analytics-event="contact_open">Описать задачу</button>
-        <button type="button" class="closing-read" data-open-sheet="read">Где читать Докрути</button>
+
       </div>
     </section>
   </article>
@@ -319,4 +316,22 @@ const supporting = articles.filter((item) => item.data.id !== featured?.data.id)
   .home-opening .opening-proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px}
   .home-opening .opening-proof span{min-width:0;font-size:9px}
   @media(max-width:700px){.home-opening .opening-proof{grid-template-columns:1fr 1fr}}
+</style>
+
+<style>
+  .trace-heading>h2{flex:1;min-width:0;margin:0;font-size:clamp(25px,2.35vw,32px);line-height:1.05;letter-spacing:-.025em}
+  .trace-heading .trace-instruction{flex:0 1 360px;margin:0;color:#50565a;font-size:13px;line-height:1.4}
+  .trace-instruction span{margin-left:7px;color:#d9562f}
+  .founder-copy>p:not(.eyebrow){max-width:50ch;margin:0 0 10px;font-size:15px;line-height:1.52}
+  .founder-copy .founder-emphasis{color:#d9562f;font-weight:700}
+  @media(max-width:700px){.trace-heading>h2{font-size:27px}.trace-heading .trace-instruction{max-width:none;font-size:12px}.founder-copy>p:not(.eyebrow){font-size:13px;line-height:1.48}}
+</style>
+<style>
+  @media(max-width:700px){:global(body:has(article.v4-home) .mobile-action){display:none!important}}
+</style>
+<style>
+  :global(body:has(article.v4-home) .footer-actions){display:none!important}
+</style>
+<style>
+  :global(article.v4-home :is(h1,h2,h3)){scroll-margin-top:72px}
 </style>
