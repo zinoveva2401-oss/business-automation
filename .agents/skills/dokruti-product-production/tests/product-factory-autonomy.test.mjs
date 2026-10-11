@@ -595,4 +595,70 @@ for (const specialistRole of ['Product Strategy', 'Instructional Design', 'Edito
 }
 assert.match(executor, /independent cold-reader QA/i);
 assert.match(executor, /Formula\/function correctness alone does not pass/i);
-console.log('PASS Product Factory v1.4.1 autonomy, provenance, semantic value, realistic examples, transitions, tool comprehension, cold-reader evidence, editorial boundary and product-type regressions');
+// DEC-218 preference recovery and consolidated brief contract. These fixtures verify routing rules, not literary quality or real-buyer demand.
+const dec218Block = executor.split('## Owner preference recovery and brief (DEC-218)')[1].split('The Product Factory project is scoped to `products/`')[0];
+assert.match(executor, /overlay v1\.4\.1 with DEC-218 operating update \(2026-10-11\)/);
+for (const rule of ['latest owner-approved preferences', 'TRANSFERABLE_PREFERENCE', 'PRODUCT_LOCK', 'TYPE_SCOPED_CHOICE', 'latest direct owner instruction', 'one consolidated owner-specific brief', 'never exceed 7', 'Accept a partial answer', 'do not issue a second style questionnaire', 'hold only the dependent decision']) {
+  assert.ok(dec218Block.includes(rule), `DEC-218 execution rule missing: ${rule}`);
+}
+assert.match(executor, /Recover current owner-approved transferable and product-specific preferences from the canonical source/i);
+
+// A stored product-specific book choice cannot leak into a different type; direct owner intent wins.
+const approvedProfile = {
+  transferable: [{ id: 'DEC-218-GENERAL', scope: 'TRANSFERABLE_PREFERENCE', value: 'owner preference fixture', source: 'Business System DEC-218' }],
+  productLocks: [{ id: 'BOOK-A-LOCK', productId: 'BOOK-A', scope: 'PRODUCT_LOCK', value: 'book-only requirement' }],
+  typeChoices: [{ id: 'BOOK-A-VISUAL', productId: 'BOOK-A', productType: 'KNOWLEDGE_PRODUCT', reusableWithinType: false, scope: 'TYPE_SCOPED_CHOICE', value: 'book layout choice' }],
+};
+const recoverProfile = (profile, productId, productType, directOwnerChoices = []) => {
+  const applicable = [...profile.transferable.filter((item) => item.source), ...profile.productLocks.filter((item) => item.productId === productId), ...profile.typeChoices.filter((item) => item.productType === productType && (item.productId === productId || item.reusableWithinType === true))];
+  const recovered = applicable.reduce((items, item) => [...items.filter((prior) => prior.id !== item.id), item], []);
+  return directOwnerChoices.reduce((items, item) => [...items.filter((prior) => prior.id !== item.id), item], recovered);
+};
+const otherProductChoices = recoverProfile(approvedProfile, 'CALC-B', 'CALCULATOR');
+assert.deepEqual(otherProductChoices.map((item) => item.id), ['DEC-218-GENERAL'], 'only explicitly transferable choices survive a change of product and type');
+const overridden = recoverProfile(approvedProfile, 'BOOK-A', 'KNOWLEDGE_PRODUCT', [{ id: 'DEC-218-GENERAL', value: 'current owner instruction', source: 'current run' }]);
+assert.equal(overridden.find((item) => item.id === 'DEC-218-GENERAL').value, 'current owner instruction', 'current direct owner intent supersedes stored preference');
+
+// Research-informed brief contains only unresolved material owner decisions and is emitted once.
+const prepareOwnerBrief = (decisions, known) => {
+  const unresolved = decisions.filter((item) => item.material && !known.has(item.id));
+  if (unresolved.length === 0) return { count: 0, questions: [] };
+  return { count: 1, questions: unresolved.slice(0, 7).map((item) => ({ ...item, hasRecommendation: Boolean(item.recommendation), hasEvidence: Boolean(item.evidence), hasAlternative: Boolean(item.alternative), hasConsequence: Boolean(item.consequence) })) };
+};
+const brief = prepareOwnerBrief([
+  { id: 'known-style', material: true },
+  { id: 'routine-layout', material: false },
+  { id: 'unknown-method-boundary', material: true, recommendation: 'bounded method', evidence: 'current source review', alternative: 'narrower claim', consequence: 'changes scope' },
+], new Set(['known-style']));
+assert.equal(brief.count, 1);
+assert.deepEqual(brief.questions.map((item) => item.id), ['unknown-method-boundary']);
+assert.ok(Object.values(brief.questions[0]).slice(-4).every(Boolean), 'material question carries recommendation, evidence, alternative and consequence');
+assert.equal(prepareOwnerBrief([{ id: 'known', material: true }], new Set(['known'])).count, 0, 'known preferences never trigger a repeat question');
+assert.ok(prepareOwnerBrief(Array.from({ length: 9 }, (_, i) => ({ id: String(i), material: true, recommendation: 'r', evidence: 'e', alternative: 'a', consequence: 'c' })), new Set()).questions.length <= 7);
+
+// Partial answers persist once; an unanswered owner gate is held without a second style questionnaire.
+const acceptPartialResponse = (openQuestions, answers, remainingOwnerGates) => ({
+  answered: openQuestions.filter((id) => Object.hasOwn(answers, id)).map((id) => ({ id, value: answers[id] })),
+  unanswered: openQuestions.filter((id) => !Object.hasOwn(answers, id)),
+  remainingOwnerGates,
+  followUpBriefsInRound: 0,
+});
+const partialDecision = acceptPartialResponse(['unknown-method-boundary', 'sample-scope'], { 'unknown-method-boundary': 'approved bounded method' }, ['exact price']);
+assert.equal(partialDecision.answered.length, 1);
+assert.deepEqual(partialDecision.unanswered, ['sample-scope']);
+assert.equal(partialDecision.followUpBriefsInRound, 0);
+assert.deepEqual(partialDecision.remainingOwnerGates, ['exact price']);
+
+// Known negative cases: domain plausibility needs operational detail; personal provenance is mandatory; structure never awards editorial PASS; low-value compulsory forms fail.
+const assessWholesaleCase = (example) => example.domainFit && example.actors && example.businessConstraint && example.operationalDecision && example.consequence ? 'PASS' : 'FAIL';
+assert.equal(assessWholesaleCase({ domainFit: true, actors: 'wholesale manager and receiving clerk', businessConstraint: 'supplier delivery is unconfirmed before a customer promise' }), 'FAIL', 'a named wholesale context without a decision and consequence is implausible filler');
+const personalClaimPasses = (claim) => !claim.firstPersonExperience || Boolean(claim.approvedSource);
+assert.equal(personalClaimPasses({ firstPersonExperience: true, approvedSource: '' }), false, 'invented owner experience is rejected');
+const structuralEditorialStatus = (chapter) => chapter.hasHeadings && chapter.hasSteps ? 'REQUIRES_INDEPENDENT_EDITORIAL_REVIEW' : 'STRUCTURAL_RISK';
+assert.equal(structuralEditorialStatus({ hasHeadings: true, hasSteps: true, dryCommandOnly: true }), 'REQUIRES_INDEPENDENT_EDITORIAL_REVIEW', 'structure cannot pass dry prose');
+const compulsoryFormValue = (form) => form.decisionUse && form.reuseFrequency && form.addedValueBeyondFreeTemplate ? 'PASS' : 'FAIL';
+assert.equal(compulsoryFormValue({ mandatory: true, decisionUse: '', reuseFrequency: '', addedValueBeyondFreeTemplate: '' }), 'FAIL', 'mandatory but purposeless form is rejected');
+
+assert.match(dec218Block, /one real, visually designed representative sample/i);
+assert.match(dec218Block, /After that approval, continue within the frozen direction without repeated chapter-by-chapter style approval requests/i);
+console.log('PASS Product Factory v1.4.1 and DEC-218 preference recovery, one-brief, product-type, provenance, value, reader and quality regressions');

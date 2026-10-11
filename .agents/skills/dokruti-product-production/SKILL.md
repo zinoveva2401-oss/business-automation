@@ -3,13 +3,13 @@ name: dokruti-product-production
 description: Execute Product Factory work under the local autonomy, product-depth and product-type gates; return each owner decision package only after its required internal gates close.
 ---
 
-# DOKRUTI product production executor — autonomy, product-depth and reader-experience overlay v1.4.1
+# DOKRUTI product production executor — overlay v1.4.1 with DEC-218 operating update (2026-10-11)
 
 For substantial product work, route first through the shared Core at `.agents/skills/ai-business-os/references/product-factory.md` and apply the versioned Product Factory domain overlay in `products/AGENTS.md`. The shared Core remains unchanged. Overlay v1.4.1 preserves v1.4.0 and hardens evidence and behavioral regression for distinct value, example realism, cold-reader independence, whole-product transitions, prototype provenance and tool comprehension. DEC-210 remains the general reader-experience decision; DEC-209 supplies PROD-TEAM-001-specific prototype standard and failure context.
 
 This Skill supplies execution routing and must not turn an incomplete internal stage into an owner handoff:
 
-1. Restore the exact product/task source and inspect existing target files before editing. Mark unavailable sources precisely; request owner access only when that access is a real prerequisite.
+1. Restore the exact product/task source and inspect existing target files before editing. Recover current owner-approved transferable and product-specific preferences from the canonical source under “Owner preference recovery and brief (DEC-218)” below, and record the source/date used. Mark unavailable sources precisely; request owner access only when that access is a real prerequisite.
 2. Translate a business-level instruction into the primary and supporting product types, approved product identity, complete applicable gate ledger, specialist route, sufficient evidence budget, market-saturation stop condition and acceptance criteria. Lock only an explicit approved buyer promise; otherwise set `PROMISED_RESULT = TO_DEFINE` and bring a clearly labelled proposal to the architecture decision. Start research from the whole approved job; do not silently narrow the job to a proposed module or ask the owner to dispatch routine work.
 3. If a criterion is missing or fails but is correctable, route it to the responsible specialist, repair it, recheck it and continue. Never stop merely to ask whether normal research or repair should proceed.
 4. For coded or interactive output, follow `docs/PRODUCT_EXECUTION.md` and the approved product design/technical source. Keep changes inside the exact product folder and preserve unrelated products.
@@ -25,5 +25,25 @@ This Skill supplies execution routing and must not turn an incomplete internal s
 14. Route correctable reader, instruction, duplication, example, transition or tool-comprehension defects to the specialist roles in the domain overlay; repair, recheck and regress before handoff.
 15. Regression heuristics flag known structural failures only; do not label prose as editorially good from causal markers, context words or fewer imperatives. Natural flow, engagement, reader voice, usefulness and desire to continue require independent review of the real artifact.
 16. Do not publish, sell, change permissions, incur material spend or write to an external source unless that action is explicitly authorized in the parent task.
+
+## Owner preference recovery and brief (DEC-218)
+
+For every new DOKRUTI product or materially new product direction, read the latest owner-approved preferences and decisions from the existing live canonical source before asking questions. For DOKRUTI, begin with DEC-218 and any newer superseding owner decision; use the current product/task record for product-specific constraints. Do not copy preference values into this Skill or create a parallel profile file.
+
+Classify each recovered choice before applying it:
+
+- `TRANSFERABLE_PREFERENCE`: explicitly durable owner preference that fits the present buyer job and medium.
+- `PRODUCT_LOCK`: approved audience, job, scope, promise, method or other constraint limited to the named product.
+- `TYPE_SCOPED_CHOICE`: format, interaction, visual, teaching or tool choice; record its product type and whether the canonical source allows reuse within that type. Never carry it across product types unless the source explicitly says it transfers.
+
+The latest direct owner instruction for this run overrides an older stored preference. Never turn a product-specific book or workbook choice into a default for a calculator, toolkit, app or other product. When a preference cannot be traced to an approved source, treat it as unknown rather than remembered fact.
+
+For a new idea, finish the required buyer, domain, market, substitute and format research first. Then put **one consolidated owner-specific brief** in the appropriate architecture decision package, before its owner gate. Ask only about materially consequential owner choices that remain unresolved after research; normally use 3–7 questions and never exceed 7. For each, state the recommended choice, concise evidence/reason, meaningful alternative and consequence. Do not ask for facts research can establish, repeat a recovered preference, or request routine execution choices. If no material owner choice remains, ask no brief.
+
+Accept a partial answer. Record confirmed answers in the existing canonical product/task source with their scope and source; do not issue a second style questionnaire in the same decision round. If a material owner gate remains unanswered, hold only the dependent decision and continue independent research or production work that does not assume that answer. Existing architecture, prototype and release gates remain in force.
+
+After the existing architecture gate, create one real, visually designed representative sample in the proposed medium, run the applicable internal and independent checks, and tell the owner exactly which material sample decisions need approval. After that approval, continue within the frozen direction without repeated chapter-by-chapter style approval requests. A material new choice or contradictory evidence reopens only the affected gate.
+
+This section adds preference recovery and one-brief sequencing; it does not replace the product-type classifier, research, value, professional review, buyer QA or owner gates already defined above.
 
 The Product Factory project is scoped to `products/`. Do not create Site, Content, Automation or Client Factory projects here. Future `CLIENT_WORK` must use the shared Core's conditional isolation boundary and the client's authorized project/state; never mix client and DOKRUTI data, brand, files, credentials or access.
