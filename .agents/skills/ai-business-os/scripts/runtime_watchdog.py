@@ -12,6 +12,7 @@ It does NOT contain credentials and does NOT call external services itself.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import time
@@ -31,10 +32,19 @@ OWNER_GATE_CLASSES = {
     'EQUIVALENT_STRATEGIC_OPTIONS', 'PORTFOLIO_CLOSURE'
 }
 PROTECTED_STATUSES = {'ПРОВЕРЕНО', 'VERIFIED', 'ЗАПИСАНО/ЗАКРЫТО', 'READY', 'READY FOR LAUNCH'}
+STAGE_EVIDENCE_CHECKS = {
+    'PRESERVE': {'git_snapshot', 'dirty_work_preserved', 'secret_review', 'gate_rejection_test', 'restart_recovery_test'},
+    'EXECUTOR': {'real_model_call', 'real_tool_call', 'restart_recovery_test'},
+    'MEDIA': {'real_media_generation', 'independent_visual_qa', 'restart_recovery_test'},
+    'E2E': {'full_release', 'duplicate_free_replay', 'error_recovery', 'owner_approval'},
+}
+DEC220_MAIN = 'CORE-STAGE-GATE-001'
+DEC220_STAGE_ORDER = ('PRESERVE', 'EXECUTOR', 'MEDIA', 'E2E')
 
 
 @dataclass
 class RuntimeState:
+    main: str = ""
     run_id: str = ""
     stage_id: str = ""
     status: str = "ПРИНЯТО"
@@ -48,6 +58,8 @@ class RuntimeState:
     blocker: str = ""
     owner_decision_required: bool = False
     last_evidence: str = ""
+    return_to: str = ""
+    updated_at: str = ""
 
     @classmethod
     def from_dict(cls, value: dict[str, Any]) -> "RuntimeState":
@@ -110,6 +122,63 @@ def _remember_event(state: RuntimeState, event_id: str) -> None:
     state.last_event_id = event_id
 
 
+def _verify_stage_evidence(stage_id: str, evidence: Any) -> tuple[bool, str]:
+    """Require a hash-bound evidence artifact with every contract check marked PASS."""
+    if not isinstance(evidence, dict):
+        return False, 'stage verification requires a hash-bound evidence artifact'
+    if str(evidence.get('status', '')).upper() in {'BLOCKED', 'FAIL', 'FAILED'}:
+        return False, f"evidence status is {evidence.get('status')}"
+    artifact = evidence.get('artifact')
+    expected_hash = str(evidence.get('sha256') or '').lower()
+    if not artifact or len(expected_hash) != 64:
+        return False, 'evidence requires artifact path and SHA-256'
+    try:
+        raw = Path(str(artifact)).read_bytes()
+    except (OSError, ValueError) as exc:
+        return False, f'evidence artifact unavailable: {exc}'
+    actual_hash = hashlib.sha256(raw).hexdigest()
+    if actual_hash != expected_hash:
+        return False, 'evidence artifact SHA-256 mismatch'
+    try:
+        document = json.loads(raw.decode('utf-8'))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        return False, 'evidence artifact must be UTF-8 JSON'
+    if not isinstance(document, dict) or str(document.get('status', '')).upper() != 'PASS':
+        return False, 'evidence artifact status must be PASS'
+    checks = document.get('checks')
+    if not isinstance(checks, list):
+        return False, 'evidence artifact checks must be a list'
+    observed: dict[str, str] = {}
+    for check in checks:
+        if not isinstance(check, dict) or not check.get('id'):
+            return False, 'each evidence check must have an id and status'
+        check_id = str(check['id'])
+        check_status = str(check.get('status', '')).upper()
+        if check_id in observed:
+            return False, f'duplicate evidence check: {check_id}'
+        if check_status in {'BLOCKED', 'FAIL', 'FAILED'}:
+            return False, f'evidence check {check_id} is {check_status}'
+        check_path = check.get('artifact')
+        check_hash = str(check.get('sha256') or '').lower()
+        if check_status != 'PASS' or not check_path or len(check_hash) != 64:
+            return False, f'evidence check {check_id} requires PASS, artifact path, and SHA-256'
+        try:
+            check_actual_hash = hashlib.sha256(Path(str(check_path)).read_bytes()).hexdigest()
+        except (OSError, ValueError):
+            return False, f'evidence artifact unavailable for check {check_id}'
+        if check_actual_hash != check_hash:
+            return False, f'evidence SHA-256 mismatch for check {check_id}'
+        observed[check_id] = check_status
+    required = STAGE_EVIDENCE_CHECKS.get(stage_id.upper(), {'independent_review'})
+    missing = sorted(required - observed.keys())
+    failed = sorted(key for key in required & observed.keys() if observed[key] != 'PASS')
+    if missing:
+        return False, 'missing required evidence checks: ' + ', '.join(missing)
+    if failed:
+        return False, 'required evidence checks are not PASS: ' + ', '.join(failed)
+    return True, actual_hash
+
+
 def process_event(state: RuntimeState, event: dict[str, Any], max_retry: int = DEFAULT_MAX_RETRY) -> dict[str, Any]:
     required = ['event_id', 'run_id', 'stage_id', 'type']
     missing = [k for k in required if not event.get(k)]
@@ -149,16 +218,27 @@ def process_event(state: RuntimeState, event: dict[str, Any], max_retry: int = D
         return {'decision': 'REJECT', 'reason': f'stage_id mismatch without stage_started: state={state.stage_id} event={incoming_stage}', 'state_changed': False}
 
     state.run_id = incoming_run
+    state.main = str(event.get('main') or state.main or incoming_run)
     if not state.stage_id and event_type != 'stage_started':
         state.stage_id = incoming_stage
 
     if event_type == 'stage_started':
+        if state.main == DEC220_MAIN:
+            if incoming_stage not in DEC220_STAGE_ORDER:
+                return {'decision': 'REJECT', 'reason': f'unsupported DEC-220 stage: {incoming_stage}', 'state_changed': False}
+            if not state.stage_id and incoming_stage != DEC220_STAGE_ORDER[0]:
+                return {'decision': 'REJECT', 'reason': 'DEC-220 must start with PRESERVE', 'state_changed': False}
         # A new EVENT-ID must not restart the same logical stage accidentally.
         if state.stage_id == incoming_stage:
             _remember_event(state, event_id)
             return {'decision': 'NO-OP', 'reason': 'stage already started; explicit repair/reroute event required', 'state_changed': True}
         if state.stage_id and incoming_stage != state.stage_id and state.status != 'ПРОВЕРЕНО':
             return {'decision': 'REJECT', 'reason': 'cannot advance stage before previous stage is ПРОВЕРЕНО', 'state_changed': False}
+        if state.main == DEC220_MAIN and state.stage_id:
+            previous_index = DEC220_STAGE_ORDER.index(state.stage_id) if state.stage_id in DEC220_STAGE_ORDER else -1
+            expected_next = DEC220_STAGE_ORDER[previous_index + 1] if 0 <= previous_index < len(DEC220_STAGE_ORDER) - 1 else None
+            if incoming_stage != expected_next:
+                return {'decision': 'REJECT', 'reason': f'DEC-220 stage order violation: expected {expected_next or "no further stage"}, got {incoming_stage}', 'state_changed': False}
         state.stage_id = incoming_stage
         state.status = 'В РАБОТЕ'
         state.blocker = ''
@@ -199,9 +279,10 @@ def process_event(state: RuntimeState, event: dict[str, Any], max_retry: int = D
     elif event_type == 'stage_verified':
         if state.status != 'НА ПРОВЕРКЕ':
             return {'decision': 'REJECT', 'reason': f'stage_verified requires НА ПРОВЕРКЕ state, got {state.status}', 'state_changed': False}
-        evidence = str(payload.get('evidence') or '').strip()
-        if not evidence:
-            return {'decision': 'REJECT', 'reason': 'stage_verified requires explicit evidence', 'state_changed': False}
+        evidence = payload.get('evidence')
+        valid_evidence, evidence_result = _verify_stage_evidence(state.stage_id, evidence)
+        if not valid_evidence:
+            return {'decision': 'REJECT', 'reason': evidence_result, 'state_changed': False}
         owner_gate = bool(payload.get('owner_gate'))
         blocker = str(payload.get('blocker') or '').strip()
         if owner_gate and blocker:
@@ -210,7 +291,7 @@ def process_event(state: RuntimeState, event: dict[str, Any], max_retry: int = D
             gate_class = str(payload.get('owner_gate_class') or '').strip()
             if gate_class not in OWNER_GATE_CLASSES:
                 return {'decision': 'REJECT', 'reason': 'owner_gate requires a permitted owner_gate_class', 'state_changed': False}
-        state.last_evidence = evidence
+        state.last_evidence = str(evidence.get('sha256')).lower()
         state.blocker = ''
         state.owner_decision_required = False
         if owner_gate:
@@ -271,11 +352,15 @@ def process_event(state: RuntimeState, event: dict[str, Any], max_retry: int = D
     else:
         return {'decision': 'REJECT', 'reason': f'unsupported event type: {event_type}', 'state_changed': False}
 
+    state.return_to = str(payload.get('return_to') or state.return_to)
     state.state_version += 1
+    state.updated_at = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
     _remember_event(state, event_id)
     return {
         'decision': 'COMMIT',
         'reason': event_type,
+        'main': state.main,
+        'current_stage': state.stage_id,
         'state_changed': True,
         'run_id': state.run_id,
         'stage_id': state.stage_id,
@@ -284,6 +369,9 @@ def process_event(state: RuntimeState, event: dict[str, Any], max_retry: int = D
         'next_action': state.next_action,
         'blocker': state.blocker,
         'owner_decision_required': state.owner_decision_required,
+        'evidence': state.last_evidence,
+        'return_to': state.return_to,
+        'updated_at': state.updated_at,
     }
 
 
