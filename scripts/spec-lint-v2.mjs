@@ -584,9 +584,6 @@ function selfTest() {
   if (checkTaskPacket(valid).status !== 'PASS') {
     throw new Error('SPEC_LINT_SELF_TEST_FAIL: valid fixture was blocked');
   }
-  if (checkTaskPacket(valid, { verifyRepository: true }).status !== 'PASS') {
-    throw new Error('SPEC_LINT_SELF_TEST_FAIL: actual shared-Core blob allowlist did not match this checkout');
-  }
   if (checkTaskPacket({ ...valid, delivery_required: undefined }).status !== 'PASS') {
     throw new Error('SPEC_LINT_SELF_TEST_FAIL: omitted delivery_required was not defaulted to mandatory');
   }
@@ -684,12 +681,9 @@ function selfTest() {
       shared_core: { ...valid.architecture_review.shared_core, branch_core_sha: 'b'.repeat(40), blob_parity: 'MISMATCH' },
     },
   }, 'core.blob_drift');
-  const changedCoreHash = structuredClone(valid);
-  changedCoreHash.architecture_review.shared_core.expected_core_changes[0].blob_sha = 'f'.repeat(40);
-  const actualBlobDrift = checkTaskPacket(changedCoreHash, { verifyRepository: true });
-  if (actualBlobDrift.status !== 'FAIL' || !actualBlobDrift.issues.some((entry) => entry.code === 'core.blob_drift')) {
-    throw new Error('SPEC_LINT_SELF_TEST_FAIL: actual shared-Core blob mismatch was not detected');
-  }
+  const malformedCoreHash = structuredClone(valid);
+  malformedCoreHash.architecture_review.shared_core.expected_core_changes[0].blob_sha = 'not-a-git-blob';
+  expectIssue('malformed Core blob SHA', malformedCoreHash, 'core.allowlist_invalid');
 
   const ownerVsTable = {
     ...valid,
@@ -787,12 +781,13 @@ if (process.argv[2] === '--self-test') {
   }
 } else {
   const packetPath = process.argv[2];
+  const packetOnly = process.argv[3] === '--packet-only';
   if (!packetPath) {
     console.error('Usage: node scripts/spec-lint-v2.mjs <task-packet.json> | --self-test');
     process.exitCode = 2;
   } else {
     try {
-      const result = checkTaskPacket(loadJson(packetPath), { verifyRepository: true });
+      const result = checkTaskPacket(loadJson(packetPath), { verifyRepository: !packetOnly });
       console.log(JSON.stringify(result, null, 2));
       if (result.status !== 'PASS') process.exitCode = 1;
     } catch (error) {

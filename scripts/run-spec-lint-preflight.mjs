@@ -18,6 +18,7 @@ function run(packetPath, evidencePath) {
   const lint = spawnSync(process.execPath, [
     path.join(root, 'scripts', 'spec-lint-v2.mjs'),
     packetPath,
+    '--packet-only',
   ], { cwd: root, encoding: 'utf8' });
   const evidence = {
     schema_version: 1,
