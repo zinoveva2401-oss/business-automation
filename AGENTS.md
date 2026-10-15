@@ -17,11 +17,13 @@ Status: active shared repository guidance. Google Drive and the current Business
 ## Domain routing
 
 - `products/AGENTS.md` adds Product Factory execution rules on top of this shared Core. For a new or materially rehabilitated product, show a representative real prototype before full production and obtain owner approval for meaningful product, UX, visual or brand choices.
-- Site and content Skills remain conditional to those tasks. This run creates no Site, Content or Automation Codex projects.
+- Site and content Skills remain conditional to those tasks. Reuse the existing in-repository domain roots/projects. Before creating a project, root, folder, worktree, branch, repository or Skill copy, the architecture review in `scripts/spec-lint-v2.mjs` must prove the canonical object, reuse check, concrete blocker, shared-Core preservation/update path and required owner decision. If any proof is missing, stop and reuse the existing object. The existing Content Factory project remains a domain executor over the shared Core.
 - Preserve client state, brand assets, files and access in a client-specific context; use the shared professional Core without copying the Business OS per client.
 - For implementation routes see `docs/ai/PROJECT_MAP.md`, `docs/PRODUCT_EXECUTION.md` and `docs/ai/CODEX_RUNTIME.md` as applicable.
 
 ## Execution and safety
+
+- Для задачи `CORE-STAGE-GATE-001` действует порядок DEC-220 `PRESERVE → EXECUTOR → MEDIA → E2E`; следующий этап нельзя начинать без сохранённого `ПРОВЕРЕНО/VERIFIED` предыдущего. Это стабилизация Core, а не универсальная лестница для продуктовых и сайт-релизов: они проходят профильный Completion Gate и отдельное owner approval, если оно требуется. Добавляй зависимость доменного выпуска от DEC-220 только когда она подтверждена живым источником задачи. В Stage Gate `BLOCKED`, `FAIL`, пропуск этапа, отсутствующее или изменённое доказательство блокирует переход; самоутверждение агента не является доказательством. Состояние `MAIN / CURRENT STAGE / STATUS / EVIDENCE / BLOCKER / NEXT ACTION / RETURN TO / время` записывается и читается обратно в существующей «Бизнес-системе» при восстановлении.
 
 - Before a change, inspect the exact branch, HEAD, status, diffs, required source and target paths. For substantial SYSTEM/DEVELOPMENT/RELEASE work, run `scripts/run-spec-lint-preflight.mjs` before implementation and record its task hash and baseline evidence.
 - Keep scope explicit. Preserve unrelated dirty work and accepted refs. Use exact path allowlists; never use `git clean`, broad staging, or force operations.
@@ -29,12 +31,13 @@ Status: active shared repository guidance. Google Drive and the current Business
 - Verify the actual result. Apply relevant technical/product/editorial/security checks and the `docs/ai/SECOND_BRAIN_REVIEW_BOARD.md` plus `docs/ai/COMPLETION_GATE.md` when their task criteria apply. A self-report, build or file-presence check alone is not proof.
 - For tracked changes outside read-only work, review the exact diff, run relevant checks, commit only the allowlist, push when authorized/required, then read back the remote SHA.
 
-## Domain branch inheritance guard
+## Shared branch and workspace reuse guard
 
-- Before creating or refreshing any DOKRUTI domain branch/worktree, read the latest VERIFIED canonical Core SHA and status from the live Business System, then confirm that exact commit exists in the repository.
-- Create the domain branch directly from that verified Core SHA. A GitHub default branch name alone is never a valid base. Record the Core source/status, base SHA, and git merge-base --is-ancestor <VERIFIED_CORE_SHA> HEAD result before implementation.
-- If the GitHub default does not contain the latest VERIFIED Core commit as an ancestor, stop branch creation and implementation until the default/canonical relationship is reconciled and remotely read back. Never silently fall back to stale main or rewrite history to conceal divergence.
-- Domain branches are technical isolation and execution overlays over the one shared Business OS. Do not copy or fork the shared brain into a domain executor.
+- Default every new chat, product, client assignment, Skill repair, and task to the existing canonical repository, its current authorized working tree, and its current branch. None of those events alone justifies another branch, worktree, project, folder, repository, or Business OS copy.
+- Before any exception, inspect the existing project/root/branch/worktrees and prove with a concrete constraint that reuse is blocked. A task packet, convenience, parallelism, or an assistant's proposed workflow is not owner approval. Obtain Svetlana's explicit approval for the exact object after the necessity and alternatives are evidenced; otherwise `NO-GO / REUSE EXISTING`.
+- If an approved branch/worktree exception is genuinely required, first read the live verified Core SHA/status and prove the exact commit exists. Record its ancestry and shared-Core blob parity before implementation. Never silently base work on stale `main`, copy the shared brain, or rewrite history to conceal divergence.
+- Serialize edits to overlapping shared files. Before writing, inspect active Codex work and the exact working-tree diff. If another task is editing an overlapping path, coordinate one writer or wait; do not evade the conflict by creating a second branch/worktree.
+- For routine delivery, use the current authorized branch and an exact path allowlist. Commit/push only when the task authorizes delivery; read back the exact remote SHA. A local change, commit, passing test, or temporary branch does not become canonical without the required remote acceptance and runtime readback.
 
 ## Handoff
 

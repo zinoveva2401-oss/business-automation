@@ -12,6 +12,8 @@ Resolve only the information that can change the route:
 4. **Execution boundary:** lock target repository, path, branch/worktree, input files, data classification, secret/access limits, allowed writes and exclusions. Inspect existing dirty state before any mutation. No silent cross-project or client/DOKRUTI context mixing.
 5. **Economics and acceptance:** set a proportional token/cost/time budget, expected observable result, evidence method, regression needs, write-back target and stop condition. A meaningful owner choice, missing unique fact or frozen business decision remains an owner gate.
 
+6. **Architecture object gate (blocking):** before creating a project, root/folder, worktree, branch, repository or Skill copy, identify the canonical object already in use, inspect whether it can be reused, record the concrete conflict that prevents reuse, preserve the one shared Business OS and name the tested Core update path. Record whether Svetlana's decision is required. The `architecture_review` block in the executable spec lint is mandatory for `SYSTEM`, `DEVELOPMENT`, `INTEGRATION` and `RELEASE`. If an object is reusable, or evidence/Core lineage is missing, return `NO-GO / REUSE EXISTING`; do not create it.
+
 Load only the task-specific source and applicable domain checklists. Common routes:
 
 - System/runtime/code → `task-specification-delegation.md`, `production-dispatcher-runtime.md`, `work-production-controller.md`, then technical/security and completion gates as applicable.

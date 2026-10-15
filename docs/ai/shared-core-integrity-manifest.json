@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "repository": "zinoveva2401-oss/business-automation",
+  "core_root": ".agents/skills/ai-business-os",
+  "base_sha": "e0ac9c53e20b9f2f08a766ce3e6559f73bb7d067",
+  "reviewed_head_sha": "c3209c5ad88fde42c977ac1a03c8269b4f1d4206",
+  "expected_core_changes": [
+    { "path": ".agents/skills/ai-business-os/references/architect-supervisor-gate.md", "blob_sha": "4878d519b38d7da7e26b7de96d1d99b7e4f10cc4" },
+    { "path": ".agents/skills/ai-business-os/references/client-work-boundary.md", "blob_sha": "c3df97ffd2dad9fd3fe95af058a9db4480518316" },
+    { "path": ".agents/skills/ai-business-os/references/production-dispatcher-runtime.md", "blob_sha": "04606603f96eb19495e1c33511bda042626ec04b" },
+    { "path": ".agents/skills/ai-business-os/references/task-specification-delegation.md", "blob_sha": "91e2db8b2b0b41d637cba6793602947c333df602" },
+    { "path": ".agents/skills/ai-business-os/scripts/runtime_watchdog.py", "blob_sha": "60b3c6183100537a652552742262fbeed8c82c26" },
+    { "path": ".agents/skills/ai-business-os/tests/test_runtime_watchdog.py", "blob_sha": "2a01858cd5f1ee83cb166fc0ee6befd4bf2e3823" },
+    { "path": ".agents/skills/ai-business-os/tests/test_v211_core_gates.py", "blob_sha": "08e4d53bbeaac4fe5cbbe5f44829dcb7844a14d4" }
+  ]
+}

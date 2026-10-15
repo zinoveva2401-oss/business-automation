@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const TASK_CLASSES = new Set(['PATCH', 'INTEGRATION', 'DEVELOPMENT', 'SYSTEM', 'RELEASE']);
 const PRODUCTION_TASK_CLASSES = new Set(['DEVELOPMENT', 'SYSTEM', 'RELEASE']);
@@ -596,14 +597,17 @@ function selfTest() {
   return 'SELF_TEST_PASS: material gates enforced; executor-created verifier is limited to READY_FOR_INDEPENDENT_QA';
 }
 
-if (process.argv[2] === '--self-test') {
+const isDirectExecution = process.argv[1]
+  && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+
+if (isDirectExecution && process.argv[2] === '--self-test') {
   try {
     console.log(selfTest());
   } catch (error) {
     console.error(`SELF_TEST_FAIL: ${error.message}`);
     process.exitCode = 1;
   }
-} else {
+} else if (isDirectExecution) {
   const [, , matrixPath, verifierPath] = process.argv;
   if (!matrixPath || !verifierPath) {
     console.error('Usage: node scripts/verify-completion-gate.mjs <acceptance.json> <verifier.json>');

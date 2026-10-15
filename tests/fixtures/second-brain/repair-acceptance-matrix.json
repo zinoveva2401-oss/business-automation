@@ -3,6 +3,32 @@
   "main": "CODEX-SECOND-BRAIN-001",
   "stage": "STAGE-SECOND-BRAIN-INDEPENDENT-QA-REPAIR",
   "task_class": "SYSTEM",
+  "context_mode": "DOKRUTI_INTERNAL",
+  "architecture_review": {
+    "canonical_objects_checked": [
+      {"name": "business-automation shared Core", "present": true, "evidence": "live DOKRUTI-CORE-001 and git branch lineage"}
+    ],
+    "reuse_assessed": true,
+    "reuse_possible": true,
+    "new_object_required": false,
+    "requested_objects": [],
+    "owner_decision": "NOT_REQUIRED",
+    "evidence": ["git merge-base --is-ancestor", "shared Core blob hash comparison"],
+    "shared_core": {
+      "verified_core_sha": "415b4634b6600c7657c60feee1f798f65889debf",
+      "branch_core_sha": "e0ac9c53e20b9f2f08a766ce3e6559f73bb7d067",
+      "ancestry_verified": true,
+      "blob_parity": "PASS",
+      "expected_core_changes": [
+        { "path": ".agents/skills/ai-business-os/references/architect-supervisor-gate.md", "blob_sha": "4878d519b38d7da7e26b7de96d1d99b7e4f10cc4" },
+        { "path": ".agents/skills/ai-business-os/references/client-work-boundary.md", "blob_sha": "c3df97ffd2dad9fd3fe95af058a9db4480518316" },
+        { "path": ".agents/skills/ai-business-os/references/task-specification-delegation.md", "blob_sha": "91e2db8b2b0b41d637cba6793602947c333df602" },
+        { "path": ".agents/skills/ai-business-os/tests/test_v211_core_gates.py", "blob_sha": "08e4d53bbeaac4fe5cbbe5f44829dcb7844a14d4" }
+      ],
+      "candidate_change_approved": true,
+      "update_path": "reviewed Core change in canonical trunk, then tested merge into domain branches"
+    }
+  },
   "source_of_truth": [
     "owner repair task",
     "Бизнес-система / 02_РАБОТА / CODEX-SECOND-BRAIN-001",

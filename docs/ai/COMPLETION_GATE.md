@@ -34,6 +34,8 @@ STATUS = PASS / FAIL / UNKNOWN
 
 Исполняемый формат и deterministic gate: `scripts/verify-completion-gate.mjs`.
 
+Product and Site PR adapters route lane-specific acceptance matrices through this verifier via `scripts/verify-domain-release.mjs`; they do not replace it. DEC-220's `PRESERVE → EXECUTOR → MEDIA → E2E` lifecycle applies to `CORE-STAGE-GATE-001`, not automatically to unrelated domain releases. A domain dependency on that lifecycle must be present in the live task source. A successful material check with independent review required remains `READY_FOR_INDEPENDENT_QA`, never a release authorization.
+
 Acceptance JSON обязан содержать metadata:
 
 ```json

@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 function git(args) {
-  return execFileSync('git', args, { cwd: root, encoding: 'utf8' }).trim();
+  return execFileSync('git', ['-c', `safe.directory=${root}`, ...args], { cwd: root, encoding: 'utf8' }).trim();
 }
 
 function run(packetPath, evidencePath) {
@@ -18,6 +18,7 @@ function run(packetPath, evidencePath) {
   const lint = spawnSync(process.execPath, [
     path.join(root, 'scripts', 'spec-lint-v2.mjs'),
     packetPath,
+    '--packet-only',
   ], { cwd: root, encoding: 'utf8' });
   const evidence = {
     schema_version: 1,
