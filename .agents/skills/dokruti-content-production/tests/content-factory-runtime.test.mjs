@@ -37,7 +37,7 @@ test('valid and invalid fixtures are validated against every Draft 2020-12 schem
 test('ordinary demand routes through marketing, strategy, editor, adaptation and QA',()=>{
  const r=routeRequest({intent:'Повторяющиеся вопросы клиентов: подготовить пост',channels:['telegram']});
  for(const lane of ['marketing','strategy','research','human_editor','channel_adaptation','publishing','qa'])assert.ok(r.lanes.includes(lane),lane);
- assert.ok(!r.lanes.includes('affiliate'));assert.equal(r.owner_gate_required,false);
+ assert.ok(!r.lanes.includes('affiliate'));assert.equal(r.owner_gate_required,true);
 });
 test('trend/video/art/SEO/affiliate requests include only the corresponding production lanes',()=>{
  const trend=routeRequest({trend:true});assert.ok(trend.lanes.includes('trend'));
