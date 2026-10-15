@@ -15,6 +15,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import time
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
@@ -375,13 +376,50 @@ def process_event(state: RuntimeState, event: dict[str, Any], max_retry: int = D
     }
 
 
+def authorize_domain_release(state: RuntimeState) -> dict[str, Any]:
+    """Read-only DEC-220 prerequisite check for a domain release request.
+
+    The transport-neutral controller cannot authenticate where this state was
+    read from; callers must supply a canonical Business System read-back.
+    """
+    if state.main != DEC220_MAIN:
+        return {'decision': 'BLOCKED', 'reason': 'state is not for CORE-STAGE-GATE-001'}
+    if state.stage_id != DEC220_STAGE_ORDER[-1] or state.status != 'ПРОВЕРЕНО':
+        return {
+            'decision': 'BLOCKED',
+            'reason': f'domain release requires final DEC-220 stage ПРОВЕРЕНО; got {state.stage_id or "<missing>"}/{state.status}',
+        }
+    if (not state.run_id or not state.last_event_id or state.state_version < 1
+            or not state.updated_at or not re.fullmatch(r'[a-f0-9]{64}', state.last_evidence or '')):
+        return {'decision': 'BLOCKED', 'reason': 'verified DEC-220 state is missing event, version, time, or evidence hash'}
+    return {
+        'decision': 'ALLOW_COMPLETION_CHECK',
+        'main': state.main,
+        'current_stage': state.stage_id,
+        'status': state.status,
+        'run_id': state.run_id,
+        'state_version': state.state_version,
+        'event_id': state.last_event_id,
+        'updated_at': state.updated_at,
+        'evidence_sha256': state.last_evidence,
+    }
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description='DOKRUTI portable watchdog/event core')
-    parser.add_argument('--event', required=True, type=Path)
+    parser.add_argument('--event', type=Path)
     parser.add_argument('--state', required=True, type=Path)
-    parser.add_argument('--result', required=True, type=Path)
+    parser.add_argument('--result', type=Path)
+    parser.add_argument('--assert-release-ready', action='store_true')
     parser.add_argument('--max-retry', type=int, default=DEFAULT_MAX_RETRY)
     args = parser.parse_args()
+
+    if args.assert_release_ready:
+        decision = authorize_domain_release(load_state(args.state))
+        print(json.dumps(decision, ensure_ascii=False, sort_keys=True))
+        return 0 if decision['decision'] == 'ALLOW_COMPLETION_CHECK' else 1
+    if args.event is None or args.result is None:
+        parser.error('--event and --result are required unless --assert-release-ready is used')
 
     event = json.loads(args.event.read_text('utf-8'))
     lock_path = args.state.with_suffix(args.state.suffix + '.lock')

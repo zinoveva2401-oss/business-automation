@@ -204,5 +204,19 @@ st=mod.RuntimeState(run_id='R1',stage_id='S1',status='В РАБОТЕ')
 r=mod.process_event(st,{'event_id':'E25','run_id':'R1','stage_id':'S1','type':'checkpoint','payload':{'status':'НА ПРОВЕРКЕ'}})
 assert r['decision']=='REJECT' and 'expected_state_version' in r['reason']
 
+# 21) Product/Site release assertion is read-only and requires final verified DEC-220 state
+verified_release_state=mod.RuntimeState(
+    main=mod.DEC220_MAIN,run_id='RUN-CORE-STAGE-GATE-001',stage_id='E2E',status='ПРОВЕРЕНО',
+    state_version=9,last_event_id='E2E-VERIFIED',last_evidence='a'*64,updated_at='2026-10-15T00:00:00Z')
+decision=mod.authorize_domain_release(verified_release_state)
+assert decision['decision']=='ALLOW_COMPLETION_CHECK' and decision['evidence_sha256']=='a'*64
+assert verified_release_state.state_version==9 and verified_release_state.status=='ПРОВЕРЕНО'
+for blocked_state in [
+    mod.RuntimeState(main=mod.DEC220_MAIN,run_id='R',stage_id='PRESERVE',status='ПРОВЕРЕНО',state_version=1,last_event_id='E',last_evidence='a'*64,updated_at='2026-10-15T00:00:00Z'),
+    mod.RuntimeState(main=mod.DEC220_MAIN,run_id='R',stage_id='E2E',status='ЗАБЛОКИРОВАНО',state_version=9,last_event_id='E',last_evidence='a'*64,updated_at='2026-10-15T00:00:00Z'),
+    mod.RuntimeState(main=mod.DEC220_MAIN,run_id='R',stage_id='E2E',status='ПРОВЕРЕНО',state_version=9,last_event_id='E',last_evidence='',updated_at='2026-10-15T00:00:00Z'),
+]:
+    assert mod.authorize_domain_release(blocked_state)['decision']=='BLOCKED'
+
 print('PASS')
-print('runtime watchdog: duplicate/logical-restart/stale-event/self-loop/run-stage isolation/evidence-hash-stage-gates/blocked-predecessor/material-owner-gates/owner-resolution/repair-reroute/max-retry/writeback/atomic persistence')
+print('runtime watchdog: duplicate/logical-restart/stale-event/self-loop/run-stage isolation/evidence-hash-stage-gates/blocked-predecessor/material-owner-gates/owner-resolution/repair-reroute/max-retry/writeback/atomic persistence/domain-release-state')
