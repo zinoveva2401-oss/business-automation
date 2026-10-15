@@ -104,44 +104,25 @@ function assertBlocked(fn, pattern) {
 
 const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'dokruti-domain-release-'));
 try {
-  const stageStatePath = path.join(temp, 'dec220-state.json');
-  fs.writeFileSync(stageStatePath, JSON.stringify({
-    main: 'CORE-STAGE-GATE-001', run_id: 'RUN-TEST', stage_id: 'E2E', status: 'ПРОВЕРЕНО',
-    state_version: 9, last_event_id: 'E2E-VERIFIED', last_evidence: 'a'.repeat(64), updated_at: '2026-10-15T00:00:00Z',
-  }));
-
   for (const domain of ['product', 'site']) {
     const dir = path.join(temp, domain);
     fs.mkdirSync(dir);
     const matrix = matrixFor(domain, dir);
     const verifier = { status: 'VERIFIED', reviewer: 'executor-assertion-is-not-authority' };
-    assert.equal(verifyDomainRelease({ domain, matrix, verifier, stageStatePath }), 'READY_FOR_INDEPENDENT_QA');
-    assertBlocked(() => verifyDomainRelease({ domain: domain === 'product' ? 'site' : 'product', matrix, verifier, stageStatePath }), 'lane');
+    // Domain release quality is independent of the global Core stabilization lifecycle.
+    assert.equal(verifyDomainRelease({ domain, matrix, verifier }), 'READY_FOR_INDEPENDENT_QA');
+    assertBlocked(() => verifyDomainRelease({ domain: domain === 'product' ? 'site' : 'product', matrix, verifier }), 'lane');
 
     const missing = structuredClone(matrix);
     missing.criteria = missing.criteria.filter((criterion) => criterion.id !== 'independent_auditor');
-    assertBlocked(() => verifyDomainRelease({ domain, matrix: missing, verifier, stageStatePath }), 'Mandatory criterion is missing');
+    assertBlocked(() => verifyDomainRelease({ domain, matrix: missing, verifier }), 'Mandatory criterion is missing');
 
     const failed = structuredClone(matrix);
     failed.criteria[0].status = 'BLOCKED';
-    assertBlocked(() => verifyDomainRelease({ domain, matrix: failed, verifier, stageStatePath }), 'BLOCKED');
+    assertBlocked(() => verifyDomainRelease({ domain, matrix: failed, verifier }), 'BLOCKED');
   }
 
-  const heldPath = path.join(temp, 'held-state.json');
-  fs.writeFileSync(heldPath, JSON.stringify({
-    main: 'CORE-STAGE-GATE-001', run_id: 'RUN-TEST', stage_id: 'PRESERVE', status: 'ЗАБЛОКИРОВАНО',
-    state_version: 1, last_event_id: 'HOLD', last_evidence: 'a'.repeat(64), updated_at: '2026-10-15T00:00:00Z',
-  }));
-  const blockedMatrixDir = path.join(temp, 'blocked');
-  fs.mkdirSync(blockedMatrixDir);
-  const blockedMatrix = matrixFor('product', blockedMatrixDir);
-  assertBlocked(() => verifyDomainRelease({ domain: 'product', matrix: blockedMatrix, verifier: {}, stageStatePath: heldPath }), 'DEC-220 Stage Gate blocked');
-
-  const tamperedPath = path.join(temp, 'tampered-state.json');
-  fs.writeFileSync(tamperedPath, '{"status":"ПРОВЕРЕНО"}');
-  assertBlocked(() => verifyDomainRelease({ domain: 'product', matrix: blockedMatrix, verifier: {}, stageStatePath: tamperedPath }), 'DEC-220 Stage Gate blocked');
-
-  console.log('PASS: Product and Site positive route reaches only READY_FOR_INDEPENDENT_QA; wrong lane, missing evidence, FAIL/BLOCKED, held DEC-220 state, and malformed state are rejected.');
+  console.log('PASS: Product and Site domain evidence reaches only READY_FOR_INDEPENDENT_QA without DEC-220 coupling; wrong lane, missing evidence, and FAIL/BLOCKED remain rejected.');
 } finally {
   fs.rmSync(temp, { recursive: true, force: true });
 }

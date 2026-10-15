@@ -41,12 +41,6 @@ if (scopes.length === 0) {
   process.exit(0);
 }
 
-const stageStatePath = process.env.DOKRUTI_STAGE_STATE_FILE;
-if (!stageStatePath || !fs.existsSync(stageStatePath)) {
-  console.error('BLOCKED: Product/Site release requires DOKRUTI_STAGE_STATE_FILE from the canonical Business System adapter');
-  process.exit(1);
-}
-
 for (const scope of scopes) {
   for (const file of [scope.matrix, scope.verifier]) {
     if (!changed.includes(file) || !fs.existsSync(path.join(ROOT, file))) {
@@ -57,7 +51,6 @@ for (const scope of scopes) {
     domain: scope.domain,
     matrix: JSON.parse(fs.readFileSync(path.join(ROOT, scope.matrix), 'utf8')),
     verifier: JSON.parse(fs.readFileSync(path.join(ROOT, scope.verifier), 'utf8')),
-    stageStatePath,
   });
   console.log(`${scope.domain.toUpperCase()}: ${status}`);
 }

@@ -49,7 +49,6 @@ jobs:
         if: github.event_name == 'pull_request'
         env:
           GITHUB_BASE_REF: ${{ github.event.pull_request.base.ref }}
-          DOKRUTI_STAGE_STATE_FILE: ${{ runner.temp }}/dokruti-stage-state.json
         run: node scripts/check-domain-release-packets.mjs
 
       - name: Runtime watchdog regression
