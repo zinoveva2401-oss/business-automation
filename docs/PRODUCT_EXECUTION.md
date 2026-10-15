@@ -52,3 +52,9 @@
 Release candidate не готов при Critical/Major дефекте. Доказать по применимости: методология сохранена, результат полезен и объясним, UX логичен, интерфейс профессионален, mobile/A11Y работают, логика/данные корректны, storage/export безопасны, performance приемлема, analytics не ломается, brand system соблюдена, Red Team и regression выполнены.
 
 Commit/push/deploy или выдача клиенту — только в явном scope задачи после фактических проверок. Финальный отчёт содержит результат, changed files, URL/branch/commit, применимые QA и непроверенные риски.
+
+### Executable Product/Site acceptance boundary
+
+Изменение артефакта под `products/<product-id>/` должно содержать свежие `.release/acceptance.json` и `.release/verifier.json`. Проверка запускается обязательным GitHub `CI / verify` на PR в `main`; локальная команда для явной проверки: `node scripts/verify-domain-release.mjs product <acceptance.json> <verifier.json> <dec220-state.json>`. Изменения `src/` или `public/` используют `.github/release-evidence/site-acceptance.json` и `site-verifier.json` через тот же адаптер с контуром `site`.
+
+Адаптер сначала вызывает read-only проверку финального DEC-220 состояния в `runtime_watchdog.py`, затем существующий `verify-completion-gate.mjs`. Без state-файла, финального `E2E/ПРОВЕРЕНО` или полных material evidence PR завершается отказом. Успешный Completion Gate возвращает только `READY_FOR_INDEPENDENT_QA`; это не разрешение на merge, выпуск или деплой и не подтверждение фактической независимости reviewer. State-файл должен поступать из доверенного адаптера к канонической «Бизнес-системе», а не из PR. Такой адаптер сейчас не подключён; GitHub CI поэтому fail-closed блокирует Product/Site PR, пока его не предоставят.

@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const manifestPath = path.resolve(root, process.argv[2] || '');
-const APPROVED_MANIFEST_BLOB = '2854983adbb972526cd3c025789ed1d4b5b8e02a';
+const APPROVED_MANIFEST_BLOB = '867d325f6aec123393575be9bc4736a7f096e167';
 
 function fail(message) {
   throw new Error(`CORE_MANIFEST_FAIL: ${message}`);

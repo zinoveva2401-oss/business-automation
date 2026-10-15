@@ -50,3 +50,5 @@ When no exact owner-frozen reference exists, the required comparison is the curr
 ## Review decision
 
 Run relevant sequential read-only specialist passes on the exact final artifact, then Review Chair. Report `PASS / FAIL / UNKNOWN` with observed evidence, artifact truth, final SHA, viewport and defects. Product, visual or experience failure cannot be overridden by technical success. Repair material issues together and rerender; review the new artifact. Unknown material criteria block READY. Preserve scope and owner decisions. Never merge, deploy or publish unless explicitly authorized.
+
+For repository release changes under `src/` or `public/`, `CI / verify` invokes the shared Site adapter (`scripts/verify-domain-release.mjs site ...`). It checks DEC-220 state through `runtime_watchdog.py` and then calls the existing Completion Gate. A missing state export or material Site acceptance packet blocks the PR. State provenance must be verified against the canonical Business System outside the PR; until that adapter is connected, these release PRs remain blocked. `READY_FOR_INDEPENDENT_QA` is a handoff only; it does not authorize merge or deployment.
